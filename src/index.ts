@@ -1,7 +1,5 @@
 export interface Client {
-  /// 启动连接
   start(): Client;
-  /// 断开连接
   stop(autoConn?: boolean): Client;
 }
 
@@ -44,7 +42,7 @@ class ClientProvider implements Client {
     this.socket.onmessage = this.onMessage.bind(this);
     this.socket.onerror = this.onError.bind(this);
 
-    this.interval = setInterval(this.handle.bind(this), 100);
+    this.interval = setInterval(this.handle.bind(this), 1000);
 
     return this;
   }
