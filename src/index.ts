@@ -1,17 +1,19 @@
 import { ChannelType } from "./types";
 
-export class Client {
+export class ClientProvider {
   private socket: WebSocket | null = null;
   private url: string;
   private token?: string;
   private lastReqTime: number;
   private lastRpsTime: number;
+  private autoConn: boolean;
 
   constructor(url: string, token?: string) {
     this.url = url;
     this.token = token;
     this.lastReqTime = 0;
     this.lastRpsTime = 0;
+    this.autoConn = true;
   }
 
   start(): void {
@@ -45,24 +47,33 @@ export class Client {
     return true;
   }
 
-  stop(): void {
+  stop(autoConn: boolean = true): void {
     if (this.socket) {
       this.socket.close();
       this.socket = null;
     }
+    this.autoConn = autoConn;
+    console.log("Websocket已断开");
   }
 
-  private sendMessage(message: any): void {
-    if (this.socket && this.socket.readyState === WebSocket.OPEN) {
-      this.socket.send(JSON.stringify(message));
+  private onOpen(): void {
+    console.log("Websocket已连接");
+  }
+
+  private onClose(): void {
+    this.stop();
+    if (this.autoConn) {
+      setTimeout(() => {
+        this.start();
+      }, 1000);
     }
   }
 
-  private onOpen(): void {}
+  private onMessage(event: MessageEvent): void {
+    console.log("Websocket收到消息:", event.data);
+  }
 
-  private onClose(): void {}
-
-  private onMessage(): void {}
-
-  private onError(): void {}
+  private onError(event: Event): void {
+    console.error("Websocket连接出现错误:", event);
+  }
 }
