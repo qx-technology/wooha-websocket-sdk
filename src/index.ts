@@ -1,4 +1,9 @@
-export class ClientProvider {
+export interface Client {
+  start(): Client;
+  stop(): Client;
+}
+
+class ClientProvider implements Client {
   private socket: WebSocket | null = null;
   private url: string;
   private token?: string;
@@ -14,7 +19,7 @@ export class ClientProvider {
     this.autoConn = true;
   }
 
-  start(): void {
+  start(): Client {
     this.stop();
 
     const now = Date.now();
@@ -32,26 +37,18 @@ export class ClientProvider {
     this.socket.onclose = this.onClose.bind(this);
     this.socket.onmessage = this.onMessage.bind(this);
     this.socket.onerror = this.onError.bind(this);
+
+    return this;
   }
 
-  isTimeout(): boolean {
-    const now = Date.now();
-    if (this.lastReqTime + 30000 > now) {
-      return false;
-    }
-    if (this.lastRpsTime + 30000 > now) {
-      return false;
-    }
-    return true;
-  }
-
-  stop(autoConn: boolean = true): void {
+  stop(autoConn: boolean = true): Client {
     if (this.socket) {
       this.socket.close();
       this.socket = null;
       console.log("Websocket已断开");
     }
     this.autoConn = autoConn;
+    return this;
   }
 
   private onOpen(): void {
@@ -74,4 +71,19 @@ export class ClientProvider {
   private onError(event: Event): void {
     console.error("Websocket连接出现错误:", event);
   }
+
+  private isTimeout(): boolean {
+    const now = Date.now();
+    if (this.lastReqTime + 30000 > now) {
+      return false;
+    }
+    if (this.lastRpsTime + 30000 > now) {
+      return false;
+    }
+    return true;
+  }
+}
+
+export function newClient(url: string, token?: string): Client {
+  return new ClientProvider(url, token);
 }
