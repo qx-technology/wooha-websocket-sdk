@@ -1,6 +1,8 @@
 export interface Client {
+  /// 启动连接
   start(): Client;
-  stop(): Client;
+  /// 断开连接
+  stop(autoConn?: boolean): Client;
 }
 
 class ClientProvider implements Client {
@@ -10,6 +12,8 @@ class ClientProvider implements Client {
   private lastReqTime: number;
   private lastRpsTime: number;
   private autoConn: boolean;
+  private isRunning: boolean;
+  private interval: NodeJS.Timeout | null;
 
   constructor(url: string, token?: string) {
     this.url = url;
@@ -17,6 +21,8 @@ class ClientProvider implements Client {
     this.lastReqTime = 0;
     this.lastRpsTime = 0;
     this.autoConn = true;
+    this.isRunning = false;
+    this.interval = null;
   }
 
   start(): Client {
@@ -38,6 +44,8 @@ class ClientProvider implements Client {
     this.socket.onmessage = this.onMessage.bind(this);
     this.socket.onerror = this.onError.bind(this);
 
+    this.interval = setInterval(this.handle.bind(this), 100);
+
     return this;
   }
 
@@ -46,6 +54,9 @@ class ClientProvider implements Client {
       this.socket.close();
       this.socket = null;
       console.log("Websocket已断开");
+      this.isRunning = false;
+      clearInterval(this.interval!);
+      this.interval = null;
     }
     this.autoConn = autoConn;
     return this;
@@ -53,6 +64,7 @@ class ClientProvider implements Client {
 
   private onOpen(): void {
     console.log("Websocket已连接");
+    this.isRunning = true;
   }
 
   private onClose(): void {
@@ -81,6 +93,31 @@ class ClientProvider implements Client {
       return false;
     }
     return true;
+  }
+
+  private handle(): void {
+    if (!this.isRunning) {
+      return;
+    }
+    if (this.isTimeout()) {
+      this.stop();
+      return;
+    }
+
+    this.socket?.send(
+      JSON.stringify([
+        {
+          channel: "RoomActivity",
+          version: "1.0.0",
+          seq: "0",
+          ts: Date.now(),
+          uid: `${Date.now()}`,
+          params: {
+            roomId: "1"
+          }
+        }
+      ])
+    );
   }
 }
 
