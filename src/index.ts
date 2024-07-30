@@ -1,5 +1,3 @@
-import { ChannelType } from "./types";
-
 export class ClientProvider {
   private socket: WebSocket | null = null;
   private url: string;
@@ -51,9 +49,9 @@ export class ClientProvider {
     if (this.socket) {
       this.socket.close();
       this.socket = null;
+      console.log("Websocket已断开");
     }
     this.autoConn = autoConn;
-    console.log("Websocket已断开");
   }
 
   private onOpen(): void {
