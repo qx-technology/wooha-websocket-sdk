@@ -119,8 +119,14 @@ class ClientProvider implements Client {
   private interval: NodeJS.Timeout | null;
   private callback: EventHandle;
   private requests: RequestMessage[];
+  private showLog: boolean;
 
-  constructor(eventHandle: EventHandle, url: string, token?: string) {
+  constructor(
+    eventHandle: EventHandle,
+    url: string,
+    token?: string,
+    showLog: boolean = false
+  ) {
     this.url = url;
     this.token = token;
     this.lastReqTime = 0;
@@ -130,6 +136,7 @@ class ClientProvider implements Client {
     this.interval = null;
     this.callback = eventHandle;
     this.requests = [];
+    this.showLog = showLog;
   }
 
   start(): Client {
@@ -160,7 +167,7 @@ class ClientProvider implements Client {
     if (this.socket) {
       this.socket.close();
       this.socket = null;
-      console.log("Websocket已断开");
+      if (this.showLog) console.log("Websocket已断开");
       this.isRunning = false;
       clearInterval(this.interval!);
       this.interval = null;
@@ -227,7 +234,7 @@ class ClientProvider implements Client {
   }
 
   private onOpen(): void {
-    console.log("Websocket已连接");
+    if (this.showLog) console.log("Websocket已连接");
     this.isRunning = true;
   }
 
@@ -242,7 +249,7 @@ class ClientProvider implements Client {
 
   private onMessage(event: MessageEvent): void {
     const responses: ResponseMessage<any, Message<any>>[] = JSON.parse(event.data);
-    console.log("Websocket收到消息:", responses);
+    if (this.showLog) console.log("Websocket收到消息:", responses);
     for (const response of responses) {
       const request = this.requests.find((request) => request.uid === response.uid);
       if (!request) continue;
@@ -331,7 +338,7 @@ class ClientProvider implements Client {
   }
 
   private onError(event: Event): void {
-    console.error("Websocket连接出现错误:", event);
+    if (this.showLog) console.error("Websocket连接出现错误:", event);
   }
 
   private isTimeout(): boolean {
@@ -350,7 +357,7 @@ class ClientProvider implements Client {
 
     for (const request of this.requests) request.ts = Date.now();
     if (this.requests.length > 0) {
-      console.log("Websocket发送消息:", this.requests);
+      if (this.showLog) console.log("Websocket发送消息:", this.requests);
       this.socket?.send(JSON.stringify(this.requests));
     }
   }
