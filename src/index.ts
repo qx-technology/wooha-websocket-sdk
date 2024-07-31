@@ -13,7 +13,8 @@ import {
   RoomGroupBuyingBiddingSellerCounteroffer,
   RoomGroupBuyingBiddingBuyerOfferRejected,
   RequestMessage,
-  RoomBasicRequestParam
+  RoomBasicRequestParam,
+  ChannelType
 } from "./types";
 
 /// 客户端
@@ -21,8 +22,11 @@ export interface Client {
   /// 启动
   start(): Client;
   /// 停止
-  /// autoConn : 是否自动重连
   stop(autoConn?: boolean): Client;
+  /// 进入房间
+  enterRoom(roomId: string): Client;
+  /// 离开房间
+  leaveRoom(roomId: string): Client;
 }
 
 /// 事件
@@ -124,6 +128,49 @@ class ClientProvider implements Client {
       this.interval = null;
     }
     this.autoConn = autoConn;
+    return this;
+  }
+
+  enterRoom(roomId: string): Client {
+    // 订阅房间详情
+    this.requests.push(<RequestMessage<RoomBasicRequestParam>>{
+      channel: ChannelType.RoomDetail,
+      version: "1.0",
+      seq: "0",
+      ts: Date.now(),
+      uid: "0",
+      params: { roomId }
+    });
+    // 订阅房间投票
+    this.requests.push(<RequestMessage<RoomBasicRequestParam>>{
+      channel: ChannelType.RoomVote,
+      version: "1.0",
+      seq: "0",
+      ts: Date.now(),
+      uid: "0",
+      params: { roomId }
+    });
+    // 订阅房间活动消息
+    this.requests.push(<RequestMessage<RoomBasicRequestParam>>{
+      channel: ChannelType.RoomActivity,
+      version: "1.0",
+      seq: "0",
+      ts: Date.now(),
+      uid: "0",
+      params: { roomId }
+    });
+    // 订阅房间用户活动消息
+    this.requests.push(<RequestMessage<RoomBasicRequestParam>>{
+      channel: ChannelType.RoomUserActivity,
+      version: "1.0",
+      seq: "0",
+      ts: Date.now(),
+      uid: "0",
+      params: { roomId }
+    });
+    return this;
+  }
+  leaveRoom(roomId: string): Client {
     return this;
   }
 
