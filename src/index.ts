@@ -332,8 +332,7 @@ class ClientProvider implements Client {
           }
           break;
       }
-
-      request.seq = response.rpsSeq;
+      if (response.rpsSeq !== "0") request.seq = response.rpsSeq;
     }
   }
 
