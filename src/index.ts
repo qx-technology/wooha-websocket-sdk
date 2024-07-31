@@ -160,14 +160,16 @@ class ClientProvider implements Client {
       params: { roomId }
     });
     // 订阅房间用户活动消息
-    this.requests.push(<RequestMessage<RoomBasicRequestParam>>{
-      channel: ChannelType.RoomUserActivity,
-      version: "1.0",
-      seq: "0",
-      ts: Date.now(),
-      uid: "0",
-      params: { roomId }
-    });
+    if (this.token) {
+      this.requests.push(<RequestMessage<RoomBasicRequestParam>>{
+        channel: ChannelType.RoomUserActivity,
+        version: "1.0",
+        seq: "0",
+        ts: Date.now(),
+        uid: "0",
+        params: { roomId }
+      });
+    }
     return this;
   }
   leaveRoom(roomId: string): Client {
@@ -211,7 +213,11 @@ class ClientProvider implements Client {
     }
 
     for (const request of this.requests) request.ts = Date.now();
-    if (this.requests.length > 0) this.socket?.send(JSON.stringify(this.requests));
+    if (this.requests.length > 0) {
+      const msg = JSON.stringify(this.requests);
+      console.log("Websocket发送消息:", msg);
+      this.socket?.send(msg);
+    }
   }
 }
 

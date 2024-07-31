@@ -7,6 +7,7 @@ const token =
 function main() {
   const client = newClient(null!, url, token);
   client.start();
+  client.enterRoom("1");
 }
 
 if (require.main === module) {
