@@ -15,7 +15,7 @@ export enum ChannelType {
 }
 
 /// 请求消息
-export interface RequestMessage<P = any> {
+export interface RequestMessage {
   /// 通道类型
   channel: ChannelType;
   /// 请求版本
@@ -27,11 +27,11 @@ export interface RequestMessage<P = any> {
   /// 请求唯一ID
   uid: string;
   /// 请求参数
-  params: P;
+  params: Map<string, any>;
 }
 
 /// 响应消息
-export interface ResponseMessage<P = any, D = any> {
+export interface ResponseMessage<D = any> {
   /// 通道类型
   channel: ChannelType;
   /// 请求版本
@@ -43,13 +43,13 @@ export interface ResponseMessage<P = any, D = any> {
   /// 请求唯一ID
   uid: string;
   /// 请求参数
-  params: P;
+  params: Map<string, any>;
   /// 响应序号
   rpsSeq: number;
   /// 响应时间戳
   rpsTs: number;
   /// 响应数据
-  data: D;
+  data: D[];
 }
 
 // ============================================================ //
