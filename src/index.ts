@@ -75,8 +75,8 @@ class ClientProvider implements Client {
   private autoConn: boolean;
   private isRunning: boolean;
   private interval: NodeJS.Timeout | null;
-  private eventHandle: EventHandle;
-  private channels: RequestMessage[];
+  private callback: EventHandle;
+  private requests: RequestMessage[];
 
   constructor(eventHandle: EventHandle, url: string, token?: string) {
     this.url = url;
@@ -86,8 +86,8 @@ class ClientProvider implements Client {
     this.autoConn = true;
     this.isRunning = false;
     this.interval = null;
-    this.eventHandle = eventHandle;
-    this.channels = [];
+    this.callback = eventHandle;
+    this.requests = [];
   }
 
   start(): Client {
@@ -151,38 +151,20 @@ class ClientProvider implements Client {
 
   private isTimeout(): boolean {
     const now = Date.now();
-    if (this.lastReqTime + 30000 > now) {
-      return false;
-    }
-    if (this.lastRpsTime + 30000 > now) {
-      return false;
-    }
+    if (this.lastReqTime + 30000 > now) return false;
+    if (this.lastRpsTime + 30000 > now) return false;
     return true;
   }
 
   private handle(): void {
-    if (!this.isRunning) {
-      return;
-    }
+    if (!this.isRunning) return;
     if (this.isTimeout()) {
       this.stop();
       return;
     }
 
-    this.socket?.send(
-      JSON.stringify([
-        {
-          channel: "RoomActivity",
-          version: "1.0.0",
-          seq: "0",
-          ts: Date.now(),
-          uid: `${Date.now()}`,
-          params: {
-            roomId: "1"
-          }
-        }
-      ])
-    );
+    for (const request of this.requests) request.ts = Date.now();
+    if (this.requests.length > 0) this.socket?.send(JSON.stringify(this.requests));
   }
 }
 
