@@ -158,7 +158,7 @@ class ClientProvider implements Client {
     this.socket.onmessage = this.onMessage.bind(this);
     this.socket.onerror = this.onError.bind(this);
 
-    this.interval = setInterval(this.handle.bind(this), 1000);
+    this.interval = setInterval(this.handle.bind(this), 100);
 
     return this;
   }
