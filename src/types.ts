@@ -15,7 +15,7 @@ export enum ChannelType {
 }
 
 /// 请求消息
-export interface RequestMessage {
+export interface RequestMessage<P = any> {
   /// 通道类型
   channel: ChannelType;
   /// 请求版本
@@ -27,11 +27,11 @@ export interface RequestMessage {
   /// 请求唯一ID
   uid: string;
   /// 请求参数
-  params: Map<string, any>;
+  params: P;
 }
 
 /// 响应消息
-export interface ResponseMessage<D = any> {
+export interface ResponseMessage<P = any, D = any> {
   /// 通道类型
   channel: ChannelType;
   /// 请求版本
@@ -43,7 +43,7 @@ export interface ResponseMessage<D = any> {
   /// 请求唯一ID
   uid: string;
   /// 请求参数
-  params: Map<string, any>;
+  params: P;
   /// 响应序号
   rpsSeq: number;
   /// 响应时间戳
@@ -105,6 +105,12 @@ export interface Message<D = any> {
 // ============================================================ //
 // 房间团购
 // ============================================================ //
+
+/// 房间请求参数
+export interface RoomBasicRequestParam {
+  /// 房间ID
+  roomId: string;
+}
 
 /// 房间团购 详情
 export interface RoomGroupBuyingDetail {

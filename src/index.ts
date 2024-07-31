@@ -11,7 +11,9 @@ import {
   RoomGroupBuyingBiddingBuyerInitiatesOffer,
   RoomGroupBuyingBiddingSellerReceivesOffer,
   RoomGroupBuyingBiddingSellerCounteroffer,
-  RoomGroupBuyingBiddingBuyerOfferRejected
+  RoomGroupBuyingBiddingBuyerOfferRejected,
+  RequestMessage,
+  RoomBasicRequestParam
 } from "./types";
 
 /// 客户端
@@ -26,27 +28,42 @@ export interface Client {
 /// 事件
 export interface EventHandle {
   /// 房间团购 详情
-  OnRoomGroupBuyingDetail(client: Client, message: ResponseMessage<Message<RoomGroupBuyingDetail>>): void;
+  OnRoomGroupBuyingDetail(client: Client, message: ResponseMessage<RoomBasicRequestParam, Message<RoomGroupBuyingDetail>>): void;
   /// 房间团购 投票
-  OnRoomGroupBuyingVote(client: Client, message: ResponseMessage<Message<RoomGroupBuyingVote>>): void;
+  OnRoomGroupBuyingVote(client: Client, message: ResponseMessage<RoomBasicRequestParam, Message<RoomGroupBuyingVote>>): void;
   /// 房间团购 开始
-  OnRoomGroupBuyingStart(client: Client, message: ResponseMessage<Message<RoomGroupBuyingStart>>): void;
+  OnRoomGroupBuyingStart(client: Client, message: ResponseMessage<RoomBasicRequestParam, Message<RoomGroupBuyingStart>>): void;
   /// 房间团购 正在开奖
-  OnRoomGroupBuyingLotteryOpening(client: Client, message: ResponseMessage<Message<RoomGroupBuyingLotteryOpening>>): void;
+  OnRoomGroupBuyingLotteryOpening(client: Client, message: ResponseMessage<RoomBasicRequestParam, Message<RoomGroupBuyingLotteryOpening>>): void;
   /// 房间团购 中奖
-  OnRoomGroupBuyingWinning(client: Client, message: ResponseMessage<Message<RoomGroupBuyingWinning>>): void;
+  OnRoomGroupBuyingWinning(client: Client, message: ResponseMessage<RoomBasicRequestParam, Message<RoomGroupBuyingWinning>>): void;
   /// 房间团购 竞拍还价所有人
-  OnRoomGroupBuyingBiddingCounteroffer(client: Client, message: ResponseMessage<Message<RoomGroupBuyingBiddingCounteroffer>>): void;
+  OnRoomGroupBuyingBiddingCounteroffer(
+    client: Client,
+    message: ResponseMessage<RoomBasicRequestParam, Message<RoomGroupBuyingBiddingCounteroffer>>
+  ): void;
   /// 房间团购 竞拍成交
-  OnRoomGroupBuyingBiddingDeal(client: Client, message: ResponseMessage<Message<RoomGroupBuyingBiddingDeal>>): void;
+  OnRoomGroupBuyingBiddingDeal(client: Client, message: ResponseMessage<RoomBasicRequestParam, Message<RoomGroupBuyingBiddingDeal>>): void;
   /// 房间团购 竞拍买家发起报价(私人)
-  OnRoomGroupBuyingBiddingBuyerInitiatesOffer(client: Client, message: ResponseMessage<Message<RoomGroupBuyingBiddingBuyerInitiatesOffer>>): void;
+  OnRoomGroupBuyingBiddingBuyerInitiatesOffer(
+    client: Client,
+    message: ResponseMessage<RoomBasicRequestParam, Message<RoomGroupBuyingBiddingBuyerInitiatesOffer>>
+  ): void;
   /// 房间团购 竞拍卖家收到报价(私人)
-  OnRoomGroupBuyingBiddingSellerReceivesOffer(client: Client, message: ResponseMessage<Message<RoomGroupBuyingBiddingSellerReceivesOffer>>): void;
+  OnRoomGroupBuyingBiddingSellerReceivesOffer(
+    client: Client,
+    message: ResponseMessage<RoomBasicRequestParam, Message<RoomGroupBuyingBiddingSellerReceivesOffer>>
+  ): void;
   /// 房间团购 竞拍买家收到还价(私人)
-  OnRoomGroupBuyingBiddingSellerCounteroffer(client: Client, message: ResponseMessage<Message<RoomGroupBuyingBiddingSellerCounteroffer>>): void;
+  OnRoomGroupBuyingBiddingSellerCounteroffer(
+    client: Client,
+    message: ResponseMessage<RoomBasicRequestParam, Message<RoomGroupBuyingBiddingSellerCounteroffer>>
+  ): void;
   /// 房间团购 竞拍买家报价被拒(私人)
-  OnRoomGroupBuyingBiddingBuyerOfferRejected(client: Client, message: ResponseMessage<Message<RoomGroupBuyingBiddingBuyerOfferRejected>>): void;
+  OnRoomGroupBuyingBiddingBuyerOfferRejected(
+    client: Client,
+    message: ResponseMessage<RoomBasicRequestParam, Message<RoomGroupBuyingBiddingBuyerOfferRejected>>
+  ): void;
 }
 
 class ClientProvider implements Client {
@@ -59,6 +76,7 @@ class ClientProvider implements Client {
   private isRunning: boolean;
   private interval: NodeJS.Timeout | null;
   private eventHandle: EventHandle;
+  private channels: RequestMessage[];
 
   constructor(eventHandle: EventHandle, url: string, token?: string) {
     this.url = url;
@@ -69,6 +87,7 @@ class ClientProvider implements Client {
     this.isRunning = false;
     this.interval = null;
     this.eventHandle = eventHandle;
+    this.channels = [];
   }
 
   start(): Client {
