@@ -147,7 +147,20 @@ export interface RoomGroupBuyingVote {
 }
 
 /// 房间团购 下一个商品
-export interface RoomGroupBuyingNextProduct {}
+export interface RoomGroupBuyingNextProduct {
+  /// 团购ID
+  groupBuyingId: string;
+  /// 商品ID
+  productId: string;
+  /// 商品名
+  productName: string;
+  /// 商品图片
+  productImage: string;
+  /// SKUID
+  skuId: string;
+  /// 开始时间
+  beginTime: string;
+}
 
 /// 房间团购 开始
 export interface RoomGroupBuyingStart {}
@@ -183,14 +196,6 @@ export interface RoomGroupBuyingWinning {
 export interface RoomGroupBuyingBiddingCounteroffer {
   /// 竞拍ID
   auctionId: string;
-  /// 卖方用户ID
-  sellerUserId: string;
-  /// 卖方用户名
-  sellerUsername: string;
-  /// 卖方用户头像
-  sellerUserAvatar: string;
-  /// 卖方用户头像框
-  sellerUserAvatarFrame: string;
   /// 还价金额
   amount: number;
 }
@@ -199,30 +204,30 @@ export interface RoomGroupBuyingBiddingCounteroffer {
 export interface RoomGroupBuyingBiddingDeal {
   /// 竞拍ID
   auctionId: string;
-  /// 成交用户ID
-  dealUserId: string;
-  /// 成交用户名
-  dealUsername: string;
-  /// 成交用户头像
-  dealUserAvatar: string;
-  /// 成交用户头像框
-  dealUserAvatarFrame: string;
-  /// 成交金额
+  /// 出价用户ID
+  userId: string;
+  /// 金额
   amount: number;
+  /// 卖方用户id
+  sellerUserId: string;
+  /// 卖方用户名
+  sellerUsername: string;
+  /// 卖方用户头像
+  sellerUserAvatar: string;
+  /// 卖方用户头像框
+  sellerUserAvatarFrame: string;
+  /// 商品名称
+  productName: string;
+  /// 商品图片
+  productImage: string;
 }
 
 /// 房间团购 竞拍买家发起报价(私人)
 export interface RoomGroupBuyingBiddingBuyerInitiatesOffer {
   /// 竞拍ID
   auctionId: string;
-  /// 买方用户ID
-  buyerUserId: string;
-  /// 买方用户名
-  buyerUsername: string;
-  /// 买方用户头像
-  buyerUserAvatar: string;
-  /// 买方用户头像框
-  buyerUserAvatarFrame: string;
+  /// 出价用户ID
+  userId: string;
   /// 金额
   amount: number;
 }
@@ -231,14 +236,8 @@ export interface RoomGroupBuyingBiddingBuyerInitiatesOffer {
 export interface RoomGroupBuyingBiddingSellerReceivesOffer {
   /// 竞拍ID
   auctionId: string;
-  /// 买方用户ID
-  buyerUserId: string;
-  /// 买方用户名
-  buyerUsername: string;
-  /// 买方用户头像
-  buyerUserAvatar: string;
-  /// 买方用户头像框
-  buyerUserAvatarFrame: string;
+  /// 出价用户ID
+  userId: string;
   /// 金额
   amount: number;
 }
@@ -247,14 +246,6 @@ export interface RoomGroupBuyingBiddingSellerReceivesOffer {
 export interface RoomGroupBuyingBiddingSellerCounteroffer {
   /// 竞拍ID
   auctionId: string;
-  /// 卖方用户ID
-  sellerUserId: string;
-  /// 卖方用户名
-  sellerUsername: string;
-  /// 卖方用户头像
-  sellerUserAvatar: string;
-  /// 卖方用户头像框
-  sellerUserAvatarFrame: string;
   /// 金额
   amount: number;
 }
@@ -263,12 +254,8 @@ export interface RoomGroupBuyingBiddingSellerCounteroffer {
 export interface RoomGroupBuyingBiddingBuyerOfferRejected {
   /// 竞拍ID
   auctionId: string;
-  /// 卖方用户ID
-  sellerUserId: string;
-  /// 卖方用户名
-  sellerUsername: string;
-  /// 卖方用户头像
-  sellerUserAvatar: string;
-  /// 卖方用户头像框
-  sellerUserAvatarFrame: string;
+  /// 出价用户ID
+  userId: string;
+  /// 金额
+  amount: number;
 }
