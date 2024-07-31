@@ -167,6 +167,6 @@ class ClientProvider implements Client {
   }
 }
 
-export function newClient(url: string, token?: string): Client {
-  return new ClientProvider(url, token);
+export function newClient(eventHandle: EventHandle, url: string, token?: string): Client {
+  return new ClientProvider(eventHandle, url, token);
 }
