@@ -240,7 +240,10 @@ class ClientProvider implements Client {
   }
 
   private onMessage(event: MessageEvent): void {
-    console.log("Websocket收到消息:", event.data);
+    const responses: ResponseMessage<any, Message<any>>[] = JSON.parse(event.data);
+    console.log("Websocket收到消息:", responses);
+    for (const response of responses) {
+    }
   }
 
   private onError(event: Event): void {
@@ -263,9 +266,8 @@ class ClientProvider implements Client {
 
     for (const request of this.requests) request.ts = Date.now();
     if (this.requests.length > 0) {
-      const msg = JSON.stringify(this.requests);
-      console.log("Websocket发送消息:", msg);
-      this.socket?.send(msg);
+      console.log("Websocket发送消息:", this.requests);
+      this.socket?.send(JSON.stringify(this.requests));
     }
   }
 }
