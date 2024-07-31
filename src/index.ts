@@ -14,7 +14,9 @@ import {
   RoomGroupBuyingBiddingBuyerOfferRejected,
   RequestMessage,
   RoomBasicRequestParam,
-  ChannelType
+  ChannelType,
+  ServiceType,
+  RoomGroupBuyingNextProduct
 } from "./types";
 import { v4 as uuid } from "uuid";
 
@@ -35,75 +37,74 @@ export interface EventHandle {
   /// 房间团购 详情
   OnRoomGroupBuyingDetail(
     client: Client,
-    message: ResponseMessage<RoomBasicRequestParam, Message<RoomGroupBuyingDetail>>
+    param: RoomBasicRequestParam,
+    message: Message<RoomGroupBuyingDetail>
   ): void;
   /// 房间团购 投票
   OnRoomGroupBuyingVote(
     client: Client,
-    message: ResponseMessage<RoomBasicRequestParam, Message<RoomGroupBuyingVote>>
+    param: RoomBasicRequestParam,
+    message: Message<RoomGroupBuyingVote>
+  ): void;
+  /// 房间团购 下一个商品
+  OnRoomGroupBuyingNextProduct(
+    client: Client,
+    param: RoomBasicRequestParam,
+    message: Message<RoomGroupBuyingNextProduct>
   ): void;
   /// 房间团购 开始
   OnRoomGroupBuyingStart(
     client: Client,
-    message: ResponseMessage<RoomBasicRequestParam, Message<RoomGroupBuyingStart>>
+    param: RoomBasicRequestParam,
+    message: Message<RoomGroupBuyingStart>
   ): void;
   /// 房间团购 正在开奖
   OnRoomGroupBuyingLotteryOpening(
     client: Client,
-    message: ResponseMessage<
-      RoomBasicRequestParam,
-      Message<RoomGroupBuyingLotteryOpening>
-    >
+    param: RoomBasicRequestParam,
+    message: Message<RoomGroupBuyingLotteryOpening>
   ): void;
   /// 房间团购 中奖
   OnRoomGroupBuyingWinning(
     client: Client,
-    message: ResponseMessage<RoomBasicRequestParam, Message<RoomGroupBuyingWinning>>
+    param: RoomBasicRequestParam,
+    message: Message<RoomGroupBuyingWinning>
   ): void;
   /// 房间团购 竞拍还价所有人
   OnRoomGroupBuyingBiddingCounteroffer(
     client: Client,
-    message: ResponseMessage<
-      RoomBasicRequestParam,
-      Message<RoomGroupBuyingBiddingCounteroffer>
-    >
+    param: RoomBasicRequestParam,
+    message: Message<RoomGroupBuyingBiddingCounteroffer>
   ): void;
   /// 房间团购 竞拍成交
   OnRoomGroupBuyingBiddingDeal(
     client: Client,
-    message: ResponseMessage<RoomBasicRequestParam, Message<RoomGroupBuyingBiddingDeal>>
+    param: RoomBasicRequestParam,
+    message: Message<RoomGroupBuyingBiddingDeal>
   ): void;
   /// 房间团购 竞拍买家发起报价(私人)
   OnRoomGroupBuyingBiddingBuyerInitiatesOffer(
     client: Client,
-    message: ResponseMessage<
-      RoomBasicRequestParam,
-      Message<RoomGroupBuyingBiddingBuyerInitiatesOffer>
-    >
+    param: RoomBasicRequestParam,
+    message: Message<RoomGroupBuyingBiddingBuyerInitiatesOffer>
   ): void;
   /// 房间团购 竞拍卖家收到报价(私人)
   OnRoomGroupBuyingBiddingSellerReceivesOffer(
     client: Client,
-    message: ResponseMessage<
-      RoomBasicRequestParam,
-      Message<RoomGroupBuyingBiddingSellerReceivesOffer>
-    >
+    param: RoomBasicRequestParam,
+    message: Message<RoomGroupBuyingBiddingSellerReceivesOffer>
   ): void;
   /// 房间团购 竞拍买家收到还价(私人)
   OnRoomGroupBuyingBiddingSellerCounteroffer(
     client: Client,
-    message: ResponseMessage<
-      RoomBasicRequestParam,
-      Message<RoomGroupBuyingBiddingSellerCounteroffer>
-    >
+    param: RoomBasicRequestParam,
+    message: Message<RoomGroupBuyingBiddingSellerCounteroffer>
   ): void;
   /// 房间团购 竞拍买家报价被拒(私人)
   OnRoomGroupBuyingBiddingBuyerOfferRejected(
     client: Client,
-    message: ResponseMessage<
-      RoomBasicRequestParam,
-      Message<RoomGroupBuyingBiddingBuyerOfferRejected>
-    >
+    param: RoomBasicRequestParam,
+    message: Message<RoomGroupBuyingBiddingBuyerOfferRejected>
   ): void;
 }
 
@@ -243,6 +244,89 @@ class ClientProvider implements Client {
     const responses: ResponseMessage<any, Message<any>>[] = JSON.parse(event.data);
     console.log("Websocket收到消息:", responses);
     for (const response of responses) {
+      const request = this.requests.find((request) => request.uid === response.uid);
+      if (!request) continue;
+
+      switch (response.channel) {
+        case ChannelType.RoomDetail:
+          for (const message of response.data) {
+            this.callback.OnRoomGroupBuyingDetail(this, request.params, message);
+          }
+          break;
+        case ChannelType.RoomActivity:
+          for (const message of response.data) {
+            switch (message.serviceType) {
+              case ServiceType.RoomGroupBuyingNextProduct:
+                this.callback.OnRoomGroupBuyingNextProduct(this, request.params, message);
+                break;
+              case ServiceType.RoomGroupBuyingStart:
+                this.callback.OnRoomGroupBuyingStart(this, request.params, message);
+                break;
+              case ServiceType.RoomGroupBuyingLotteryOpening:
+                this.callback.OnRoomGroupBuyingLotteryOpening(
+                  this,
+                  request.params,
+                  message
+                );
+                break;
+              case ServiceType.RoomGroupBuyingWinning:
+                this.callback.OnRoomGroupBuyingWinning(this, request.params, message);
+                break;
+              case ServiceType.RoomGroupBuyingBiddingCounteroffer:
+                this.callback.OnRoomGroupBuyingBiddingCounteroffer(
+                  this,
+                  request.params,
+                  message
+                );
+                break;
+              case ServiceType.RoomGroupBuyingBiddingDeal:
+                this.callback.OnRoomGroupBuyingBiddingDeal(this, request.params, message);
+                break;
+            }
+          }
+          break;
+        case ChannelType.RoomVote:
+          for (const message of response.data) {
+            this.callback.OnRoomGroupBuyingVote(this, request.params, message);
+          }
+          break;
+        case ChannelType.RoomUserActivity:
+          for (const message of response.data) {
+            switch (message.serviceType) {
+              case ServiceType.RoomGroupBuyingBiddingBuyerInitiatesOffer:
+                this.callback.OnRoomGroupBuyingBiddingBuyerInitiatesOffer(
+                  this,
+                  request.params,
+                  message
+                );
+                break;
+              case ServiceType.RoomGroupBuyingBiddingSellerReceivesOffer:
+                this.callback.OnRoomGroupBuyingBiddingSellerReceivesOffer(
+                  this,
+                  request.params,
+                  message
+                );
+                break;
+              case ServiceType.RoomGroupBuyingBiddingSellerCounteroffer:
+                this.callback.OnRoomGroupBuyingBiddingSellerCounteroffer(
+                  this,
+                  request.params,
+                  message
+                );
+                break;
+              case ServiceType.RoomGroupBuyingBiddingBuyerOfferRejected:
+                this.callback.OnRoomGroupBuyingBiddingBuyerOfferRejected(
+                  this,
+                  request.params,
+                  message
+                );
+                break;
+            }
+          }
+          break;
+      }
+
+      request.seq = response.rpsSeq;
     }
   }
 

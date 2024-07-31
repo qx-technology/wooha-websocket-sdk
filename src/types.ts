@@ -4,10 +4,10 @@
 
 /// 通道类型
 export enum ChannelType {
-  /// 房间活动消息
-  RoomActivity = "RoomActivity",
   /// 房间详情消息
   RoomDetail = "RoomDetail",
+  /// 房间活动消息
+  RoomActivity = "RoomActivity",
   /// 房间投票消息
   RoomVote = "RoomVote",
   /// 房间用户活动消息
@@ -45,7 +45,7 @@ export interface ResponseMessage<P = any, D = any> {
   /// 请求参数
   params: P;
   /// 响应序号
-  rpsSeq: number;
+  rpsSeq: string;
   /// 响应时间戳
   rpsTs: number;
   /// 响应数据
@@ -145,6 +145,9 @@ export interface RoomGroupBuyingVote {
   /// 投票数
   tickets: number;
 }
+
+/// 房间团购 下一个商品
+export interface RoomGroupBuyingNextProduct {}
 
 /// 房间团购 开始
 export interface RoomGroupBuyingStart {}
