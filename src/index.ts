@@ -363,6 +363,11 @@ class ClientProvider implements Client {
   }
 }
 
-export function newClient(eventHandle: EventHandle, url: string, token?: string): Client {
-  return new ClientProvider(eventHandle, url, token);
+export function newClient(
+  eventHandle: EventHandle,
+  url: string,
+  token?: string,
+  showLog?: boolean
+): Client {
+  return new ClientProvider(eventHandle, url, token, showLog);
 }
