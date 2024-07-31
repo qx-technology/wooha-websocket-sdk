@@ -33,41 +33,77 @@ export interface Client {
 /// 事件
 export interface EventHandle {
   /// 房间团购 详情
-  OnRoomGroupBuyingDetail(client: Client, message: ResponseMessage<RoomBasicRequestParam, Message<RoomGroupBuyingDetail>>): void;
+  OnRoomGroupBuyingDetail(
+    client: Client,
+    message: ResponseMessage<RoomBasicRequestParam, Message<RoomGroupBuyingDetail>>
+  ): void;
   /// 房间团购 投票
-  OnRoomGroupBuyingVote(client: Client, message: ResponseMessage<RoomBasicRequestParam, Message<RoomGroupBuyingVote>>): void;
+  OnRoomGroupBuyingVote(
+    client: Client,
+    message: ResponseMessage<RoomBasicRequestParam, Message<RoomGroupBuyingVote>>
+  ): void;
   /// 房间团购 开始
-  OnRoomGroupBuyingStart(client: Client, message: ResponseMessage<RoomBasicRequestParam, Message<RoomGroupBuyingStart>>): void;
+  OnRoomGroupBuyingStart(
+    client: Client,
+    message: ResponseMessage<RoomBasicRequestParam, Message<RoomGroupBuyingStart>>
+  ): void;
   /// 房间团购 正在开奖
-  OnRoomGroupBuyingLotteryOpening(client: Client, message: ResponseMessage<RoomBasicRequestParam, Message<RoomGroupBuyingLotteryOpening>>): void;
+  OnRoomGroupBuyingLotteryOpening(
+    client: Client,
+    message: ResponseMessage<
+      RoomBasicRequestParam,
+      Message<RoomGroupBuyingLotteryOpening>
+    >
+  ): void;
   /// 房间团购 中奖
-  OnRoomGroupBuyingWinning(client: Client, message: ResponseMessage<RoomBasicRequestParam, Message<RoomGroupBuyingWinning>>): void;
+  OnRoomGroupBuyingWinning(
+    client: Client,
+    message: ResponseMessage<RoomBasicRequestParam, Message<RoomGroupBuyingWinning>>
+  ): void;
   /// 房间团购 竞拍还价所有人
   OnRoomGroupBuyingBiddingCounteroffer(
     client: Client,
-    message: ResponseMessage<RoomBasicRequestParam, Message<RoomGroupBuyingBiddingCounteroffer>>
+    message: ResponseMessage<
+      RoomBasicRequestParam,
+      Message<RoomGroupBuyingBiddingCounteroffer>
+    >
   ): void;
   /// 房间团购 竞拍成交
-  OnRoomGroupBuyingBiddingDeal(client: Client, message: ResponseMessage<RoomBasicRequestParam, Message<RoomGroupBuyingBiddingDeal>>): void;
+  OnRoomGroupBuyingBiddingDeal(
+    client: Client,
+    message: ResponseMessage<RoomBasicRequestParam, Message<RoomGroupBuyingBiddingDeal>>
+  ): void;
   /// 房间团购 竞拍买家发起报价(私人)
   OnRoomGroupBuyingBiddingBuyerInitiatesOffer(
     client: Client,
-    message: ResponseMessage<RoomBasicRequestParam, Message<RoomGroupBuyingBiddingBuyerInitiatesOffer>>
+    message: ResponseMessage<
+      RoomBasicRequestParam,
+      Message<RoomGroupBuyingBiddingBuyerInitiatesOffer>
+    >
   ): void;
   /// 房间团购 竞拍卖家收到报价(私人)
   OnRoomGroupBuyingBiddingSellerReceivesOffer(
     client: Client,
-    message: ResponseMessage<RoomBasicRequestParam, Message<RoomGroupBuyingBiddingSellerReceivesOffer>>
+    message: ResponseMessage<
+      RoomBasicRequestParam,
+      Message<RoomGroupBuyingBiddingSellerReceivesOffer>
+    >
   ): void;
   /// 房间团购 竞拍买家收到还价(私人)
   OnRoomGroupBuyingBiddingSellerCounteroffer(
     client: Client,
-    message: ResponseMessage<RoomBasicRequestParam, Message<RoomGroupBuyingBiddingSellerCounteroffer>>
+    message: ResponseMessage<
+      RoomBasicRequestParam,
+      Message<RoomGroupBuyingBiddingSellerCounteroffer>
+    >
   ): void;
   /// 房间团购 竞拍买家报价被拒(私人)
   OnRoomGroupBuyingBiddingBuyerOfferRejected(
     client: Client,
-    message: ResponseMessage<RoomBasicRequestParam, Message<RoomGroupBuyingBiddingBuyerOfferRejected>>
+    message: ResponseMessage<
+      RoomBasicRequestParam,
+      Message<RoomGroupBuyingBiddingBuyerOfferRejected>
+    >
   ): void;
 }
 
@@ -174,6 +210,18 @@ class ClientProvider implements Client {
     return this;
   }
   leaveRoom(roomId: string): Client {
+    this.requests = this.requests.filter(
+      (request) =>
+        !(
+          [
+            ChannelType.RoomActivity,
+            ChannelType.RoomDetail,
+            ChannelType.RoomVote,
+            ChannelType.RoomUserActivity
+          ].includes(request.channel) &&
+          (<RoomBasicRequestParam>request.params).roomId === roomId
+        )
+    );
     return this;
   }
 
