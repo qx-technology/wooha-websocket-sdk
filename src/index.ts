@@ -16,6 +16,7 @@ import {
   RoomBasicRequestParam,
   ChannelType
 } from "./types";
+import { v4 as uuid } from "uuid";
 
 /// 客户端
 export interface Client {
@@ -138,7 +139,7 @@ class ClientProvider implements Client {
       version: "1.0",
       seq: "0",
       ts: Date.now(),
-      uid: "0",
+      uid: uuid(),
       params: { roomId }
     });
     // 订阅房间投票
@@ -147,7 +148,7 @@ class ClientProvider implements Client {
       version: "1.0",
       seq: "0",
       ts: Date.now(),
-      uid: "0",
+      uid: uuid(),
       params: { roomId }
     });
     // 订阅房间活动消息
@@ -156,7 +157,7 @@ class ClientProvider implements Client {
       version: "1.0",
       seq: "0",
       ts: Date.now(),
-      uid: "0",
+      uid: uuid(),
       params: { roomId }
     });
     // 订阅房间用户活动消息
@@ -166,7 +167,7 @@ class ClientProvider implements Client {
         version: "1.0",
         seq: "0",
         ts: Date.now(),
-        uid: "0",
+        uid: uuid(),
         params: { roomId }
       });
     }
