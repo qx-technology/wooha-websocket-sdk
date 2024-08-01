@@ -89,42 +89,42 @@ class MsgCallback implements EventHandle {
     param: RoomBasicRequestParam,
     message: Message<RoomGroupBuyingBiddingCounteroffer>
   ): void {
-    console.log("房间团购竞拍还价所有人事件");
+    console.log("房间团购竞拍还价所有人");
   }
   OnRoomGroupBuyingBiddingDeal(
     client: Client,
     param: RoomBasicRequestParam,
     message: Message<RoomGroupBuyingBiddingDeal>
   ): void {
-    console.log("房间团购竞拍成交事件");
+    console.log("房间团购竞拍成交");
   }
   OnRoomGroupBuyingBiddingBuyerInitiatesOffer(
     client: Client,
     param: RoomBasicRequestParam,
     message: Message<RoomGroupBuyingBiddingBuyerInitiatesOffer>
   ): void {
-    console.log("房间团购竞拍买家发起报价事件");
+    console.log("房间团购竞拍买家发起报价");
   }
   OnRoomGroupBuyingBiddingSellerReceivesOffer(
     client: Client,
     param: RoomBasicRequestParam,
     message: Message<RoomGroupBuyingBiddingSellerReceivesOffer>
   ): void {
-    console.log("房间团购竞拍买家收到报价事件");
+    console.log("房间团购竞拍买家收到报价");
   }
   OnRoomGroupBuyingBiddingSellerCounteroffer(
     client: Client,
     param: RoomBasicRequestParam,
     message: Message<RoomGroupBuyingBiddingSellerCounteroffer>
   ): void {
-    console.log("房间团购竞拍买家收到还价事件");
+    console.log("房间团购竞拍买家收到还价");
   }
   OnRoomGroupBuyingBiddingBuyerOfferRejected(
     client: Client,
     param: RoomBasicRequestParam,
     message: Message<RoomGroupBuyingBiddingBuyerOfferRejected>
   ): void {
-    console.log("房间团购竞拍买家报价被拒事件");
+    console.log("房间团购竞拍买家报价被拒");
   }
 }
 
