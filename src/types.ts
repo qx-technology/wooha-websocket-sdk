@@ -4,14 +4,16 @@
 
 /// 通道类型
 export enum ChannelType {
-  /// 房间详情消息
+  /// 房间详情
   RoomDetail = "RoomDetail",
-  /// 房间活动消息
-  RoomActivity = "RoomActivity",
-  /// 房间投票消息
+  /// 房间团购详情
+  RoomGroupBuying = "RoomGroupBuying",
+  /// 房间消息
+  RoomMessage = "RoomMessage",
+  /// 房间投票
   RoomVote = "RoomVote",
-  /// 房间用户活动消息
-  RoomUserActivity = "RoomUserActivity"
+  /// 房间用户消息
+  RoomUserMessage = "RoomUserMessage"
 }
 
 /// 请求消息
@@ -64,8 +66,10 @@ export enum MessageType {
 
 /// 业务类型
 export enum ServiceType {
-  /// 房间团购 详情
-  RoomGroupBuyingDetail = "RoomGroupBuyingDetail",
+  /// 房间详情
+  RoomDetail = "RoomDetail",
+  /// 房间团购详情
+  RoomGroupBuying = "RoomGroupBuying",
   /// 房间团购 投票
   RoomGroupBuyingVote = "RoomGroupBuyingVote",
   /// 房间团购 下一个商品
@@ -103,17 +107,23 @@ export interface Message<D = any> {
 }
 
 // ============================================================ //
-// 房间团购
+// 房间
 // ============================================================ //
 
 /// 房间请求参数
-export interface RoomBasicRequestParam {
+export interface RoomBasicParam {
   /// 房间ID
   roomId: string;
 }
 
-/// 房间团购 详情
-export interface RoomGroupBuyingDetail {
+/// 房间详情
+export interface RoomDetail {
+  /// 在线人数
+  onlinePeople: number;
+}
+
+/// 房间团购详情
+export interface RoomGroupBuying {
   /// 房间ID
   id: string;
   /// 团购ID
@@ -128,7 +138,7 @@ export interface RoomGroupBuyingDetail {
   voteProgress: number;
 }
 
-/// 房间团购 投票
+/// 房间团购投票
 export interface RoomGroupBuyingVote {
   /// 团购ID
   groupBuyingId: number;
@@ -146,7 +156,7 @@ export interface RoomGroupBuyingVote {
   tickets: number;
 }
 
-/// 房间团购 下一个商品
+/// 房间团购下一个商品
 export interface RoomGroupBuyingNextProduct {
   /// 团购ID
   groupBuyingId: string;
@@ -162,13 +172,13 @@ export interface RoomGroupBuyingNextProduct {
   beginTime: string;
 }
 
-/// 房间团购 开始
+/// 房间团购开始
 export interface RoomGroupBuyingStart {}
 
-/// 房间团购 正在开奖
+/// 房间团购正在开奖
 export interface RoomGroupBuyingLotteryOpening {}
 
-/// 房间团购 中奖
+/// 房间团购中奖
 export interface RoomGroupBuyingWinning {
   /// 中奖用户ID
   winnerUserId: string;
@@ -192,7 +202,7 @@ export interface RoomGroupBuyingWinning {
   auctionId: string;
 }
 
-/// 房间团购 竞拍还价所有人
+/// 房间团购竞拍还价所有人
 export interface RoomGroupBuyingBiddingCounteroffer {
   /// 竞拍ID
   auctionId: string;
@@ -200,7 +210,7 @@ export interface RoomGroupBuyingBiddingCounteroffer {
   amount: number;
 }
 
-/// 房间团购 竞拍成交
+/// 房间团购竞拍成交
 export interface RoomGroupBuyingBiddingDeal {
   /// 竞拍ID
   auctionId: string;
@@ -222,7 +232,7 @@ export interface RoomGroupBuyingBiddingDeal {
   productImage: string;
 }
 
-/// 房间团购 竞拍买家发起报价(私人)
+/// 房间团购竞拍买家发起报价(私人)
 export interface RoomGroupBuyingBiddingBuyerInitiatesOffer {
   /// 竞拍ID
   auctionId: string;
@@ -232,7 +242,7 @@ export interface RoomGroupBuyingBiddingBuyerInitiatesOffer {
   amount: number;
 }
 
-/// 房间团购 竞拍卖家收到报价(私人)
+/// 房间团购竞拍卖家收到报价(私人)
 export interface RoomGroupBuyingBiddingSellerReceivesOffer {
   /// 竞拍ID
   auctionId: string;
@@ -242,7 +252,7 @@ export interface RoomGroupBuyingBiddingSellerReceivesOffer {
   amount: number;
 }
 
-/// 房间团购 竞拍买家收到还价(私人)
+/// 房间团购竞拍买家收到还价(私人)
 export interface RoomGroupBuyingBiddingSellerCounteroffer {
   /// 竞拍ID
   auctionId: string;
@@ -250,7 +260,7 @@ export interface RoomGroupBuyingBiddingSellerCounteroffer {
   amount: number;
 }
 
-/// 房间团购 竞拍买家报价被拒(私人)
+/// 房间团购竞拍买家报价被拒(私人)
 export interface RoomGroupBuyingBiddingBuyerOfferRejected {
   /// 竞拍ID
   auctionId: string;

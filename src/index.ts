@@ -1,7 +1,7 @@
 import {
   Message,
   ResponseMessage,
-  RoomGroupBuyingDetail,
+  RoomGroupBuying,
   RoomGroupBuyingVote,
   RoomGroupBuyingStart,
   RoomGroupBuyingLotteryOpening,
@@ -13,7 +13,7 @@ import {
   RoomGroupBuyingBiddingSellerCounteroffer,
   RoomGroupBuyingBiddingBuyerOfferRejected,
   RequestMessage,
-  RoomBasicRequestParam,
+  RoomBasicParam,
   ChannelType,
   ServiceType,
   RoomGroupBuyingNextProduct
@@ -37,73 +37,73 @@ export interface EventHandle {
   /// 房间团购 详情
   OnRoomGroupBuyingDetail(
     client: Client,
-    param: RoomBasicRequestParam,
-    message: Message<RoomGroupBuyingDetail>
+    param: RoomBasicParam,
+    message: Message<RoomGroupBuying>
   ): void;
   /// 房间团购 投票
   OnRoomGroupBuyingVote(
     client: Client,
-    param: RoomBasicRequestParam,
+    param: RoomBasicParam,
     message: Message<RoomGroupBuyingVote>
   ): void;
   /// 房间团购 下一个商品
   OnRoomGroupBuyingNextProduct(
     client: Client,
-    param: RoomBasicRequestParam,
+    param: RoomBasicParam,
     message: Message<RoomGroupBuyingNextProduct>
   ): void;
   /// 房间团购 开始
   OnRoomGroupBuyingStart(
     client: Client,
-    param: RoomBasicRequestParam,
+    param: RoomBasicParam,
     message: Message<RoomGroupBuyingStart>
   ): void;
   /// 房间团购 正在开奖
   OnRoomGroupBuyingLotteryOpening(
     client: Client,
-    param: RoomBasicRequestParam,
+    param: RoomBasicParam,
     message: Message<RoomGroupBuyingLotteryOpening>
   ): void;
   /// 房间团购 中奖
   OnRoomGroupBuyingWinning(
     client: Client,
-    param: RoomBasicRequestParam,
+    param: RoomBasicParam,
     message: Message<RoomGroupBuyingWinning>
   ): void;
   /// 房间团购 竞拍还价所有人
   OnRoomGroupBuyingBiddingCounteroffer(
     client: Client,
-    param: RoomBasicRequestParam,
+    param: RoomBasicParam,
     message: Message<RoomGroupBuyingBiddingCounteroffer>
   ): void;
   /// 房间团购 竞拍成交
   OnRoomGroupBuyingBiddingDeal(
     client: Client,
-    param: RoomBasicRequestParam,
+    param: RoomBasicParam,
     message: Message<RoomGroupBuyingBiddingDeal>
   ): void;
   /// 房间团购 竞拍买家发起报价(私人)
   OnRoomGroupBuyingBiddingBuyerInitiatesOffer(
     client: Client,
-    param: RoomBasicRequestParam,
+    param: RoomBasicParam,
     message: Message<RoomGroupBuyingBiddingBuyerInitiatesOffer>
   ): void;
   /// 房间团购 竞拍卖家收到报价(私人)
   OnRoomGroupBuyingBiddingSellerReceivesOffer(
     client: Client,
-    param: RoomBasicRequestParam,
+    param: RoomBasicParam,
     message: Message<RoomGroupBuyingBiddingSellerReceivesOffer>
   ): void;
   /// 房间团购 竞拍买家收到还价(私人)
   OnRoomGroupBuyingBiddingSellerCounteroffer(
     client: Client,
-    param: RoomBasicRequestParam,
+    param: RoomBasicParam,
     message: Message<RoomGroupBuyingBiddingSellerCounteroffer>
   ): void;
   /// 房间团购 竞拍买家报价被拒(私人)
   OnRoomGroupBuyingBiddingBuyerOfferRejected(
     client: Client,
-    param: RoomBasicRequestParam,
+    param: RoomBasicParam,
     message: Message<RoomGroupBuyingBiddingBuyerOfferRejected>
   ): void;
 }
@@ -178,7 +178,7 @@ class ClientProvider implements Client {
 
   enterRoom(roomId: string): Client {
     // 订阅房间详情
-    this.requests.push(<RequestMessage<RoomBasicRequestParam>>{
+    this.requests.push(<RequestMessage<RoomBasicParam>>{
       channel: ChannelType.RoomDetail,
       version: "1.0",
       seq: "0",
@@ -187,7 +187,7 @@ class ClientProvider implements Client {
       params: { roomId }
     });
     // 订阅房间投票
-    this.requests.push(<RequestMessage<RoomBasicRequestParam>>{
+    this.requests.push(<RequestMessage<RoomBasicParam>>{
       channel: ChannelType.RoomVote,
       version: "1.0",
       seq: "0",
@@ -196,8 +196,8 @@ class ClientProvider implements Client {
       params: { roomId }
     });
     // 订阅房间活动消息
-    this.requests.push(<RequestMessage<RoomBasicRequestParam>>{
-      channel: ChannelType.RoomActivity,
+    this.requests.push(<RequestMessage<RoomBasicParam>>{
+      channel: ChannelType.RoomMessage,
       version: "1.0",
       seq: "0",
       ts: Date.now(),
@@ -206,8 +206,8 @@ class ClientProvider implements Client {
     });
     // 订阅房间用户活动消息
     if (this.token) {
-      this.requests.push(<RequestMessage<RoomBasicRequestParam>>{
-        channel: ChannelType.RoomUserActivity,
+      this.requests.push(<RequestMessage<RoomBasicParam>>{
+        channel: ChannelType.RoomUserMessage,
         version: "1.0",
         seq: "0",
         ts: Date.now(),
@@ -222,12 +222,12 @@ class ClientProvider implements Client {
       (request) =>
         !(
           [
-            ChannelType.RoomActivity,
+            ChannelType.RoomMessage,
             ChannelType.RoomDetail,
             ChannelType.RoomVote,
-            ChannelType.RoomUserActivity
+            ChannelType.RoomUserMessage
           ].includes(request.channel) &&
-          (<RoomBasicRequestParam>request.params).roomId === roomId
+          (<RoomBasicParam>request.params).roomId === roomId
         )
     );
     return this;
@@ -260,7 +260,7 @@ class ClientProvider implements Client {
             this.callback.OnRoomGroupBuyingDetail(this, request.params, message);
           }
           break;
-        case ChannelType.RoomActivity:
+        case ChannelType.RoomMessage:
           for (const message of response.data) {
             switch (message.serviceType) {
               case ServiceType.RoomGroupBuyingNextProduct:
@@ -297,7 +297,7 @@ class ClientProvider implements Client {
             this.callback.OnRoomGroupBuyingVote(this, request.params, message);
           }
           break;
-        case ChannelType.RoomUserActivity:
+        case ChannelType.RoomUserMessage:
           for (const message of response.data) {
             switch (message.serviceType) {
               case ServiceType.RoomGroupBuyingBiddingBuyerInitiatesOffer:

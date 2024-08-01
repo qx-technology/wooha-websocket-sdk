@@ -1,8 +1,8 @@
 import { newClient, EventHandle, Client } from "./index";
 import {
-  RoomBasicRequestParam,
+  RoomBasicParam,
   Message,
-  RoomGroupBuyingDetail,
+  RoomGroupBuying,
   RoomGroupBuyingVote,
   RoomGroupBuyingNextProduct,
   RoomGroupBuyingStart,
@@ -23,8 +23,8 @@ const token =
 class MsgCallback implements EventHandle {
   OnRoomGroupBuyingDetail(
     client: Client,
-    param: RoomBasicRequestParam,
-    message: Message<RoomGroupBuyingDetail>
+    param: RoomBasicParam,
+    message: Message<RoomGroupBuying>
   ): void {
     const content = message.content;
 
@@ -38,7 +38,7 @@ class MsgCallback implements EventHandle {
   }
   OnRoomGroupBuyingVote(
     client: Client,
-    param: RoomBasicRequestParam,
+    param: RoomBasicParam,
     message: Message<RoomGroupBuyingVote>
   ): void {
     const content = message.content;
@@ -48,7 +48,7 @@ class MsgCallback implements EventHandle {
   }
   OnRoomGroupBuyingNextProduct(
     client: Client,
-    param: RoomBasicRequestParam,
+    param: RoomBasicParam,
     message: Message<RoomGroupBuyingNextProduct>
   ): void {
     const content = message.content;
@@ -62,21 +62,21 @@ class MsgCallback implements EventHandle {
   }
   OnRoomGroupBuyingStart(
     client: Client,
-    param: RoomBasicRequestParam,
+    param: RoomBasicParam,
     message: Message<RoomGroupBuyingStart>
   ): void {
     console.log("房间团购开始");
   }
   OnRoomGroupBuyingLotteryOpening(
     client: Client,
-    param: RoomBasicRequestParam,
+    param: RoomBasicParam,
     message: Message<RoomGroupBuyingLotteryOpening>
   ): void {
     console.log("房间团购开奖中");
   }
   OnRoomGroupBuyingWinning(
     client: Client,
-    param: RoomBasicRequestParam,
+    param: RoomBasicParam,
     message: Message<RoomGroupBuyingWinning>
   ): void {
     const content = message.content;
@@ -86,42 +86,42 @@ class MsgCallback implements EventHandle {
   }
   OnRoomGroupBuyingBiddingCounteroffer(
     client: Client,
-    param: RoomBasicRequestParam,
+    param: RoomBasicParam,
     message: Message<RoomGroupBuyingBiddingCounteroffer>
   ): void {
     console.log("房间团购竞拍还价所有人");
   }
   OnRoomGroupBuyingBiddingDeal(
     client: Client,
-    param: RoomBasicRequestParam,
+    param: RoomBasicParam,
     message: Message<RoomGroupBuyingBiddingDeal>
   ): void {
     console.log("房间团购竞拍成交");
   }
   OnRoomGroupBuyingBiddingBuyerInitiatesOffer(
     client: Client,
-    param: RoomBasicRequestParam,
+    param: RoomBasicParam,
     message: Message<RoomGroupBuyingBiddingBuyerInitiatesOffer>
   ): void {
     console.log("房间团购竞拍买家发起报价");
   }
   OnRoomGroupBuyingBiddingSellerReceivesOffer(
     client: Client,
-    param: RoomBasicRequestParam,
+    param: RoomBasicParam,
     message: Message<RoomGroupBuyingBiddingSellerReceivesOffer>
   ): void {
     console.log("房间团购竞拍买家收到报价");
   }
   OnRoomGroupBuyingBiddingSellerCounteroffer(
     client: Client,
-    param: RoomBasicRequestParam,
+    param: RoomBasicParam,
     message: Message<RoomGroupBuyingBiddingSellerCounteroffer>
   ): void {
     console.log("房间团购竞拍买家收到还价");
   }
   OnRoomGroupBuyingBiddingBuyerOfferRejected(
     client: Client,
-    param: RoomBasicRequestParam,
+    param: RoomBasicParam,
     message: Message<RoomGroupBuyingBiddingBuyerOfferRejected>
   ): void {
     console.log("房间团购竞拍买家报价被拒");
