@@ -22,11 +22,16 @@ const token =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzaG9wIiwiZXhwIjoxNzMwMTA2NDQ1LCJpYXQiOjE3MjIzMzA0NDUsImp0aSI6IjVkMTMwYTkyZGQ0MzE3ZTFiYWE2NTQ5YjNmNzU0NDgzIn0.QdOiSOjNxMv1sP7MzivqcbNi3bh0AtpU2Y0AGyqauNc";
 
 class MsgCallback implements EventHandle {
+  private roomDetailLastTime = 0;
+
   OnRoomDetail(
     client: Client,
     param: RoomBasicParam,
     message: Message<RoomDetail>
   ): void {
+    const now = Date.now();
+    if (now - this.roomDetailLastTime < 3000) return;
+    this.roomDetailLastTime = now;
     const content = message.content;
     console.log(`房间详情: 在线人数(${content.onlinePeople})`);
   }
