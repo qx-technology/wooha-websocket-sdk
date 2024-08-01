@@ -27,7 +27,6 @@ class MsgCallback implements EventHandle {
     message: Message<RoomGroupBuying>
   ): void {
     const content = message.content;
-
     console.log(
       `房间团购详情: 房间ID(${content.id}), 团购ID(${
         content.groupBuyingId
@@ -131,9 +130,9 @@ class MsgCallback implements EventHandle {
 }
 
 function main() {
-  const client = newClient(new MsgCallback(), url, token, true);
+  const client = newClient(new MsgCallback(), url, token, false);
   client.start();
-  client.enterRoom("33");
+  client.enterRoom("1");
 }
 
 if (require.main === module) {
