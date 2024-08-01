@@ -52,7 +52,7 @@ class MsgCallback implements EventHandle {
     message: Message<RoomGroupBuyingNextProduct>
   ): void {
     const content = message.content;
-    if (content.beginTime === '"0001-01-01T00:00:00Z"') {
+    if (content.beginTime === "0001-01-01T00:00:00Z") {
       console.log(
         `房间团购下一轮商品: 团购ID(${content.groupBuyingId}), 商品ID(${content.productId}), SKUID(${content.skuId})`
       );
