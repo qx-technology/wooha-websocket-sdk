@@ -13,7 +13,8 @@ import {
   RoomGroupBuyingBiddingBuyerInitiatesOffer,
   RoomGroupBuyingBiddingSellerReceivesOffer,
   RoomGroupBuyingBiddingSellerCounteroffer,
-  RoomGroupBuyingBiddingBuyerOfferRejected
+  RoomGroupBuyingBiddingBuyerOfferRejected,
+  RoomDetail
 } from "./types";
 
 const url = "ws://47.57.236.213:8849/ws";
@@ -21,6 +22,14 @@ const token =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzaG9wIiwiZXhwIjoxNzMwMTA2NDQ1LCJpYXQiOjE3MjIzMzA0NDUsImp0aSI6IjVkMTMwYTkyZGQ0MzE3ZTFiYWE2NTQ5YjNmNzU0NDgzIn0.QdOiSOjNxMv1sP7MzivqcbNi3bh0AtpU2Y0AGyqauNc";
 
 class MsgCallback implements EventHandle {
+  OnRoomDetail(
+    client: Client,
+    param: RoomBasicParam,
+    message: Message<RoomDetail>
+  ): void {
+    const content = message.content;
+    console.log(`房间详情: 在线人数(${content.onlinePeople})`);
+  }
   OnRoomGroupBuying(
     client: Client,
     param: RoomBasicParam,

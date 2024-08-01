@@ -16,7 +16,8 @@ import {
   RoomBasicParam,
   ChannelType,
   ServiceType,
-  RoomGroupBuyingNextProduct
+  RoomGroupBuyingNextProduct,
+  RoomDetail
 } from "./types";
 import { v4 as uuid } from "uuid";
 
@@ -34,6 +35,8 @@ export interface Client {
 
 /// 事件
 export interface EventHandle {
+  /// 房间详情
+  OnRoomDetail(client: Client, param: RoomBasicParam, message: Message<RoomDetail>): void;
   /// 房间团购详情
   OnRoomGroupBuying(
     client: Client,
@@ -158,7 +161,7 @@ class ClientProvider implements Client {
     this.socket.onmessage = this.onMessage.bind(this);
     this.socket.onerror = this.onError.bind(this);
 
-    this.interval = setInterval(this.handle.bind(this), 350);
+    this.interval = setInterval(this.handle.bind(this), 100);
 
     return this;
   }
@@ -177,6 +180,15 @@ class ClientProvider implements Client {
   }
 
   enterRoom(roomId: string): Client {
+    // 订阅房间详情
+    this.requests.push(<RequestMessage<RoomBasicParam>>{
+      channel: ChannelType.RoomDetail,
+      version: "1.0",
+      seq: "0",
+      ts: Date.now(),
+      uid: uuid(),
+      params: { roomId }
+    });
     // 订阅房间团购详情
     this.requests.push(<RequestMessage<RoomBasicParam>>{
       channel: ChannelType.RoomGroupBuying,
@@ -256,6 +268,11 @@ class ClientProvider implements Client {
       if (!request) continue;
 
       switch (response.channel) {
+        case ChannelType.RoomDetail:
+          for (const message of response.data) {
+            this.callback.OnRoomDetail(this, request.params, message);
+          }
+          break;
         case ChannelType.RoomGroupBuying:
           for (const message of response.data) {
             this.callback.OnRoomGroupBuying(this, request.params, message);
