@@ -26,42 +26,63 @@ class MsgCallback implements EventHandle {
     param: RoomBasicRequestParam,
     message: Message<RoomGroupBuyingDetail>
   ): void {
-    console.log("房间详情事件");
+    const content = message.content;
+
+    console.log(
+      `房间详情: 房间ID(${content.id}), 团购ID(${content.groupBuyingId}), 最大可投票数(${
+        content.maxVoteTickets
+      }), 用户最大可投票数(${content.userMaxVoteTickets}), 当前已投票数(${
+        content.currentVoteTickets
+      }), 投票进度(${content.voteProgress / 100})`
+    );
   }
   OnRoomGroupBuyingVote(
     client: Client,
     param: RoomBasicRequestParam,
     message: Message<RoomGroupBuyingVote>
   ): void {
-    console.log("房间团购投票事件");
+    const content = message.content;
+    console.log(
+      `房间团购投票: 团购ID(${content.groupBuyingId}), 用户ID(${content.userId}), 投票时间(${content.voteTime}), 投票数(${content.tickets})`
+    );
   }
   OnRoomGroupBuyingNextProduct(
     client: Client,
     param: RoomBasicRequestParam,
     message: Message<RoomGroupBuyingNextProduct>
   ): void {
-    console.log("房间团购下一轮商品事件");
+    const content = message.content;
+    if (content.beginTime === '"0001-01-01T00:00:00Z"') {
+      console.log(
+        `房间团购下一轮商品: 团购ID(${content.groupBuyingId}), 商品ID(${content.productId}), SKUID(${content.skuId})`
+      );
+    } else {
+      console.log(`房间团购下一轮商品: 开始时间(${content.beginTime})`);
+    }
   }
   OnRoomGroupBuyingStart(
     client: Client,
     param: RoomBasicRequestParam,
     message: Message<RoomGroupBuyingStart>
   ): void {
-    console.log("房间团购开始事件");
+    console.log("房间团购开始");
   }
   OnRoomGroupBuyingLotteryOpening(
     client: Client,
     param: RoomBasicRequestParam,
     message: Message<RoomGroupBuyingLotteryOpening>
   ): void {
-    console.log("房间团购开奖中事件");
+    console.log("房间团购开奖中");
   }
   OnRoomGroupBuyingWinning(
     client: Client,
     param: RoomBasicRequestParam,
     message: Message<RoomGroupBuyingWinning>
   ): void {
-    console.log("房间团购用户中奖事件");
+    const content = message.content;
+    console.log(
+      `房间团购用户中奖: 用户ID(${content.winnerUserId}), 奖品可领奖时间(${content.prizeCollectionTime}), 竞拍ID(${content.auctionId})`
+    );
   }
   OnRoomGroupBuyingBiddingCounteroffer(
     client: Client,
@@ -110,7 +131,7 @@ class MsgCallback implements EventHandle {
 function main() {
   const client = newClient(new MsgCallback(), url, token, false);
   client.start();
-  client.enterRoom("33");
+  client.enterRoom("1");
 }
 
 if (require.main === module) {
