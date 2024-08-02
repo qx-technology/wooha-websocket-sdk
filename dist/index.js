@@ -1,7 +1,32 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.types = void 0;
 exports.newClient = newClient;
-const types_1 = require("./types");
+exports.types = __importStar(require("./types"));
+const types = __importStar(require("./types"));
 const uuid_1 = require("uuid");
 class ClientProvider {
     constructor(eventHandle, url, token, showLog = false) {
@@ -51,7 +76,7 @@ class ClientProvider {
     enterRoom(roomId) {
         // 订阅房间详情
         this.requests.push({
-            channel: types_1.ChannelType.RoomDetail,
+            channel: types.ChannelType.RoomDetail,
             version: "1.0",
             seq: "0",
             ts: Date.now(),
@@ -60,7 +85,7 @@ class ClientProvider {
         });
         // 订阅房间团购详情
         this.requests.push({
-            channel: types_1.ChannelType.RoomGroupBuying,
+            channel: types.ChannelType.RoomGroupBuying,
             version: "1.0",
             seq: "0",
             ts: Date.now(),
@@ -69,7 +94,7 @@ class ClientProvider {
         });
         // 订阅房间投票
         this.requests.push({
-            channel: types_1.ChannelType.RoomVote,
+            channel: types.ChannelType.RoomVote,
             version: "1.0",
             seq: "0",
             ts: Date.now(),
@@ -78,7 +103,7 @@ class ClientProvider {
         });
         // 订阅房间消息
         this.requests.push({
-            channel: types_1.ChannelType.RoomMessage,
+            channel: types.ChannelType.RoomMessage,
             version: "1.0",
             seq: "0",
             ts: Date.now(),
@@ -88,7 +113,7 @@ class ClientProvider {
         // 订阅房间用户消息
         if (this.token) {
             this.requests.push({
-                channel: types_1.ChannelType.RoomUserMessage,
+                channel: types.ChannelType.RoomUserMessage,
                 version: "1.0",
                 seq: "0",
                 ts: Date.now(),
@@ -100,11 +125,11 @@ class ClientProvider {
     }
     leaveRoom(roomId) {
         this.requests = this.requests.filter((request) => !([
-            types_1.ChannelType.RoomMessage,
-            types_1.ChannelType.RoomDetail,
-            types_1.ChannelType.RoomGroupBuying,
-            types_1.ChannelType.RoomVote,
-            types_1.ChannelType.RoomUserMessage
+            types.ChannelType.RoomMessage,
+            types.ChannelType.RoomDetail,
+            types.ChannelType.RoomGroupBuying,
+            types.ChannelType.RoomVote,
+            types.ChannelType.RoomUserMessage
         ].includes(request.channel) &&
             request.params.roomId === roomId));
         return this;
@@ -131,58 +156,58 @@ class ClientProvider {
             if (!request)
                 continue;
             switch (response.channel) {
-                case types_1.ChannelType.RoomDetail:
+                case types.ChannelType.RoomDetail:
                     for (const message of response.data) {
                         this.callback.OnRoomDetail(this, request.params, message);
                     }
                     break;
-                case types_1.ChannelType.RoomGroupBuying:
+                case types.ChannelType.RoomGroupBuying:
                     for (const message of response.data) {
                         this.callback.OnRoomGroupBuying(this, request.params, message);
                     }
                     break;
-                case types_1.ChannelType.RoomMessage:
+                case types.ChannelType.RoomMessage:
                     for (const message of response.data) {
                         switch (message.serviceType) {
-                            case types_1.ServiceType.RoomGroupBuyingNextProduct:
+                            case types.ServiceType.RoomGroupBuyingNextProduct:
                                 this.callback.OnRoomGroupBuyingNextProduct(this, request.params, message);
                                 break;
-                            case types_1.ServiceType.RoomGroupBuyingStart:
+                            case types.ServiceType.RoomGroupBuyingStart:
                                 this.callback.OnRoomGroupBuyingStart(this, request.params, message);
                                 break;
-                            case types_1.ServiceType.RoomGroupBuyingLotteryOpening:
+                            case types.ServiceType.RoomGroupBuyingLotteryOpening:
                                 this.callback.OnRoomGroupBuyingLotteryOpening(this, request.params, message);
                                 break;
-                            case types_1.ServiceType.RoomGroupBuyingWinning:
+                            case types.ServiceType.RoomGroupBuyingWinning:
                                 this.callback.OnRoomGroupBuyingWinning(this, request.params, message);
                                 break;
-                            case types_1.ServiceType.RoomGroupBuyingBiddingCounteroffer:
+                            case types.ServiceType.RoomGroupBuyingBiddingCounteroffer:
                                 this.callback.OnRoomGroupBuyingBiddingCounteroffer(this, request.params, message);
                                 break;
-                            case types_1.ServiceType.RoomGroupBuyingBiddingDeal:
+                            case types.ServiceType.RoomGroupBuyingBiddingDeal:
                                 this.callback.OnRoomGroupBuyingBiddingDeal(this, request.params, message);
                                 break;
                         }
                     }
                     break;
-                case types_1.ChannelType.RoomVote:
+                case types.ChannelType.RoomVote:
                     for (const message of response.data) {
                         this.callback.OnRoomGroupBuyingVote(this, request.params, message);
                     }
                     break;
-                case types_1.ChannelType.RoomUserMessage:
+                case types.ChannelType.RoomUserMessage:
                     for (const message of response.data) {
                         switch (message.serviceType) {
-                            case types_1.ServiceType.RoomGroupBuyingBiddingBuyerInitiatesOffer:
+                            case types.ServiceType.RoomGroupBuyingBiddingBuyerInitiatesOffer:
                                 this.callback.OnRoomGroupBuyingBiddingBuyerInitiatesOffer(this, request.params, message);
                                 break;
-                            case types_1.ServiceType.RoomGroupBuyingBiddingSellerReceivesOffer:
+                            case types.ServiceType.RoomGroupBuyingBiddingSellerReceivesOffer:
                                 this.callback.OnRoomGroupBuyingBiddingSellerReceivesOffer(this, request.params, message);
                                 break;
-                            case types_1.ServiceType.RoomGroupBuyingBiddingSellerCounteroffer:
+                            case types.ServiceType.RoomGroupBuyingBiddingSellerCounteroffer:
                                 this.callback.OnRoomGroupBuyingBiddingSellerCounteroffer(this, request.params, message);
                                 break;
-                            case types_1.ServiceType.RoomGroupBuyingBiddingBuyerOfferRejected:
+                            case types.ServiceType.RoomGroupBuyingBiddingBuyerOfferRejected:
                                 this.callback.OnRoomGroupBuyingBiddingBuyerOfferRejected(this, request.params, message);
                                 break;
                         }

@@ -1,24 +1,5 @@
-import {
-  Message,
-  ResponseMessage,
-  RoomGroupBuying,
-  RoomGroupBuyingVote,
-  RoomGroupBuyingStart,
-  RoomGroupBuyingLotteryOpening,
-  RoomGroupBuyingWinning,
-  RoomGroupBuyingBiddingCounteroffer,
-  RoomGroupBuyingBiddingDeal,
-  RoomGroupBuyingBiddingBuyerInitiatesOffer,
-  RoomGroupBuyingBiddingSellerReceivesOffer,
-  RoomGroupBuyingBiddingSellerCounteroffer,
-  RoomGroupBuyingBiddingBuyerOfferRejected,
-  RequestMessage,
-  RoomBasicParam,
-  ChannelType,
-  ServiceType,
-  RoomGroupBuyingNextProduct,
-  RoomDetail
-} from "./types";
+export * as types from "./types";
+import * as types from "./types";
 import { v4 as uuid } from "uuid";
 
 /// 客户端
@@ -36,78 +17,82 @@ export interface Client {
 /// 事件
 export interface EventHandle {
   /// 房间详情
-  OnRoomDetail(client: Client, param: RoomBasicParam, message: Message<RoomDetail>): void;
+  OnRoomDetail(
+    client: Client,
+    param: types.RoomBasicParam,
+    message: types.Message<types.RoomDetail>
+  ): void;
   /// 房间团购详情
   OnRoomGroupBuying(
     client: Client,
-    param: RoomBasicParam,
-    message: Message<RoomGroupBuying>
+    param: types.RoomBasicParam,
+    message: types.Message<types.RoomGroupBuying>
   ): void;
   /// 房间团购投票
   OnRoomGroupBuyingVote(
     client: Client,
-    param: RoomBasicParam,
-    message: Message<RoomGroupBuyingVote>
+    param: types.RoomBasicParam,
+    message: types.Message<types.RoomGroupBuyingVote>
   ): void;
   /// 房间团购下一个商品
   OnRoomGroupBuyingNextProduct(
     client: Client,
-    param: RoomBasicParam,
-    message: Message<RoomGroupBuyingNextProduct>
+    param: types.RoomBasicParam,
+    message: types.Message<types.RoomGroupBuyingNextProduct>
   ): void;
   /// 房间团购开始
   OnRoomGroupBuyingStart(
     client: Client,
-    param: RoomBasicParam,
-    message: Message<RoomGroupBuyingStart>
+    param: types.RoomBasicParam,
+    message: types.Message<types.RoomGroupBuyingStart>
   ): void;
   /// 房间团购正在开奖
   OnRoomGroupBuyingLotteryOpening(
     client: Client,
-    param: RoomBasicParam,
-    message: Message<RoomGroupBuyingLotteryOpening>
+    param: types.RoomBasicParam,
+    message: types.Message<types.RoomGroupBuyingLotteryOpening>
   ): void;
   /// 房间团购中奖
   OnRoomGroupBuyingWinning(
     client: Client,
-    param: RoomBasicParam,
-    message: Message<RoomGroupBuyingWinning>
+    param: types.RoomBasicParam,
+    message: types.Message<types.RoomGroupBuyingWinning>
   ): void;
   /// 房间团购竞拍还价所有人
   OnRoomGroupBuyingBiddingCounteroffer(
     client: Client,
-    param: RoomBasicParam,
-    message: Message<RoomGroupBuyingBiddingCounteroffer>
+    param: types.RoomBasicParam,
+    message: types.Message<types.RoomGroupBuyingBiddingCounteroffer>
   ): void;
   /// 房间团购竞拍成交
   OnRoomGroupBuyingBiddingDeal(
     client: Client,
-    param: RoomBasicParam,
-    message: Message<RoomGroupBuyingBiddingDeal>
+    param: types.RoomBasicParam,
+    message: types.Message<types.RoomGroupBuyingBiddingDeal>
   ): void;
   /// 房间团购竞拍买家发起报价(私人)
   OnRoomGroupBuyingBiddingBuyerInitiatesOffer(
     client: Client,
-    param: RoomBasicParam,
-    message: Message<RoomGroupBuyingBiddingBuyerInitiatesOffer>
+    param: types.RoomBasicParam,
+    message: types.Message<types.RoomGroupBuyingBiddingBuyerInitiatesOffer>
   ): void;
   /// 房间团购竞拍卖家收到报价(私人)
   OnRoomGroupBuyingBiddingSellerReceivesOffer(
     client: Client,
-    param: RoomBasicParam,
-    message: Message<RoomGroupBuyingBiddingSellerReceivesOffer>
+    param: types.RoomBasicParam,
+    message: types.Message<types.RoomGroupBuyingBiddingSellerReceivesOffer>
   ): void;
   /// 房间团购竞拍买家收到还价(私人)
   OnRoomGroupBuyingBiddingSellerCounteroffer(
     client: Client,
-    param: RoomBasicParam,
-    message: Message<RoomGroupBuyingBiddingSellerCounteroffer>
+    param: types.RoomBasicParam,
+    message: types.Message<types.RoomGroupBuyingBiddingSellerCounteroffer>
   ): void;
   /// 房间团购竞拍买家报价被拒(私人)
   OnRoomGroupBuyingBiddingBuyerOfferRejected(
     client: Client,
-    param: RoomBasicParam,
-    message: Message<RoomGroupBuyingBiddingBuyerOfferRejected>
+    param: types.RoomBasicParam,
+    message: types.Message<types.RoomGroupBuyingBiddingBuyerOfferRejected>
   ): void;
 }
 
@@ -121,7 +106,7 @@ class ClientProvider implements Client {
   private isRunning: boolean;
   private interval: NodeJS.Timeout | null;
   private callback: EventHandle;
-  private requests: RequestMessage[];
+  private requests: types.RequestMessage[];
   private showLog: boolean;
 
   constructor(
@@ -181,8 +166,8 @@ class ClientProvider implements Client {
 
   enterRoom(roomId: string): Client {
     // 订阅房间详情
-    this.requests.push(<RequestMessage<RoomBasicParam>>{
-      channel: ChannelType.RoomDetail,
+    this.requests.push(<types.RequestMessage<types.RoomBasicParam>>{
+      channel: types.ChannelType.RoomDetail,
       version: "1.0",
       seq: "0",
       ts: Date.now(),
@@ -190,8 +175,8 @@ class ClientProvider implements Client {
       params: { roomId }
     });
     // 订阅房间团购详情
-    this.requests.push(<RequestMessage<RoomBasicParam>>{
-      channel: ChannelType.RoomGroupBuying,
+    this.requests.push(<types.RequestMessage<types.RoomBasicParam>>{
+      channel: types.ChannelType.RoomGroupBuying,
       version: "1.0",
       seq: "0",
       ts: Date.now(),
@@ -199,8 +184,8 @@ class ClientProvider implements Client {
       params: { roomId }
     });
     // 订阅房间投票
-    this.requests.push(<RequestMessage<RoomBasicParam>>{
-      channel: ChannelType.RoomVote,
+    this.requests.push(<types.RequestMessage<types.RoomBasicParam>>{
+      channel: types.ChannelType.RoomVote,
       version: "1.0",
       seq: "0",
       ts: Date.now(),
@@ -208,8 +193,8 @@ class ClientProvider implements Client {
       params: { roomId }
     });
     // 订阅房间消息
-    this.requests.push(<RequestMessage<RoomBasicParam>>{
-      channel: ChannelType.RoomMessage,
+    this.requests.push(<types.RequestMessage<types.RoomBasicParam>>{
+      channel: types.ChannelType.RoomMessage,
       version: "1.0",
       seq: "0",
       ts: Date.now(),
@@ -218,8 +203,8 @@ class ClientProvider implements Client {
     });
     // 订阅房间用户消息
     if (this.token) {
-      this.requests.push(<RequestMessage<RoomBasicParam>>{
-        channel: ChannelType.RoomUserMessage,
+      this.requests.push(<types.RequestMessage<types.RoomBasicParam>>{
+        channel: types.ChannelType.RoomUserMessage,
         version: "1.0",
         seq: "0",
         ts: Date.now(),
@@ -234,13 +219,13 @@ class ClientProvider implements Client {
       (request) =>
         !(
           [
-            ChannelType.RoomMessage,
-            ChannelType.RoomDetail,
-            ChannelType.RoomGroupBuying,
-            ChannelType.RoomVote,
-            ChannelType.RoomUserMessage
+            types.ChannelType.RoomMessage,
+            types.ChannelType.RoomDetail,
+            types.ChannelType.RoomGroupBuying,
+            types.ChannelType.RoomVote,
+            types.ChannelType.RoomUserMessage
           ].includes(request.channel) &&
-          (<RoomBasicParam>request.params).roomId === roomId
+          (<types.RoomBasicParam>request.params).roomId === roomId
         )
     );
     return this;
@@ -261,85 +246,87 @@ class ClientProvider implements Client {
   }
 
   private onMessage(event: MessageEvent): void {
-    const responses: ResponseMessage<any, Message<any>>[] = JSON.parse(event.data);
+    const responses: types.ResponseMessage<any, types.Message<any>>[] = JSON.parse(
+      event.data
+    );
     if (this.showLog) console.log("Websocket收到消息:", responses);
     for (const response of responses) {
       const request = this.requests.find((request) => request.uid === response.uid);
       if (!request) continue;
 
       switch (response.channel) {
-        case ChannelType.RoomDetail:
+        case types.ChannelType.RoomDetail:
           for (const message of response.data) {
             this.callback.OnRoomDetail(this, request.params, message);
           }
           break;
-        case ChannelType.RoomGroupBuying:
+        case types.ChannelType.RoomGroupBuying:
           for (const message of response.data) {
             this.callback.OnRoomGroupBuying(this, request.params, message);
           }
           break;
-        case ChannelType.RoomMessage:
+        case types.ChannelType.RoomMessage:
           for (const message of response.data) {
             switch (message.serviceType) {
-              case ServiceType.RoomGroupBuyingNextProduct:
+              case types.ServiceType.RoomGroupBuyingNextProduct:
                 this.callback.OnRoomGroupBuyingNextProduct(this, request.params, message);
                 break;
-              case ServiceType.RoomGroupBuyingStart:
+              case types.ServiceType.RoomGroupBuyingStart:
                 this.callback.OnRoomGroupBuyingStart(this, request.params, message);
                 break;
-              case ServiceType.RoomGroupBuyingLotteryOpening:
+              case types.ServiceType.RoomGroupBuyingLotteryOpening:
                 this.callback.OnRoomGroupBuyingLotteryOpening(
                   this,
                   request.params,
                   message
                 );
                 break;
-              case ServiceType.RoomGroupBuyingWinning:
+              case types.ServiceType.RoomGroupBuyingWinning:
                 this.callback.OnRoomGroupBuyingWinning(this, request.params, message);
                 break;
-              case ServiceType.RoomGroupBuyingBiddingCounteroffer:
+              case types.ServiceType.RoomGroupBuyingBiddingCounteroffer:
                 this.callback.OnRoomGroupBuyingBiddingCounteroffer(
                   this,
                   request.params,
                   message
                 );
                 break;
-              case ServiceType.RoomGroupBuyingBiddingDeal:
+              case types.ServiceType.RoomGroupBuyingBiddingDeal:
                 this.callback.OnRoomGroupBuyingBiddingDeal(this, request.params, message);
                 break;
             }
           }
           break;
-        case ChannelType.RoomVote:
+        case types.ChannelType.RoomVote:
           for (const message of response.data) {
             this.callback.OnRoomGroupBuyingVote(this, request.params, message);
           }
           break;
-        case ChannelType.RoomUserMessage:
+        case types.ChannelType.RoomUserMessage:
           for (const message of response.data) {
             switch (message.serviceType) {
-              case ServiceType.RoomGroupBuyingBiddingBuyerInitiatesOffer:
+              case types.ServiceType.RoomGroupBuyingBiddingBuyerInitiatesOffer:
                 this.callback.OnRoomGroupBuyingBiddingBuyerInitiatesOffer(
                   this,
                   request.params,
                   message
                 );
                 break;
-              case ServiceType.RoomGroupBuyingBiddingSellerReceivesOffer:
+              case types.ServiceType.RoomGroupBuyingBiddingSellerReceivesOffer:
                 this.callback.OnRoomGroupBuyingBiddingSellerReceivesOffer(
                   this,
                   request.params,
                   message
                 );
                 break;
-              case ServiceType.RoomGroupBuyingBiddingSellerCounteroffer:
+              case types.ServiceType.RoomGroupBuyingBiddingSellerCounteroffer:
                 this.callback.OnRoomGroupBuyingBiddingSellerCounteroffer(
                   this,
                   request.params,
                   message
                 );
                 break;
-              case ServiceType.RoomGroupBuyingBiddingBuyerOfferRejected:
+              case types.ServiceType.RoomGroupBuyingBiddingBuyerOfferRejected:
                 this.callback.OnRoomGroupBuyingBiddingBuyerOfferRejected(
                   this,
                   request.params,
