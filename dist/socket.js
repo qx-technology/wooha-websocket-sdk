@@ -5,11 +5,12 @@ exports.newClient = newClient;
 const types_1 = require("./types");
 const uuid_1 = require("uuid");
 class RequestInfo {
-    constructor(config, interval) {
+    constructor(config, interval, isIncrData = true) {
         const now = Date.now();
         this.nextRequestTime = now;
         this.interval = interval;
         this.config = config;
+        this.isIncrData = isIncrData;
     }
 }
 exports.RequestInfo = RequestInfo;
@@ -61,8 +62,8 @@ class ClientProvider {
         this.autoConn = autoConn;
         return this;
     }
-    registerChannel(config, interval) {
-        this.requests.push(new RequestInfo(config, interval));
+    registerChannel(config, interval, isIncrData) {
+        this.requests.push(new RequestInfo(config, interval, isIncrData));
     }
     enterRoom(roomId) {
         // 订阅房间详情
@@ -73,57 +74,45 @@ class ClientProvider {
             ts: Date.now(),
             uid: (0, uuid_1.v4)(),
             params: { roomId }
-        }, 1500);
-        // // 订阅房间团购详情
-        // this.registerChannel(
-        //   <RequestMessage<RoomBasicParam>>{
-        //     channel: ChannelType.RoomGroupBuying,
-        //     version: "1.0",
-        //     seq: "0",
-        //     ts: Date.now(),
-        //     uid: uuid(),
-        //     params: { roomId }
-        //   },
-        //   100
-        // );
-        // // 订阅房间投票
-        // this.registerChannel(
-        //   <RequestMessage<RoomBasicParam>>{
-        //     channel: ChannelType.RoomVote,
-        //     version: "1.0",
-        //     seq: "0",
-        //     ts: Date.now(),
-        //     uid: uuid(),
-        //     params: { roomId }
-        //   },
-        //   100
-        // );
-        // // 订阅房间消息
-        // this.registerChannel(
-        //   <RequestMessage<RoomBasicParam>>{
-        //     channel: ChannelType.RoomMessage,
-        //     version: "1.0",
-        //     seq: "0",
-        //     ts: Date.now(),
-        //     uid: uuid(),
-        //     params: { roomId }
-        //   },
-        //   100
-        // );
-        // // 订阅房间用户消息
-        // if (this.token) {
-        //   this.registerChannel(
-        //     <RequestMessage<RoomBasicParam>>{
-        //       channel: ChannelType.RoomUserMessage,
-        //       version: "1.0",
-        //       seq: "0",
-        //       ts: Date.now(),
-        //       uid: uuid(),
-        //       params: { roomId }
-        //     },
-        //     100
-        //   );
-        // }
+        }, 1500, false);
+        // 订阅房间团购详情
+        this.registerChannel({
+            channel: types_1.ChannelType.RoomGroupBuying,
+            version: "1.0",
+            seq: "0",
+            ts: Date.now(),
+            uid: (0, uuid_1.v4)(),
+            params: { roomId }
+        }, 100);
+        // 订阅房间投票
+        this.registerChannel({
+            channel: types_1.ChannelType.RoomVote,
+            version: "1.0",
+            seq: "0",
+            ts: Date.now(),
+            uid: (0, uuid_1.v4)(),
+            params: { roomId }
+        }, 100);
+        // 订阅房间消息
+        this.registerChannel({
+            channel: types_1.ChannelType.RoomMessage,
+            version: "1.0",
+            seq: "0",
+            ts: Date.now(),
+            uid: (0, uuid_1.v4)(),
+            params: { roomId }
+        }, 100);
+        // 订阅房间用户消息
+        if (this.token) {
+            this.registerChannel({
+                channel: types_1.ChannelType.RoomUserMessage,
+                version: "1.0",
+                seq: "0",
+                ts: Date.now(),
+                uid: (0, uuid_1.v4)(),
+                params: { roomId }
+            }, 100);
+        }
         return this;
     }
     leaveRoom(roomId) {
@@ -151,7 +140,6 @@ class ClientProvider {
         }
     }
     onMessage(event) {
-        const now = Date.now();
         const responses = JSON.parse(event.data);
         if (this.showLog)
             console.log("Websocket收到消息:", responses);
@@ -159,6 +147,12 @@ class ClientProvider {
             const request = this.requests.find((request) => request.config.uid === response.uid);
             if (!request)
                 continue;
+            if (request.isIncrData) {
+                const currSeq = BigInt(request.config.seq);
+                const currRpsSeq = BigInt(response.rpsSeq);
+                if (currSeq >= currRpsSeq)
+                    continue;
+            }
             switch (response.channel) {
                 case types_1.ChannelType.RoomDetail:
                     for (const message of response.data) {
@@ -218,7 +212,6 @@ class ClientProvider {
                     }
                     break;
             }
-            request.nextRequestTime = now + request.interval;
             request.config.seq = response.rpsSeq;
         }
     }

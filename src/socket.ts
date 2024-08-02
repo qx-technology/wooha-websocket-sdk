@@ -118,12 +118,15 @@ export class RequestInfo {
   public interval: number;
   /// 下一次请求时间(毫秒)
   public nextRequestTime: number;
+  /// 是否为增量数据
+  public isIncrData: boolean;
 
-  constructor(config: RequestMessage, interval: number) {
+  constructor(config: RequestMessage, interval: number, isIncrData: boolean = true) {
     const now = Date.now();
     this.nextRequestTime = now;
     this.interval = interval;
     this.config = config;
+    this.isIncrData = isIncrData;
   }
 }
 
@@ -199,8 +202,8 @@ export class ClientProvider implements Client {
     return this;
   }
 
-  registerChannel(config: RequestMessage, interval: number) {
-    this.requests.push(new RequestInfo(config, interval));
+  registerChannel(config: RequestMessage, interval: number, isIncrData?: boolean) {
+    this.requests.push(new RequestInfo(config, interval, isIncrData));
   }
 
   enterRoom(roomId: string): Client {
@@ -214,58 +217,59 @@ export class ClientProvider implements Client {
         uid: uuid(),
         params: { roomId }
       },
-      1500
+      1500,
+      false
     );
-    // // 订阅房间团购详情
-    // this.registerChannel(
-    //   <RequestMessage<RoomBasicParam>>{
-    //     channel: ChannelType.RoomGroupBuying,
-    //     version: "1.0",
-    //     seq: "0",
-    //     ts: Date.now(),
-    //     uid: uuid(),
-    //     params: { roomId }
-    //   },
-    //   100
-    // );
-    // // 订阅房间投票
-    // this.registerChannel(
-    //   <RequestMessage<RoomBasicParam>>{
-    //     channel: ChannelType.RoomVote,
-    //     version: "1.0",
-    //     seq: "0",
-    //     ts: Date.now(),
-    //     uid: uuid(),
-    //     params: { roomId }
-    //   },
-    //   100
-    // );
-    // // 订阅房间消息
-    // this.registerChannel(
-    //   <RequestMessage<RoomBasicParam>>{
-    //     channel: ChannelType.RoomMessage,
-    //     version: "1.0",
-    //     seq: "0",
-    //     ts: Date.now(),
-    //     uid: uuid(),
-    //     params: { roomId }
-    //   },
-    //   100
-    // );
-    // // 订阅房间用户消息
-    // if (this.token) {
-    //   this.registerChannel(
-    //     <RequestMessage<RoomBasicParam>>{
-    //       channel: ChannelType.RoomUserMessage,
-    //       version: "1.0",
-    //       seq: "0",
-    //       ts: Date.now(),
-    //       uid: uuid(),
-    //       params: { roomId }
-    //     },
-    //     100
-    //   );
-    // }
+    // 订阅房间团购详情
+    this.registerChannel(
+      <RequestMessage<RoomBasicParam>>{
+        channel: ChannelType.RoomGroupBuying,
+        version: "1.0",
+        seq: "0",
+        ts: Date.now(),
+        uid: uuid(),
+        params: { roomId }
+      },
+      100
+    );
+    // 订阅房间投票
+    this.registerChannel(
+      <RequestMessage<RoomBasicParam>>{
+        channel: ChannelType.RoomVote,
+        version: "1.0",
+        seq: "0",
+        ts: Date.now(),
+        uid: uuid(),
+        params: { roomId }
+      },
+      100
+    );
+    // 订阅房间消息
+    this.registerChannel(
+      <RequestMessage<RoomBasicParam>>{
+        channel: ChannelType.RoomMessage,
+        version: "1.0",
+        seq: "0",
+        ts: Date.now(),
+        uid: uuid(),
+        params: { roomId }
+      },
+      100
+    );
+    // 订阅房间用户消息
+    if (this.token) {
+      this.registerChannel(
+        <RequestMessage<RoomBasicParam>>{
+          channel: ChannelType.RoomUserMessage,
+          version: "1.0",
+          seq: "0",
+          ts: Date.now(),
+          uid: uuid(),
+          params: { roomId }
+        },
+        100
+      );
+    }
     return this;
   }
 
@@ -301,7 +305,6 @@ export class ClientProvider implements Client {
   }
 
   private onMessage(event: MessageEvent): void {
-    const now = Date.now();
     const responses: ResponseMessage<any, Message<any>>[] = JSON.parse(event.data);
     if (this.showLog) console.log("Websocket收到消息:", responses);
     for (const response of responses) {
@@ -309,6 +312,12 @@ export class ClientProvider implements Client {
         (request) => request.config.uid === response.uid
       );
       if (!request) continue;
+
+      if (request.isIncrData) {
+        const currSeq = BigInt(request.config.seq);
+        const currRpsSeq = BigInt(response.rpsSeq);
+        if (currSeq >= currRpsSeq) continue;
+      }
 
       switch (response.channel) {
         case ChannelType.RoomDetail:
@@ -409,8 +418,6 @@ export class ClientProvider implements Client {
           }
           break;
       }
-
-      request.nextRequestTime = now + request.interval;
       request.config.seq = response.rpsSeq;
     }
   }

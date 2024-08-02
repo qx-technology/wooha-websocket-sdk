@@ -24,7 +24,8 @@ export declare class RequestInfo {
     config: RequestMessage;
     interval: number;
     nextRequestTime: number;
-    constructor(config: RequestMessage, interval: number);
+    isIncrData: boolean;
+    constructor(config: RequestMessage, interval: number, isIncrData?: boolean);
 }
 export declare class ClientProvider implements Client {
     private socket;
@@ -41,7 +42,7 @@ export declare class ClientProvider implements Client {
     constructor(eventHandle: EventHandle, url: string, token?: string, showLog?: boolean);
     start(): Client;
     stop(autoConn?: boolean): Client;
-    registerChannel(config: RequestMessage, interval: number): void;
+    registerChannel(config: RequestMessage, interval: number, isIncrData?: boolean): void;
     enterRoom(roomId: string): Client;
     leaveRoom(roomId: string): Client;
     private onOpen;
