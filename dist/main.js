@@ -7,7 +7,7 @@ const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzaG9wIiwiZXhwIjox
 class MsgCallback {
     OnRoomDetail(client, param, message) {
         const content = message.content;
-        console.log(`房间详情: 在线人数(${content.onlinePeople})`);
+        console.log(`房间详情: 在线人数(${content.onlinePeople}), 时间(${new Date()})`);
     }
     OnRoomGroupBuying(client, param, message) {
         const content = message.content;

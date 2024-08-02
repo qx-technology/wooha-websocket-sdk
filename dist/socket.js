@@ -10,7 +10,6 @@ class RequestInfo {
         this.nextRequestTime = now;
         this.interval = interval;
         this.config = config;
-        this.isRequesting = false;
     }
 }
 exports.RequestInfo = RequestInfo;
@@ -45,7 +44,6 @@ class ClientProvider {
         this.socket.onerror = this.onError.bind(this);
         this.interval = setInterval(this.handle.bind(this), 100);
         this.requests.forEach((item) => {
-            item.isRequesting = false;
             item.nextRequestTime = now;
         });
         return this;
@@ -76,44 +74,56 @@ class ClientProvider {
             uid: (0, uuid_1.v4)(),
             params: { roomId }
         }, 1500);
-        // 订阅房间团购详情
-        this.registerChannel({
-            channel: types_1.ChannelType.RoomGroupBuying,
-            version: "1.0",
-            seq: "0",
-            ts: Date.now(),
-            uid: (0, uuid_1.v4)(),
-            params: { roomId }
-        }, 100);
-        // 订阅房间投票
-        this.registerChannel({
-            channel: types_1.ChannelType.RoomVote,
-            version: "1.0",
-            seq: "0",
-            ts: Date.now(),
-            uid: (0, uuid_1.v4)(),
-            params: { roomId }
-        }, 100);
-        // 订阅房间消息
-        this.registerChannel({
-            channel: types_1.ChannelType.RoomMessage,
-            version: "1.0",
-            seq: "0",
-            ts: Date.now(),
-            uid: (0, uuid_1.v4)(),
-            params: { roomId }
-        }, 100);
-        // 订阅房间用户消息
-        if (this.token) {
-            this.registerChannel({
-                channel: types_1.ChannelType.RoomUserMessage,
-                version: "1.0",
-                seq: "0",
-                ts: Date.now(),
-                uid: (0, uuid_1.v4)(),
-                params: { roomId }
-            }, 100);
-        }
+        // // 订阅房间团购详情
+        // this.registerChannel(
+        //   <RequestMessage<RoomBasicParam>>{
+        //     channel: ChannelType.RoomGroupBuying,
+        //     version: "1.0",
+        //     seq: "0",
+        //     ts: Date.now(),
+        //     uid: uuid(),
+        //     params: { roomId }
+        //   },
+        //   100
+        // );
+        // // 订阅房间投票
+        // this.registerChannel(
+        //   <RequestMessage<RoomBasicParam>>{
+        //     channel: ChannelType.RoomVote,
+        //     version: "1.0",
+        //     seq: "0",
+        //     ts: Date.now(),
+        //     uid: uuid(),
+        //     params: { roomId }
+        //   },
+        //   100
+        // );
+        // // 订阅房间消息
+        // this.registerChannel(
+        //   <RequestMessage<RoomBasicParam>>{
+        //     channel: ChannelType.RoomMessage,
+        //     version: "1.0",
+        //     seq: "0",
+        //     ts: Date.now(),
+        //     uid: uuid(),
+        //     params: { roomId }
+        //   },
+        //   100
+        // );
+        // // 订阅房间用户消息
+        // if (this.token) {
+        //   this.registerChannel(
+        //     <RequestMessage<RoomBasicParam>>{
+        //       channel: ChannelType.RoomUserMessage,
+        //       version: "1.0",
+        //       seq: "0",
+        //       ts: Date.now(),
+        //       uid: uuid(),
+        //       params: { roomId }
+        //     },
+        //     100
+        //   );
+        // }
         return this;
     }
     leaveRoom(roomId) {
@@ -208,8 +218,6 @@ class ClientProvider {
                     }
                     break;
             }
-            // 请求中状态切换, 下一次请求时间为当前时间+间隔时间
-            request.isRequesting = false;
             request.nextRequestTime = now + request.interval;
             request.config.seq = response.rpsSeq;
         }
@@ -239,10 +247,8 @@ class ClientProvider {
         const now = Date.now();
         const requests = [];
         for (const request of this.requests) {
-            // 正在请求中 && 下次请求时间大于当前时间
-            if (request.isRequesting && request.nextRequestTime > now)
+            if (request.nextRequestTime > now)
                 continue;
-            request.isRequesting = true;
             request.nextRequestTime = now + request.interval;
             requests.push(request.config);
         }

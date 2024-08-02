@@ -24,7 +24,6 @@ export declare class RequestInfo {
     config: RequestMessage;
     interval: number;
     nextRequestTime: number;
-    isRequesting: boolean;
     constructor(config: RequestMessage, interval: number);
 }
 export declare class ClientProvider implements Client {

@@ -28,7 +28,7 @@ class MsgCallback implements EventHandle {
     message: Message<RoomDetail>
   ): void {
     const content = message.content;
-    console.log(`房间详情: 在线人数(${content.onlinePeople})`);
+    console.log(`房间详情: 在线人数(${content.onlinePeople}), 时间(${new Date()})`);
   }
   OnRoomGroupBuying(
     client: Client,

@@ -118,15 +118,12 @@ export class RequestInfo {
   public interval: number;
   /// 下一次请求时间(毫秒)
   public nextRequestTime: number;
-  /// 请求中
-  public isRequesting: boolean;
 
   constructor(config: RequestMessage, interval: number) {
     const now = Date.now();
     this.nextRequestTime = now;
     this.interval = interval;
     this.config = config;
-    this.isRequesting = false;
   }
 }
 
@@ -183,7 +180,6 @@ export class ClientProvider implements Client {
     this.interval = setInterval(this.handle.bind(this), 100);
 
     this.requests.forEach((item) => {
-      item.isRequesting = false;
       item.nextRequestTime = now;
     });
 
@@ -220,56 +216,56 @@ export class ClientProvider implements Client {
       },
       1500
     );
-    // 订阅房间团购详情
-    this.registerChannel(
-      <RequestMessage<RoomBasicParam>>{
-        channel: ChannelType.RoomGroupBuying,
-        version: "1.0",
-        seq: "0",
-        ts: Date.now(),
-        uid: uuid(),
-        params: { roomId }
-      },
-      100
-    );
-    // 订阅房间投票
-    this.registerChannel(
-      <RequestMessage<RoomBasicParam>>{
-        channel: ChannelType.RoomVote,
-        version: "1.0",
-        seq: "0",
-        ts: Date.now(),
-        uid: uuid(),
-        params: { roomId }
-      },
-      100
-    );
-    // 订阅房间消息
-    this.registerChannel(
-      <RequestMessage<RoomBasicParam>>{
-        channel: ChannelType.RoomMessage,
-        version: "1.0",
-        seq: "0",
-        ts: Date.now(),
-        uid: uuid(),
-        params: { roomId }
-      },
-      100
-    );
-    // 订阅房间用户消息
-    if (this.token) {
-      this.registerChannel(
-        <RequestMessage<RoomBasicParam>>{
-          channel: ChannelType.RoomUserMessage,
-          version: "1.0",
-          seq: "0",
-          ts: Date.now(),
-          uid: uuid(),
-          params: { roomId }
-        },
-        100
-      );
-    }
+    // // 订阅房间团购详情
+    // this.registerChannel(
+    //   <RequestMessage<RoomBasicParam>>{
+    //     channel: ChannelType.RoomGroupBuying,
+    //     version: "1.0",
+    //     seq: "0",
+    //     ts: Date.now(),
+    //     uid: uuid(),
+    //     params: { roomId }
+    //   },
+    //   100
+    // );
+    // // 订阅房间投票
+    // this.registerChannel(
+    //   <RequestMessage<RoomBasicParam>>{
+    //     channel: ChannelType.RoomVote,
+    //     version: "1.0",
+    //     seq: "0",
+    //     ts: Date.now(),
+    //     uid: uuid(),
+    //     params: { roomId }
+    //   },
+    //   100
+    // );
+    // // 订阅房间消息
+    // this.registerChannel(
+    //   <RequestMessage<RoomBasicParam>>{
+    //     channel: ChannelType.RoomMessage,
+    //     version: "1.0",
+    //     seq: "0",
+    //     ts: Date.now(),
+    //     uid: uuid(),
+    //     params: { roomId }
+    //   },
+    //   100
+    // );
+    // // 订阅房间用户消息
+    // if (this.token) {
+    //   this.registerChannel(
+    //     <RequestMessage<RoomBasicParam>>{
+    //       channel: ChannelType.RoomUserMessage,
+    //       version: "1.0",
+    //       seq: "0",
+    //       ts: Date.now(),
+    //       uid: uuid(),
+    //       params: { roomId }
+    //     },
+    //     100
+    //   );
+    // }
     return this;
   }
 
@@ -414,8 +410,6 @@ export class ClientProvider implements Client {
           break;
       }
 
-      // 请求中状态切换, 下一次请求时间为当前时间+间隔时间
-      request.isRequesting = false;
       request.nextRequestTime = now + request.interval;
       request.config.seq = response.rpsSeq;
     }
@@ -445,9 +439,7 @@ export class ClientProvider implements Client {
     const requests = [];
 
     for (const request of this.requests) {
-      // 正在请求中 && 下次请求时间大于当前时间
-      if (request.isRequesting && request.nextRequestTime > now) continue;
-      request.isRequesting = true;
+      if (request.nextRequestTime > now) continue;
       request.nextRequestTime = now + request.interval;
       requests.push(request.config);
     }
