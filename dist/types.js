@@ -57,4 +57,3 @@ var ServiceType;
     /// 房间团购 竞拍买家报价被拒(私人)
     ServiceType["RoomGroupBuyingBiddingBuyerOfferRejected"] = "RoomGroupBuyingBiddingBuyerOfferRejected";
 })(ServiceType || (exports.ServiceType = ServiceType = {}));
-//# sourceMappingURL=types.js.map

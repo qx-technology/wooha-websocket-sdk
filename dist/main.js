@@ -73,4 +73,3 @@ function demo() {
 if (require.main === module) {
     main();
 }
-//# sourceMappingURL=main.js.map
