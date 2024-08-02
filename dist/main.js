@@ -1,18 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.demo = demo;
-const index_1 = require("./index");
+const socket_1 = require("./socket");
 const url = "ws://47.57.236.213:8849/ws";
 const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzaG9wIiwiZXhwIjoxNzMwMTA2NDQ1LCJpYXQiOjE3MjIzMzA0NDUsImp0aSI6IjVkMTMwYTkyZGQ0MzE3ZTFiYWE2NTQ5YjNmNzU0NDgzIn0.QdOiSOjNxMv1sP7MzivqcbNi3bh0AtpU2Y0AGyqauNc";
 class MsgCallback {
-    constructor() {
-        this.roomDetailLastTime = 0;
-    }
     OnRoomDetail(client, param, message) {
-        const now = Date.now();
-        if (now - this.roomDetailLastTime < 3000)
-            return;
-        this.roomDetailLastTime = now;
         const content = message.content;
         console.log(`房间详情: 在线人数(${content.onlinePeople})`);
     }
@@ -66,7 +59,7 @@ function main() {
     demo();
 }
 function demo() {
-    const client = (0, index_1.newClient)(new MsgCallback(), url, token, false);
+    const client = (0, socket_1.newClient)(new MsgCallback(), url, token, false);
     client.start();
     client.enterRoom("1");
 }
