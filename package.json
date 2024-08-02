@@ -1,9 +1,10 @@
 {
   "name": "wooha-websocket-sdk",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
-    "test": "./node_modules/.bin/tsc && node dist/main.js"
+    "test": "./node_modules/.bin/tsc && node dist/main.js",
+    "build": "./node_modules/.bin/tsc"
   },
   "keywords": [],
   "author": "",
