@@ -23,7 +23,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.types = void 0;
+exports.ClientProvider = exports.types = void 0;
 exports.newClient = newClient;
 exports.types = __importStar(require("./types"));
 const types = __importStar(require("./types"));
@@ -246,6 +246,7 @@ class ClientProvider {
         }
     }
 }
+exports.ClientProvider = ClientProvider;
 function newClient(eventHandle, url, token, showLog) {
     return new ClientProvider(eventHandle, url, token, showLog);
 }

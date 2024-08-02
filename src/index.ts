@@ -96,7 +96,7 @@ export interface EventHandle {
   ): void;
 }
 
-class ClientProvider implements Client {
+export class ClientProvider implements Client {
   private socket: WebSocket | null = null;
   private url: string;
   private token?: string;
