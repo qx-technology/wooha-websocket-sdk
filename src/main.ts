@@ -144,6 +144,10 @@ class MsgCallback implements EventHandle {
 }
 
 function main() {
+  demo();
+}
+
+export function demo() {
   const client = newClient(new MsgCallback(), url, token, false);
   client.start();
   client.enterRoom("1");
