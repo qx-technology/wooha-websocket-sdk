@@ -254,3 +254,4 @@ exports.ClientProvider = ClientProvider;
 function newClient(eventHandle, url, token, showLog) {
     return new ClientProvider(eventHandle, url, token, showLog);
 }
+//# sourceMappingURL=socket.js.map
