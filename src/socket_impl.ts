@@ -45,9 +45,9 @@ export class WebFuket implements WebFuketInterface {
           }, 100);
         }
       });
-      // this.socket.onOpen(() => {
-      //   if (this.onopen) this.onopen(null!);
-      // });
+      this.socket.onOpen(() => {
+        if (this.onopen) this.onopen(null!);
+      });
       this.socket.onMessage((ev: any) => {
         if (this.onmessage) this.onmessage(ev);
       });
