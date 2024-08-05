@@ -559,10 +559,26 @@ export async function getMessageVersioinByRank(
   const url = new URL(getBasicHttpUrl() + "/getMessageVersioinByRank");
   url.search = new URLSearchParams(Object.assign(params, { channel, rank })).toString();
 
-  return fetch(url.toString(), {
-    method: "GET",
-    headers
-  })
-    .then((res) => res.json())
-    .then((json) => json.data);
+  if (process.env.UNI_PLATFORM === "app-plus") {
+    return new Promise((resolve, reject) => {
+      //@ts-ignore
+      uni.request({
+        url: url.toString(),
+        header: headers,
+        success: (res: any) => {
+          resolve(res.data);
+        },
+        fail: () => {
+          reject();
+        }
+      });
+    });
+  } else {
+    return fetch(url.toString(), {
+      method: "GET",
+      headers
+    })
+      .then((res) => res.json())
+      .then((json) => json.data);
+  }
 }
