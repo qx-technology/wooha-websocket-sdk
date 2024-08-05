@@ -15,6 +15,30 @@ class WebFuket {
             protocols.push(this.token);
         }
         if (process.env.UNI_PLATFORM === "app-plus") {
+            //@ts-ignore
+            this.socket = uni.connectSocket({
+                url: this.url,
+                header: { "content-type": "application/json" },
+                protocols: protocols,
+                method: "GET",
+                complete: () => { }
+            });
+            this.socket.onOpen = (ev) => {
+                if (this.onopen)
+                    this.onopen(ev);
+            };
+            this.socket.onMessage = (ev) => {
+                if (this.onmessage)
+                    this.onmessage(ev);
+            };
+            this.socket.onError = (ev) => {
+                if (this.onerror)
+                    this.onerror(ev);
+            };
+            this.socket.onClose = (ev) => {
+                if (this.onclose)
+                    this.onclose(ev);
+            };
         }
         else {
             this.socket = new WebSocket(this.url, protocols);
