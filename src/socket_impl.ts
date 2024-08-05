@@ -25,6 +25,7 @@ export class WebFuket implements WebFuketInterface {
       protocols.push(this.token);
     }
 
+    console.log("process.env.UNI_PLATFORM", process.env.UNI_PLATFORM);
     if (process.env.UNI_PLATFORM === "app-plus") {
       //@ts-ignore
       this.socket = uni.connectSocket({
