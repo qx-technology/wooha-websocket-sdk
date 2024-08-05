@@ -59,7 +59,7 @@ function main() {
     demo();
 }
 function demo() {
-    const client = (0, socket_1.newClient)(new MsgCallback(), url, token, false);
+    const client = (0, socket_1.newClient)(new MsgCallback(), token, true);
     client.start();
     client.enterRoom("1");
 }

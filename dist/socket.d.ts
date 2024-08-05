@@ -1,8 +1,11 @@
-import { RequestMessage, RoomBasicParam, Message, RoomDetail, RoomGroupBuying, RoomGroupBuyingVote, RoomGroupBuyingNextProduct, RoomGroupBuyingStart, RoomGroupBuyingLotteryOpening, RoomGroupBuyingWinning, RoomGroupBuyingBiddingCounteroffer, RoomGroupBuyingBiddingDeal, RoomGroupBuyingBiddingBuyerInitiatesOffer, RoomGroupBuyingBiddingSellerReceivesOffer, RoomGroupBuyingBiddingSellerCounteroffer, RoomGroupBuyingBiddingBuyerOfferRejected } from "./types";
+import { RequestMessage, RoomBasicParam, ChannelType, Message, RoomDetail, RoomGroupBuying, RoomGroupBuyingVote, RoomGroupBuyingNextProduct, RoomGroupBuyingStart, RoomGroupBuyingLotteryOpening, RoomGroupBuyingWinning, RoomGroupBuyingBiddingCounteroffer, RoomGroupBuyingBiddingDeal, RoomGroupBuyingBiddingBuyerInitiatesOffer, RoomGroupBuyingBiddingSellerReceivesOffer, RoomGroupBuyingBiddingSellerCounteroffer, RoomGroupBuyingBiddingBuyerOfferRejected } from "./types";
+export declare function configSite(url: string): void;
+export declare function useHttps(): void;
+export declare function useWss(): void;
 export interface Client {
     start(): Client;
     stop(autoConn?: boolean): Client;
-    enterRoom(roomId: string): Client;
+    enterRoom(roomId: string): Promise<Client>;
     leaveRoom(roomId: string): Client;
 }
 export interface EventHandle {
@@ -39,11 +42,11 @@ export declare class ClientProvider implements Client {
     private callback;
     private requests;
     private showLog;
-    constructor(eventHandle: EventHandle, url: string, token?: string, showLog?: boolean);
+    constructor(eventHandle: EventHandle, token?: string, showLog?: boolean);
     start(): Client;
     stop(autoConn?: boolean): Client;
     registerChannel(config: RequestMessage, interval: number, isIncrData?: boolean): void;
-    enterRoom(roomId: string): Client;
+    enterRoom(roomId: string): Promise<Client>;
     leaveRoom(roomId: string): Client;
     private onOpen;
     private onClose;
@@ -52,4 +55,5 @@ export declare class ClientProvider implements Client {
     private isTimeout;
     private handle;
 }
-export declare function newClient(eventHandle: EventHandle, url: string, token?: string, showLog?: boolean): Client;
+export declare function newClient(eventHandle: EventHandle, token?: string, showLog?: boolean): Client;
+export declare function getMessageVersioinByRank(channel: ChannelType, rank?: number, params?: Record<string, any>, token?: string): Promise<String>;

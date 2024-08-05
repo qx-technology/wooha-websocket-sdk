@@ -143,7 +143,7 @@ function main() {
 }
 
 export function demo() {
-  const client = newClient(new MsgCallback(), url, token, false);
+  const client = newClient(new MsgCallback(), token, true);
   client.start();
   client.enterRoom("1");
 }

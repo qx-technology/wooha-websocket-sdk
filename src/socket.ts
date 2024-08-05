@@ -21,6 +21,48 @@ import {
 } from "./types";
 import { v4 as uuid } from "uuid";
 
+// ============================================================ //
+// 全局配置
+// ============================================================ //
+
+// 站点
+let site = "47.57.236.213:8849";
+// 使用HTTPS
+let enableHttps = false;
+// 使用WSS
+let enableWss = false;
+
+// 设置站点
+export function configSite(url: string) {
+  site = url;
+}
+
+// 使用HTTPS
+export function useHttps() {
+  enableHttps = true;
+}
+
+// 使用WSS
+export function useWss() {
+  enableWss = true;
+}
+
+function getBasicWebsocketUrl(): string {
+  if (enableWss) {
+    return `wss://${site}`;
+  } else {
+    return `ws://${site}`;
+  }
+}
+
+function getBasicHttpUrl(): string {
+  if (enableHttps) {
+    return `https://${site}`;
+  } else {
+    return `http://${site}`;
+  }
+}
+
 /// 客户端
 export interface Client {
   /// 启动
@@ -28,7 +70,7 @@ export interface Client {
   /// 停止
   stop(autoConn?: boolean): Client;
   /// 进入房间
-  enterRoom(roomId: string): Client;
+  enterRoom(roomId: string): Promise<Client>;
   /// 离开房间
   leaveRoom(roomId: string): Client;
 }
@@ -143,13 +185,8 @@ export class ClientProvider implements Client {
   private requests: RequestInfo[];
   private showLog: boolean;
 
-  constructor(
-    eventHandle: EventHandle,
-    url: string,
-    token?: string,
-    showLog: boolean = false
-  ) {
-    this.url = url;
+  constructor(eventHandle: EventHandle, token?: string, showLog: boolean = false) {
+    this.url = getBasicWebsocketUrl() + "/ws";
     this.token = token;
     this.lastReqTime = 0;
     this.lastRpsTime = 0;
@@ -193,7 +230,7 @@ export class ClientProvider implements Client {
     if (this.socket) {
       this.socket.close();
       this.socket = null;
-      if (this.showLog) console.log("Websocket已断开");
+      if (this.showLog) console.error("Websocket已断开");
       this.isRunning = false;
       clearInterval(this.interval!);
       this.interval = null;
@@ -206,7 +243,7 @@ export class ClientProvider implements Client {
     this.requests.push(new RequestInfo(config, interval, isIncrData));
   }
 
-  enterRoom(roomId: string): Client {
+  async enterRoom(roomId: string): Promise<Client> {
     // 订阅房间详情
     this.registerChannel(
       <RequestMessage<RoomBasicParam>>{
@@ -221,11 +258,22 @@ export class ClientProvider implements Client {
       false
     );
     // 订阅房间团购详情
+    const roomGroupBuyingVersion = await getMessageVersioinByRank(
+      ChannelType.RoomGroupBuying,
+      1,
+      { roomId },
+      this.token
+    );
+    if (this.showLog) {
+      console.log(
+        `订阅房间团购详情: roomId(${roomId}), 版本号(${roomGroupBuyingVersion})`
+      );
+    }
     this.registerChannel(
       <RequestMessage<RoomBasicParam>>{
         channel: ChannelType.RoomGroupBuying,
         version: "1.0",
-        seq: "0",
+        seq: roomGroupBuyingVersion,
         ts: Date.now(),
         uid: uuid(),
         params: { roomId }
@@ -233,11 +281,20 @@ export class ClientProvider implements Client {
       100
     );
     // 订阅房间投票
+    const roomVoteVersion = await getMessageVersioinByRank(
+      ChannelType.RoomVote,
+      1,
+      { roomId },
+      this.token
+    );
+    if (this.showLog) {
+      console.log(`订阅房间投票: roomId(${roomId}), 版本号(${roomVoteVersion})`);
+    }
     this.registerChannel(
       <RequestMessage<RoomBasicParam>>{
         channel: ChannelType.RoomVote,
         version: "1.0",
-        seq: "0",
+        seq: roomVoteVersion,
         ts: Date.now(),
         uid: uuid(),
         params: { roomId }
@@ -245,11 +302,20 @@ export class ClientProvider implements Client {
       100
     );
     // 订阅房间消息
+    const roomMessageVersion = await getMessageVersioinByRank(
+      ChannelType.RoomMessage,
+      1,
+      { roomId },
+      this.token
+    );
+    if (this.showLog) {
+      console.log(`订阅房间消息: roomId(${roomId}), 版本号(${roomMessageVersion})`);
+    }
     this.registerChannel(
       <RequestMessage<RoomBasicParam>>{
         channel: ChannelType.RoomMessage,
         version: "1.0",
-        seq: "0",
+        seq: roomMessageVersion,
         ts: Date.now(),
         uid: uuid(),
         params: { roomId }
@@ -258,11 +324,22 @@ export class ClientProvider implements Client {
     );
     // 订阅房间用户消息
     if (this.token) {
+      const roomUserMessageVersion = await getMessageVersioinByRank(
+        ChannelType.RoomUserMessage,
+        1,
+        { roomId },
+        this.token
+      );
+      if (this.showLog) {
+        console.log(
+          `订阅房间用户消息: roomId(${roomId}), 版本号(${roomUserMessageVersion})`
+        );
+      }
       this.registerChannel(
         <RequestMessage<RoomBasicParam>>{
           channel: ChannelType.RoomUserMessage,
           version: "1.0",
-          seq: "0",
+          seq: roomUserMessageVersion,
           ts: Date.now(),
           uid: uuid(),
           params: { roomId }
@@ -306,7 +383,7 @@ export class ClientProvider implements Client {
 
   private onMessage(event: MessageEvent): void {
     const responses: ResponseMessage<any, Message<any>>[] = JSON.parse(event.data);
-    if (this.showLog) console.log("Websocket收到消息:", responses);
+    // if (this.showLog) console.log("Websocket收到消息:", responses);
     for (const response of responses) {
       const request = this.requests.find(
         (request) => request.config.uid === response.uid
@@ -436,6 +513,7 @@ export class ClientProvider implements Client {
   private handle(): void {
     if (!this.isRunning) return;
     if (this.isTimeout()) {
+      if (this.showLog) console.error("连接超时");
       this.stop();
       return;
     }
@@ -451,16 +529,37 @@ export class ClientProvider implements Client {
       requests.push(request.config);
     }
 
-    if (this.showLog) console.log("Websocket发送消息:", requests);
+    // if (this.showLog) console.log("Websocket发送消息:", requests);
     this.socket?.send(JSON.stringify(requests));
   }
 }
 
 export function newClient(
   eventHandle: EventHandle,
-  url: string,
   token?: string,
   showLog?: boolean
 ): Client {
-  return new ClientProvider(eventHandle, url, token, showLog);
+  return new ClientProvider(eventHandle, token, showLog);
+}
+
+export async function getMessageVersioinByRank(
+  channel: ChannelType,
+  rank: number = 1,
+  params: Record<string, any> = {},
+  token?: string
+): Promise<String> {
+  const headers: Record<string, any> = {
+    "Content-Type": "application/json",
+    token: token
+  };
+
+  const url = new URL(getBasicHttpUrl() + "/getMessageVersioinByRank");
+  url.search = new URLSearchParams(Object.assign(params, { channel, rank })).toString();
+
+  return fetch(url.toString(), {
+    method: "GET",
+    headers
+  })
+    .then((res) => res.json())
+    .then((json) => json.data);
 }
