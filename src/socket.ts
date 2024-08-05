@@ -550,6 +550,16 @@ export function newClient(
   return new ClientProvider(eventHandle, token, showLog);
 }
 
+function objectToQueryString(obj: any) {
+  const params = [];
+  for (const key in obj) {
+    if (obj.hasOwnProperty(key)) {
+      params.push(`${key}=${obj[key]}`);
+    }
+  }
+  return params.join('&');
+}
+
 export async function getMessageVersioinByRank(
   channel: ChannelType,
   rank: number = 1,
@@ -561,14 +571,13 @@ export async function getMessageVersioinByRank(
   };
   if (token) headers["token"] = token;
 
-  const url = new URL(getBasicHttpUrl() + "/getMessageVersioinByRank");
-  url.search = new URLSearchParams(Object.assign(params, { channel, rank })).toString();
-
+  const url = `${getBasicHttpUrl()}/getMessageVersioinByRank?`;
+  const queryString = objectToQueryString(Object.assign(params, { channel, rank }))
   if (process.env.UNI_PLATFORM === "app-plus") {
     return new Promise((resolve, reject) => {
       //@ts-ignore
       uni.request({
-        url: url.toString(),
+        url: `${url}${queryString}`,
         header: headers,
         success: (res: any) => {
           resolve(res.data);
