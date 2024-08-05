@@ -40,10 +40,6 @@ class WebFuket {
                 if (this.onclose)
                     this.onclose(ev);
             };
-            this.socket.send = (data) => {
-                console.log("uni websocket send");
-                this.socket.send({ data });
-            };
         }
         else {
             this.socket = new WebSocket(this.url, protocols);
@@ -69,6 +65,10 @@ class WebFuket {
         this.socket.close();
     }
     send(data) {
+        if (process.env.UNI_PLATFORM === "app-plus") {
+            this.socket.send({ data });
+            return;
+        }
         this.socket.send(data);
     }
 }
