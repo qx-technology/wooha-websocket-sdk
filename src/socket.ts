@@ -257,6 +257,8 @@ export class ClientProvider implements Client {
       1500,
       false
     );
+    try {
+
     // 订阅房间团购详情
     const roomGroupBuyingVersion = await getMessageVersioinByRank(
       ChannelType.RoomGroupBuying,
@@ -346,6 +348,9 @@ export class ClientProvider implements Client {
         },
         100
       );
+    }
+    } catch (e) {
+      console.error(e);
     }
     return this;
   }

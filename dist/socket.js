@@ -125,59 +125,64 @@ class ClientProvider {
                 uid: uuid(),
                 params: { roomId }
             }, 1500, false);
-            // 订阅房间团购详情
-            const roomGroupBuyingVersion = yield getMessageVersioinByRank(types_1.ChannelType.RoomGroupBuying, 1, { roomId }, this.token);
-            if (this.showLog) {
-                console.log(`订阅房间团购详情: roomId(${roomId}), 版本号(${roomGroupBuyingVersion})`);
-            }
-            this.registerChannel({
-                channel: types_1.ChannelType.RoomGroupBuying,
-                version: "1.0",
-                seq: roomGroupBuyingVersion,
-                ts: Date.now(),
-                uid: uuid(),
-                params: { roomId }
-            }, 100);
-            // 订阅房间投票
-            const roomVoteVersion = yield getMessageVersioinByRank(types_1.ChannelType.RoomVote, 1, { roomId }, this.token);
-            if (this.showLog) {
-                console.log(`订阅房间投票: roomId(${roomId}), 版本号(${roomVoteVersion})`);
-            }
-            this.registerChannel({
-                channel: types_1.ChannelType.RoomVote,
-                version: "1.0",
-                seq: roomVoteVersion,
-                ts: Date.now(),
-                uid: uuid(),
-                params: { roomId }
-            }, 100);
-            // 订阅房间消息
-            const roomMessageVersion = yield getMessageVersioinByRank(types_1.ChannelType.RoomMessage, 1, { roomId }, this.token);
-            if (this.showLog) {
-                console.log(`订阅房间消息: roomId(${roomId}), 版本号(${roomMessageVersion})`);
-            }
-            this.registerChannel({
-                channel: types_1.ChannelType.RoomMessage,
-                version: "1.0",
-                seq: roomMessageVersion,
-                ts: Date.now(),
-                uid: uuid(),
-                params: { roomId }
-            }, 100);
-            // 订阅房间用户消息
-            if (this.token) {
-                const roomUserMessageVersion = yield getMessageVersioinByRank(types_1.ChannelType.RoomUserMessage, 1, { roomId }, this.token);
+            try {
+                // 订阅房间团购详情
+                const roomGroupBuyingVersion = yield getMessageVersioinByRank(types_1.ChannelType.RoomGroupBuying, 1, { roomId }, this.token);
                 if (this.showLog) {
-                    console.log(`订阅房间用户消息: roomId(${roomId}), 版本号(${roomUserMessageVersion})`);
+                    console.log(`订阅房间团购详情: roomId(${roomId}), 版本号(${roomGroupBuyingVersion})`);
                 }
                 this.registerChannel({
-                    channel: types_1.ChannelType.RoomUserMessage,
+                    channel: types_1.ChannelType.RoomGroupBuying,
                     version: "1.0",
-                    seq: roomUserMessageVersion,
+                    seq: roomGroupBuyingVersion,
                     ts: Date.now(),
                     uid: uuid(),
                     params: { roomId }
                 }, 100);
+                // 订阅房间投票
+                const roomVoteVersion = yield getMessageVersioinByRank(types_1.ChannelType.RoomVote, 1, { roomId }, this.token);
+                if (this.showLog) {
+                    console.log(`订阅房间投票: roomId(${roomId}), 版本号(${roomVoteVersion})`);
+                }
+                this.registerChannel({
+                    channel: types_1.ChannelType.RoomVote,
+                    version: "1.0",
+                    seq: roomVoteVersion,
+                    ts: Date.now(),
+                    uid: uuid(),
+                    params: { roomId }
+                }, 100);
+                // 订阅房间消息
+                const roomMessageVersion = yield getMessageVersioinByRank(types_1.ChannelType.RoomMessage, 1, { roomId }, this.token);
+                if (this.showLog) {
+                    console.log(`订阅房间消息: roomId(${roomId}), 版本号(${roomMessageVersion})`);
+                }
+                this.registerChannel({
+                    channel: types_1.ChannelType.RoomMessage,
+                    version: "1.0",
+                    seq: roomMessageVersion,
+                    ts: Date.now(),
+                    uid: uuid(),
+                    params: { roomId }
+                }, 100);
+                // 订阅房间用户消息
+                if (this.token) {
+                    const roomUserMessageVersion = yield getMessageVersioinByRank(types_1.ChannelType.RoomUserMessage, 1, { roomId }, this.token);
+                    if (this.showLog) {
+                        console.log(`订阅房间用户消息: roomId(${roomId}), 版本号(${roomUserMessageVersion})`);
+                    }
+                    this.registerChannel({
+                        channel: types_1.ChannelType.RoomUserMessage,
+                        version: "1.0",
+                        seq: roomUserMessageVersion,
+                        ts: Date.now(),
+                        uid: uuid(),
+                        params: { roomId }
+                    }, 100);
+                }
+            }
+            catch (e) {
+                console.error(e);
             }
             return this;
         });
