@@ -26,6 +26,26 @@ export class WebFuket implements WebFuketInterface {
     }
 
     if (process.env.UNI_PLATFORM === "app-plus") {
+      //@ts-ignore
+      this.socket = uni.connectSocket({
+        url: this.url,
+        header: { "content-type": "application/json" },
+        protocols: protocols,
+        method: "GET",
+        complete: () => {}
+      });
+      this.socket.onOpen = (ev: Event) => {
+        if (this.onopen) this.onopen(ev);
+      };
+      this.socket.onMessage = (ev: MessageEvent) => {
+        if (this.onmessage) this.onmessage(ev);
+      };
+      this.socket.onError = (ev: Event) => {
+        if (this.onerror) this.onerror(ev);
+      };
+      this.socket.onClose = (ev: CloseEvent) => {
+        if (this.onclose) this.onclose(ev);
+      };
     } else {
       this.socket = new WebSocket(this.url, protocols);
       this.socket.onopen = (ev: Event) => {
