@@ -16,7 +16,10 @@ exports.useWss = useWss;
 exports.newClient = newClient;
 exports.getMessageVersioinByRank = getMessageVersioinByRank;
 const types_1 = require("./types");
-const uuid_1 = require("uuid");
+// import { v4 as uuid } from "uuid";
+function uuid() {
+    return `${Date.now()}${Math.random()}`;
+}
 // ============================================================ //
 // 全局配置
 // ============================================================ //
@@ -123,7 +126,7 @@ class ClientProvider {
                 version: "1.0",
                 seq: "0",
                 ts: Date.now(),
-                uid: (0, uuid_1.v4)(),
+                uid: uuid(),
                 params: { roomId }
             }, 1500, false);
             // 订阅房间团购详情
@@ -136,7 +139,7 @@ class ClientProvider {
                 version: "1.0",
                 seq: roomGroupBuyingVersion,
                 ts: Date.now(),
-                uid: (0, uuid_1.v4)(),
+                uid: uuid(),
                 params: { roomId }
             }, 100);
             // 订阅房间投票
@@ -149,7 +152,7 @@ class ClientProvider {
                 version: "1.0",
                 seq: roomVoteVersion,
                 ts: Date.now(),
-                uid: (0, uuid_1.v4)(),
+                uid: uuid(),
                 params: { roomId }
             }, 100);
             // 订阅房间消息
@@ -162,7 +165,7 @@ class ClientProvider {
                 version: "1.0",
                 seq: roomMessageVersion,
                 ts: Date.now(),
-                uid: (0, uuid_1.v4)(),
+                uid: uuid(),
                 params: { roomId }
             }, 100);
             // 订阅房间用户消息
@@ -176,7 +179,7 @@ class ClientProvider {
                     version: "1.0",
                     seq: roomUserMessageVersion,
                     ts: Date.now(),
-                    uid: (0, uuid_1.v4)(),
+                    uid: uuid(),
                     params: { roomId }
                 }, 100);
             }
