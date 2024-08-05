@@ -22,7 +22,15 @@ class WebFuket {
                 header: { "content-type": "application/json" },
                 protocols: protocols,
                 method: "GET",
-                complete: () => { }
+                complete: () => { },
+                success: () => {
+                    if (this.onopen)
+                        this.onopen(null);
+                },
+                fail: () => {
+                    if (this.onclose)
+                        this.onclose(null);
+                }
             });
             this.socket.onOpen = (ev) => {
                 if (this.onopen)
