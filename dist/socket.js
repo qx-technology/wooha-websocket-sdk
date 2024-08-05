@@ -208,6 +208,8 @@ class ClientProvider {
         }
     }
     onMessage(event) {
+        const now = Date.now();
+        this.lastRpsTime = now;
         const responses = JSON.parse(event.data);
         // if (this.showLog) console.log("Websocket收到消息:", responses);
         for (const response of responses) {
@@ -316,6 +318,7 @@ class ClientProvider {
         }
         // if (this.showLog) console.log("Websocket发送消息:", requests);
         (_a = this.socket) === null || _a === void 0 ? void 0 : _a.send(JSON.stringify(requests));
+        this.lastReqTime = now;
     }
 }
 exports.ClientProvider = ClientProvider;
