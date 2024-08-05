@@ -19,7 +19,11 @@ import {
   RoomGroupBuyingBiddingSellerCounteroffer,
   RoomGroupBuyingBiddingBuyerOfferRejected
 } from "./types";
-import { v4 as uuid } from "uuid";
+// import { v4 as uuid } from "uuid";
+
+function uuid(): string {
+  return `${Date.now()}${Math.random()}`;
+}
 
 // ============================================================ //
 // 全局配置
