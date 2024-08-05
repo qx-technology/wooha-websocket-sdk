@@ -47,6 +47,10 @@ export class WebFuket implements WebFuketInterface {
       this.socket.onClose = (ev: CloseEvent) => {
         if (this.onclose) this.onclose(ev);
       };
+      this.socket.send = (data: any) => {
+        console.log("uni websocket send");
+        this.socket.send({ data });
+      };
     } else {
       this.socket = new WebSocket(this.url, protocols);
       this.socket.onopen = (ev: Event) => {

@@ -14,6 +14,7 @@ class WebFuket {
             protocols.push("token");
             protocols.push(this.token);
         }
+        console.log("process.env.UNI_PLATFORM", process.env.UNI_PLATFORM);
         if (process.env.UNI_PLATFORM === "app-plus") {
             //@ts-ignore
             this.socket = uni.connectSocket({
@@ -38,6 +39,10 @@ class WebFuket {
             this.socket.onClose = (ev) => {
                 if (this.onclose)
                     this.onclose(ev);
+            };
+            this.socket.send = (data) => {
+                console.log("uni websocket send");
+                this.socket.send({ data });
             };
         }
         else {
