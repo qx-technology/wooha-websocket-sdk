@@ -36,9 +36,10 @@ class WebFuket {
                     }, 100);
                 }
             });
-            // this.socket.onOpen(() => {
-            //   if (this.onopen) this.onopen(null!);
-            // });
+            this.socket.onOpen(() => {
+                if (this.onopen)
+                    this.onopen(null);
+            });
             this.socket.onMessage((ev) => {
                 if (this.onmessage)
                     this.onmessage(ev);
