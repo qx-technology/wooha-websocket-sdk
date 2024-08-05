@@ -1,3 +1,6 @@
+//@ts-ignore
+import socket from "plus-websocket"
+
 export interface WebFuketInterface {
   onopen: ((this: WebFuketInterface, ev: Event) => any) | null;
   onmessage: ((this: WebFuketInterface, ev: MessageEvent) => any) | null;
@@ -27,6 +30,8 @@ export class WebFuket implements WebFuketInterface {
 
     console.log("process.env.UNI_PLATFORM", process.env.UNI_PLATFORM);
     if (process.env.UNI_PLATFORM === "app-plus") {
+      //@ts-ignore
+      Object.assign(uni, socket)
       //@ts-ignore
       this.socket = uni.connectSocket({
         url: this.url,
