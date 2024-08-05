@@ -580,7 +580,7 @@ export async function getMessageVersioinByRank(
         url: `${url}${queryString}`,
         header: headers,
         success: (res: any) => {
-          resolve(res.data);
+          resolve(res.data.data);
         },
         fail: () => {
           reject();
@@ -588,7 +588,7 @@ export async function getMessageVersioinByRank(
       });
     });
   } else {
-    return fetch(url.toString(), {
+    return fetch(`${url}${queryString}`, {
       method: "GET",
       headers
     })

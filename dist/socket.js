@@ -354,7 +354,7 @@ function getMessageVersioinByRank(channel_1) {
                     url: `${url}${queryString}`,
                     header: headers,
                     success: (res) => {
-                        resolve(res.data);
+                        resolve(res.data.data);
                     },
                     fail: () => {
                         reject();
@@ -363,7 +363,7 @@ function getMessageVersioinByRank(channel_1) {
             });
         }
         else {
-            return fetch(url.toString(), {
+            return fetch(`${url}${queryString}`, {
                 method: "GET",
                 headers
             })
