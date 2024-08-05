@@ -17,6 +17,7 @@ exports.newClient = newClient;
 exports.getMessageVersioinByRank = getMessageVersioinByRank;
 const types_1 = require("./types");
 // import { v4 as uuid } from "uuid";
+const socket_impl_1 = require("./socket_impl");
 function uuid() {
     return `${Date.now()}${Math.random()}`;
 }
@@ -86,12 +87,7 @@ class ClientProvider {
         const now = Date.now();
         this.lastReqTime = now;
         this.lastRpsTime = now;
-        const protocols = [];
-        if (this.token) {
-            protocols.push("token");
-            protocols.push(this.token);
-        }
-        this.socket = new WebSocket(this.url, protocols);
+        this.socket = new socket_impl_1.WebFuket(this.url, this.token);
         this.socket.onopen = this.onOpen.bind(this);
         this.socket.onclose = this.onClose.bind(this);
         this.socket.onmessage = this.onMessage.bind(this);

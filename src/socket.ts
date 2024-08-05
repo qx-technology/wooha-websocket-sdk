@@ -20,6 +20,7 @@ import {
   RoomGroupBuyingBiddingBuyerOfferRejected
 } from "./types";
 // import { v4 as uuid } from "uuid";
+import { WebFuket } from "./socket_impl";
 
 function uuid(): string {
   return `${Date.now()}${Math.random()}`;
@@ -177,7 +178,7 @@ export class RequestInfo {
 }
 
 export class ClientProvider implements Client {
-  private socket: WebSocket | null = null;
+  private socket: WebFuket | null = null;
   private url: string;
   private token?: string;
   private lastReqTime: number;
@@ -209,12 +210,7 @@ export class ClientProvider implements Client {
     this.lastReqTime = now;
     this.lastRpsTime = now;
 
-    const protocols: string[] = [];
-    if (this.token) {
-      protocols.push("token");
-      protocols.push(this.token);
-    }
-    this.socket = new WebSocket(this.url, protocols);
+    this.socket = new WebFuket(this.url, this.token);
 
     this.socket.onopen = this.onOpen.bind(this);
     this.socket.onclose = this.onClose.bind(this);
