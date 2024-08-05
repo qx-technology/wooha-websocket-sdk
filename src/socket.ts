@@ -552,9 +552,9 @@ export async function getMessageVersioinByRank(
   token?: string
 ): Promise<String> {
   const headers: Record<string, any> = {
-    "Content-Type": "application/json",
-    token: token
+    "Content-Type": "application/json"
   };
+  if (token) headers["token"] = token;
 
   const url = new URL(getBasicHttpUrl() + "/getMessageVersioinByRank");
   url.search = new URLSearchParams(Object.assign(params, { channel, rank })).toString();

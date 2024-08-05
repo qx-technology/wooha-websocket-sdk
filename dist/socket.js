@@ -327,9 +327,10 @@ function newClient(eventHandle, token, showLog) {
 function getMessageVersioinByRank(channel_1) {
     return __awaiter(this, arguments, void 0, function* (channel, rank = 1, params = {}, token) {
         const headers = {
-            "Content-Type": "application/json",
-            token: token
+            "Content-Type": "application/json"
         };
+        if (token)
+            headers["token"] = token;
         const url = new URL(getBasicHttpUrl() + "/getMessageVersioinByRank");
         url.search = new URLSearchParams(Object.assign(params, { channel, rank })).toString();
         if (process.env.UNI_PLATFORM === "app-plus") {

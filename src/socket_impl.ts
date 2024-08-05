@@ -35,24 +35,28 @@ export class WebFuket implements WebFuketInterface {
         method: "GET",
         complete: () => {},
         success: () => {
-          if (this.onopen) this.onopen(null!);
+          setTimeout(() => {
+            if (this.onopen) this.onopen(null!);
+          }, 100);
         },
         fail: () => {
-          if (this.onclose) this.onclose(null!);
+          setTimeout(() => {
+            if (this.onclose) this.onclose(null!);
+          }, 100);
         }
       });
-      this.socket.onOpen = (ev: Event) => {
-        if (this.onopen) this.onopen(ev);
-      };
-      this.socket.onMessage = (ev: MessageEvent) => {
+      // this.socket.onOpen(() => {
+      //   if (this.onopen) this.onopen(null!);
+      // });
+      this.socket.onMessage((ev: any) => {
         if (this.onmessage) this.onmessage(ev);
-      };
-      this.socket.onError = (ev: Event) => {
+      });
+      this.socket.onError((ev: any) => {
         if (this.onerror) this.onerror(ev);
-      };
-      this.socket.onClose = (ev: CloseEvent) => {
+      });
+      this.socket.onClose((ev: any) => {
         if (this.onclose) this.onclose(ev);
-      };
+      });
     } else {
       this.socket = new WebSocket(this.url, protocols);
       this.socket.onopen = (ev: Event) => {

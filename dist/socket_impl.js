@@ -24,30 +24,33 @@ class WebFuket {
                 method: "GET",
                 complete: () => { },
                 success: () => {
-                    if (this.onopen)
-                        this.onopen(null);
+                    setTimeout(() => {
+                        if (this.onopen)
+                            this.onopen(null);
+                    }, 100);
                 },
                 fail: () => {
-                    if (this.onclose)
-                        this.onclose(null);
+                    setTimeout(() => {
+                        if (this.onclose)
+                            this.onclose(null);
+                    }, 100);
                 }
             });
-            this.socket.onOpen = (ev) => {
-                if (this.onopen)
-                    this.onopen(ev);
-            };
-            this.socket.onMessage = (ev) => {
+            // this.socket.onOpen(() => {
+            //   if (this.onopen) this.onopen(null!);
+            // });
+            this.socket.onMessage((ev) => {
                 if (this.onmessage)
                     this.onmessage(ev);
-            };
-            this.socket.onError = (ev) => {
+            });
+            this.socket.onError((ev) => {
                 if (this.onerror)
                     this.onerror(ev);
-            };
-            this.socket.onClose = (ev) => {
+            });
+            this.socket.onClose((ev) => {
                 if (this.onclose)
                     this.onclose(ev);
-            };
+            });
         }
         else {
             this.socket = new WebSocket(this.url, protocols);
