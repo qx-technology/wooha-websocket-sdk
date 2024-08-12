@@ -396,7 +396,7 @@ export class ClientProvider implements Client {
     const responses = msgpackDecode(rpsData, {
       useBigInt64: true
     }) as ResponseMessage[];
-    // if (this.showLog) console.log("Websocket收到消息:", responses);
+    if (this.showLog) console.log("Websocket收到消息:", responses);
     for (const response of responses) {
       const request = this.requests.find(
         (request) => request.config.uid === response.uid
@@ -539,6 +539,8 @@ export class ClientProvider implements Client {
       request.nextRequestTime = now + request.interval;
       requests.push(request.config);
     }
+
+    if (requests.length == 0) return;
 
     // if (this.showLog) console.log("Websocket发送消息:", requests);
 

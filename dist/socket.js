@@ -223,7 +223,8 @@ class ClientProvider {
             const responses = (0, msgpack_1.decode)(rpsData, {
                 useBigInt64: true
             });
-            // if (this.showLog) console.log("Websocket收到消息:", responses);
+            if (this.showLog)
+                console.log("Websocket收到消息:", responses);
             for (const response of responses) {
                 const request = this.requests.find((request) => request.config.uid === response.uid);
                 if (!request)
@@ -327,6 +328,8 @@ class ClientProvider {
             request.nextRequestTime = now + request.interval;
             requests.push(request.config);
         }
+        if (requests.length == 0)
+            return;
         // if (this.showLog) console.log("Websocket发送消息:", requests);
         const sendData = (0, msgpack_1.encode)(requests, { useBigInt64: true });
         (_a = this.socket) === null || _a === void 0 ? void 0 : _a.send(sendData);
