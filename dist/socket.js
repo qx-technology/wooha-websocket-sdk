@@ -325,7 +325,7 @@ class ClientProvider {
             requests.push(request.config);
         }
         // if (this.showLog) console.log("Websocket发送消息:", requests);
-        const sendData = (0, msgpack_1.encode)(requests, { useBigInt64: false });
+        const sendData = (0, msgpack_1.encode)(requests, { useBigInt64: true });
         (_a = this.socket) === null || _a === void 0 ? void 0 : _a.send(sendData);
         this.lastReqTime = now;
     }
