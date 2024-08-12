@@ -531,8 +531,8 @@ export class ClientProvider implements Client {
 
   private isTimeout(): boolean {
     const now = Date.now();
-    if (this.lastReqTime + 15000 > now) return false;
-    if (this.lastRpsTime + 15000 > now) return false;
+    if (this.lastReqTime + 18000 > now) return false;
+    if (this.lastRpsTime + 18000 > now) return false;
     return true;
   }
 
