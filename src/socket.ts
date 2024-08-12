@@ -404,54 +404,54 @@ export class ClientProvider implements Client {
 
       switch (response.channel) {
         case ChannelType.ROOM_DETAIL:
-          for (const message of response.data) {
+          for (const message of response.contents) {
             this.callback.OnRoomDetail(this, request.config.params, message);
           }
           break;
         case ChannelType.ROOM_GROUP_BUYING:
-          for (const message of response.data) {
+          for (const message of response.contents) {
             this.callback.OnRoomGroupBuying(this, request.config.params, message);
           }
           break;
         case ChannelType.ROOM_MESSAGE:
-          for (const message of response.data) {
-            switch (message.serviceType) {
-              case ServiceType.RoomGroupBuyingNextProduct:
+          for (const message of response.contents) {
+            switch (message.type) {
+              case MessageType.ROOM_GROUP_BUYING_NEXT_PRODUCT:
                 this.callback.OnRoomGroupBuyingNextProduct(
                   this,
                   request.config.params,
                   message
                 );
                 break;
-              case ServiceType.RoomGroupBuyingStart:
+              case MessageType.ROOM_GROUP_BUYING_START:
                 this.callback.OnRoomGroupBuyingStart(
                   this,
                   request.config.params,
                   message
                 );
                 break;
-              case ServiceType.RoomGroupBuyingLotteryOpening:
+              case MessageType.ROOM_GROUP_BUYING_LOTTERY_OPENING:
                 this.callback.OnRoomGroupBuyingLotteryOpening(
                   this,
                   request.config.params,
                   message
                 );
                 break;
-              case ServiceType.RoomGroupBuyingWinning:
+              case MessageType.ROOM_GROUP_BUYING_WINNING:
                 this.callback.OnRoomGroupBuyingWinning(
                   this,
                   request.config.params,
                   message
                 );
                 break;
-              case ServiceType.RoomGroupBuyingBiddingCounteroffer:
+              case MessageType.ROOM_GROUP_BUYING_BIDDING_COUNTEROFFER:
                 this.callback.OnRoomGroupBuyingBiddingCounteroffer(
                   this,
                   request.config.params,
                   message
                 );
                 break;
-              case ServiceType.RoomGroupBuyingBiddingDeal:
+              case MessageType.ROOM_GROUP_BUYING_BIDDING_DEAL:
                 this.callback.OnRoomGroupBuyingBiddingDeal(
                   this,
                   request.config.params,
@@ -462,35 +462,35 @@ export class ClientProvider implements Client {
           }
           break;
         case ChannelType.ROOM_VOTE:
-          for (const message of response.data) {
+          for (const message of response.contents) {
             this.callback.OnRoomGroupBuyingVote(this, request.config.params, message);
           }
           break;
         case ChannelType.ROOM_USER_MESSAGE:
-          for (const message of response.data) {
-            switch (message.serviceType) {
-              case ServiceType.RoomGroupBuyingBiddingBuyerInitiatesOffer:
+          for (const message of response.contents) {
+            switch (message.type) {
+              case MessageType.ROOM_GROUP_BUYING_BIDDING_BUYER_INITIATES_OFFER:
                 this.callback.OnRoomGroupBuyingBiddingBuyerInitiatesOffer(
                   this,
                   request.config.params,
                   message
                 );
                 break;
-              case ServiceType.RoomGroupBuyingBiddingSellerReceivesOffer:
+              case MessageType.ROOM_GROUP_BUYING_BIDDING_SELLER_RECEIVES_OFFER:
                 this.callback.OnRoomGroupBuyingBiddingSellerReceivesOffer(
                   this,
                   request.config.params,
                   message
                 );
                 break;
-              case ServiceType.RoomGroupBuyingBiddingSellerCounteroffer:
+              case MessageType.ROOM_GROUP_BUYING_BIDDING_SELLER_COUNTEROFFER:
                 this.callback.OnRoomGroupBuyingBiddingSellerCounteroffer(
                   this,
                   request.config.params,
                   message
                 );
                 break;
-              case ServiceType.RoomGroupBuyingBiddingBuyerOfferRejected:
+              case MessageType.ROOM_GROUP_BUYING_BIDDING_BUYER_OFFER_REJECTED:
                 this.callback.OnRoomGroupBuyingBiddingBuyerOfferRejected(
                   this,
                   request.config.params,
