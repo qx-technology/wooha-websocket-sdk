@@ -386,6 +386,10 @@ export class ClientProvider implements Client {
   }
 
   private onMessage(event: MessageEvent): void {
+    if (typeof event.data === "string") {
+      console.error(JSON.parse(event.data));
+      return;
+    }
     const now = Date.now();
     this.lastRpsTime = now;
     const responses = msgpackDecode(event.data, {

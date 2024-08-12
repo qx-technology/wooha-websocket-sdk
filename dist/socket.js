@@ -212,6 +212,10 @@ class ClientProvider {
         }
     }
     onMessage(event) {
+        if (typeof event.data === "string") {
+            console.error(JSON.parse(event.data));
+            return;
+        }
         const now = Date.now();
         this.lastRpsTime = now;
         const responses = (0, msgpack_1.decode)(event.data, {
