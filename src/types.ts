@@ -1,125 +1,185 @@
 // ============================================================ //
-// Websocket协议
+// 枚举
 // ============================================================ //
 
-/// 通道类型
+/**
+ * 通道类型
+ */
 export enum ChannelType {
-  /// 房间详情
-  RoomDetail = "RoomDetail",
-  /// 房间团购详情
-  RoomGroupBuying = "RoomGroupBuying",
-  /// 房间消息
-  RoomMessage = "RoomMessage",
-  /// 房间投票
-  RoomVote = "RoomVote",
-  /// 房间用户消息
-  RoomUserMessage = "RoomUserMessage"
+  /**
+   * 心跳
+   */
+  HEARTBEAT,
+  /**
+   * 房间详情
+   */
+  ROOM_DETAIL,
+  /**
+   * 房间团购详情
+   */
+  ROOM_GROUP_BUYING,
+  /**
+   * 房间消息
+   */
+  ROOM_MESSAGE,
+  /**
+   * 房间投票
+   */
+  ROOM_VOTE,
+  /**
+   * 房间用户消息
+   */
+  ROOM_USER_MESSAGE
 }
 
-/// 请求消息
-export interface RequestMessage<P = any> {
-  /// 通道类型
-  channel: ChannelType;
-  /// 请求版本
-  version: string;
-  /// 请求序号
-  seq: string;
-  /// 请求时间戳
-  ts: number;
-  /// 请求唯一ID
-  uid: string;
-  /// 请求参数
-  params: P;
-}
-
-/// 响应消息
-export interface ResponseMessage<P = any, D = any> {
-  /// 通道类型
-  channel: ChannelType;
-  /// 请求版本
-  version: string;
-  /// 请求序号
-  seq: string;
-  /// 请求时间戳
-  ts: number;
-  /// 请求唯一ID
-  uid: string;
-  /// 请求参数
-  params: P;
-  /// 响应序号
-  rpsSeq: string;
-  /// 响应时间戳
-  rpsTs: number;
-  /// 响应数据
-  data: D[];
-}
-
-// ============================================================ //
-// 消息协议
-// ============================================================ //
-
-/// 消息类型
+/**
+ * 消息类型
+ */
 export enum MessageType {
-  /// 普通消息
-  Normal = "Normal"
+  /**
+   * 房间详情
+   */
+  ROOM_DETAIL,
+  /**
+   * 房间团购详情
+   */
+  ROOM_GROUP_BUYING_DETAIL,
+  /**
+   * 房间团购投票
+   */
+  ROOM_GROUP_BUYING_VOTE,
+  /**
+   * 房间团购下一个商品
+   */
+  ROOM_GROUP_BUYING_NEXT_PRODUCT,
+  /**
+   * 房间团购开始
+   */
+  ROOM_GROUP_BUYING_START,
+  /**
+   * 房间团购正在开奖
+   */
+  ROOM_GROUP_BUYING_LOTTERY_OPENING,
+  /**
+   * 房间团购中奖
+   */
+  ROOM_GROUP_BUYING_WINNING,
+  /**
+   * 房间团购竞拍还价所有人
+   */
+  ROOM_GROUP_BUYING_BIDDING_COUNTEROFFER,
+  /**
+   * 房间团购竞拍成交
+   */
+  ROOM_GROUP_BUYING_BIDDING_DEAL,
+  /**
+   * 房间团购竞拍买家发起报价(私人)
+   */
+  ROOM_GROUP_BUYING_BIDDING_BUYER_INITIATES_OFFER,
+  /**
+   * 房间团购竞拍卖家收到报价(私人)
+   */
+  ROOM_GROUP_BUYING_BIDDING_SELLER_RECEIVES_OFFER,
+  /**
+   * 房间团购竞拍买家收到还价(私人)
+   */
+  ROOM_GROUP_BUYING_BIDDING_SELLER_COUNTEROFFER,
+  /**
+   * 房间团购竞拍买家报价被拒(私人)
+   */
+  ROOM_GROUP_BUYING_BIDDING_BUYER_OFFER_REJECTED
 }
 
-/// 业务类型
-export enum ServiceType {
-  /// 房间详情
-  RoomDetail = "RoomDetail",
-  /// 房间团购详情
-  RoomGroupBuying = "RoomGroupBuying",
-  /// 房间团购 投票
-  RoomGroupBuyingVote = "RoomGroupBuyingVote",
-  /// 房间团购 下一个商品
-  RoomGroupBuyingNextProduct = "RoomGroupBuyingNextProduct",
-  /// 房间团购 开始
-  RoomGroupBuyingStart = "RoomGroupBuyingStart",
-  /// 房间团购 正在开奖
-  RoomGroupBuyingLotteryOpening = "RoomGroupBuyingLotteryOpening",
-  /// 房间团购 中奖
-  RoomGroupBuyingWinning = "RoomGroupBuyingWinning",
-  /// 房间团购 竞拍还价所有人
-  RoomGroupBuyingBiddingCounteroffer = "RoomGroupBuyingBiddingCounteroffer",
-  /// 房间团购 竞拍成交
-  RoomGroupBuyingBiddingDeal = "RoomGroupBuyingBiddingDeal",
-  /// 房间团购 竞拍买家发起报价(私人)
-  RoomGroupBuyingBiddingBuyerInitiatesOffer = "RoomGroupBuyingBiddingBuyerInitiatesOffer",
-  /// 房间团购 竞拍卖家收到报价(私人)
-  RoomGroupBuyingBiddingSellerReceivesOffer = "RoomGroupBuyingBiddingSellerReceivesOffer",
-  /// 房间团购 竞拍买家收到还价(私人)
-  RoomGroupBuyingBiddingSellerCounteroffer = "RoomGroupBuyingBiddingSellerCounteroffer",
-  /// 房间团购 竞拍买家报价被拒(私人)
-  RoomGroupBuyingBiddingBuyerOfferRejected = "RoomGroupBuyingBiddingBuyerOfferRejected"
-}
+// ============================================================ //
+// 协议
+// ============================================================ //
 
 /// 消息
-export interface Message<D = any> {
-  /// 消息ID
-  messageId: string;
-  /// 消息类型
-  messageType: MessageType;
-  /// 业务类型
-  serviceType: ServiceType;
-  /// 消息内容
-  content: D;
+export interface Message {
+  /**
+   * 消息序号
+   */
+  seq: bigint;
+  /**
+   * 消息类型
+   */
+  type: MessageType;
+  /**
+   * 消息内容
+   */
+  content: Uint8Array;
+}
+
+/**
+ * 请求消息
+ */
+export interface RequestMessage {
+  /**
+   * 通道类型
+   */
+  channel: ChannelType;
+  /**
+   * 请求版本
+   */
+  version: string;
+  /**
+   * 请求序号
+   */
+  seq: bigint;
+  /**
+   * 请求时间戳
+   */
+  ts: number;
+  /**
+   * 请求唯一ID
+   */
+  uid: string;
+  /**
+   * 请求参数
+   */
+  params: Uint8Array;
+}
+
+/**
+ * 响应消息
+ */
+export interface ResponseMessage extends RequestMessage {
+  /**
+   * 响应序号
+   */
+  rpsSeq: bigint;
+  /**
+   * 响应时间戳
+   */
+  rpsTs: number;
+  /**
+   * 响应数据
+   */
+  contents: Message[];
 }
 
 // ============================================================ //
-// 房间
+// 房间业务
 // ============================================================ //
 
-/// 房间请求参数
+/**
+ * 房间基础请求参数
+ */
 export interface RoomBasicParam {
-  /// 房间ID
-  roomId: string;
+  /**
+   * 房间ID
+   */
+  roomId: bigint;
 }
 
-/// 房间详情
+/**
+ * 房间详情
+ */
 export interface RoomDetail {
-  /// 在线人数
-  onlinePeople: number;
+  /**
+   * 在线人数
+   */
+  onlinePeople: bigint;
 }
 
 /// 房间团购详情
