@@ -19,7 +19,7 @@ class MsgCallback {
     }
     OnRoomGroupBuyingNextProduct(client, param, message) {
         const content = message.content;
-        if (content.beginTime === 0) {
+        if (content.beginTime == BigInt(0)) {
             console.log(`房间团购下一轮商品: 团购ID(${content.groupBuyingId}), 商品ID(${content.productId}), SKUID(${content.skuId})`);
         }
         else {

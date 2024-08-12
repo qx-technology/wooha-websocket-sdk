@@ -385,14 +385,15 @@ export class ClientProvider implements Client {
     }
   }
 
-  private onMessage(event: MessageEvent): void {
+  private async onMessage(event: MessageEvent): Promise<void> {
     if (typeof event.data === "string") {
       console.error("Websocket异常:", JSON.parse(event.data));
       return;
     }
     const now = Date.now();
     this.lastRpsTime = now;
-    const responses = msgpackDecode(event.data, {
+    const rpsData = new Uint8Array(await event.data.arrayBuffer());
+    const responses = msgpackDecode(rpsData, {
       useBigInt64: true
     }) as ResponseMessage[];
     // if (this.showLog) console.log("Websocket收到消息:", responses);
