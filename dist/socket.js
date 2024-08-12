@@ -81,6 +81,14 @@ class ClientProvider {
         this.callback = eventHandle;
         this.requests = [];
         this.showLog = showLog;
+        // 5秒心跳
+        this.registerChannel({
+            channel: types_1.ChannelType.HEARTBEAT,
+            version: "1.0",
+            seq: BigInt(0),
+            ts: BigInt(Date.now()),
+            uid: uuid()
+        }, 5000, false);
     }
     start() {
         this.stop();
@@ -290,6 +298,9 @@ class ClientProvider {
                             }
                         }
                         break;
+                    case types_1.ChannelType.HEARTBEAT:
+                        console.log("收到服务器心跳:", now);
+                        break;
                 }
                 request.config.seq = response.rpsSeq;
             }
@@ -301,9 +312,9 @@ class ClientProvider {
     }
     isTimeout() {
         const now = Date.now();
-        if (this.lastReqTime + 15000 > now)
+        if (this.lastReqTime + 18000 > now)
             return false;
-        if (this.lastRpsTime + 15000 > now)
+        if (this.lastRpsTime + 18000 > now)
             return false;
         return true;
     }
