@@ -20,7 +20,7 @@ import {
   RoomGroupBuyingBiddingBuyerOfferRejected
 } from "./types";
 import { WebFuket } from "./socket_impl";
-import { decode as msgpackDecode } from "@msgpack/msgpack";
+import { decode as msgpackDecode, encode as msgpackEncode } from "@msgpack/msgpack";
 
 function uuid(): string {
   return `${Date.now()}${Math.random()}`;
@@ -403,17 +403,17 @@ export class ClientProvider implements Client {
       }
 
       switch (response.channel) {
-        case ChannelType.RoomDetail:
+        case ChannelType.ROOM_DETAIL:
           for (const message of response.data) {
             this.callback.OnRoomDetail(this, request.config.params, message);
           }
           break;
-        case ChannelType.RoomGroupBuying:
+        case ChannelType.ROOM_GROUP_BUYING:
           for (const message of response.data) {
             this.callback.OnRoomGroupBuying(this, request.config.params, message);
           }
           break;
-        case ChannelType.RoomMessage:
+        case ChannelType.ROOM_MESSAGE:
           for (const message of response.data) {
             switch (message.serviceType) {
               case ServiceType.RoomGroupBuyingNextProduct:
@@ -461,12 +461,12 @@ export class ClientProvider implements Client {
             }
           }
           break;
-        case ChannelType.RoomVote:
+        case ChannelType.ROOM_VOTE:
           for (const message of response.data) {
             this.callback.OnRoomGroupBuyingVote(this, request.config.params, message);
           }
           break;
-        case ChannelType.RoomUserMessage:
+        case ChannelType.ROOM_USER_MESSAGE:
           for (const message of response.data) {
             switch (message.serviceType) {
               case ServiceType.RoomGroupBuyingBiddingBuyerInitiatesOffer:
@@ -536,7 +536,8 @@ export class ClientProvider implements Client {
     }
 
     // if (this.showLog) console.log("Websocket发送消息:", requests);
-    this.socket?.send(JSON.stringify(requests));
+
+    this.socket?.send(msgpackEncode(requests));
     this.lastReqTime = now;
   }
 }
