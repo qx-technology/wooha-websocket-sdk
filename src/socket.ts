@@ -387,7 +387,7 @@ export class ClientProvider implements Client {
 
   private onMessage(event: MessageEvent): void {
     if (typeof event.data === "string") {
-      console.error(JSON.parse(event.data));
+      console.error("Websocket异常:", JSON.parse(event.data));
       return;
     }
     const now = Date.now();

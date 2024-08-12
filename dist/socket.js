@@ -213,7 +213,7 @@ class ClientProvider {
     }
     onMessage(event) {
         if (typeof event.data === "string") {
-            console.error(JSON.parse(event.data));
+            console.error("Websocket异常:", JSON.parse(event.data));
             return;
         }
         const now = Date.now();
