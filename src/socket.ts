@@ -4,7 +4,7 @@ import {
   ChannelType,
   ResponseMessage,
   Message,
-  ServiceType,
+  MessageType,
   RoomDetail,
   RoomGroupBuying,
   RoomGroupBuyingVote,
@@ -19,7 +19,6 @@ import {
   RoomGroupBuyingBiddingSellerCounteroffer,
   RoomGroupBuyingBiddingBuyerOfferRejected
 } from "./types";
-// import { v4 as uuid } from "uuid";
 import { WebFuket } from "./socket_impl";
 
 function uuid(): string {
@@ -258,97 +257,96 @@ export class ClientProvider implements Client {
       false
     );
     try {
-
-    // 订阅房间团购详情
-    const roomGroupBuyingVersion = await getMessageVersioinByRank(
-      ChannelType.RoomGroupBuying,
-      1,
-      { roomId },
-      this.token
-    );
-    if (this.showLog) {
-      console.log(
-        `订阅房间团购详情: roomId(${roomId}), 版本号(${roomGroupBuyingVersion})`
-      );
-    }
-    this.registerChannel(
-      <RequestMessage<RoomBasicParam>>{
-        channel: ChannelType.RoomGroupBuying,
-        version: "1.0",
-        seq: roomGroupBuyingVersion,
-        ts: Date.now(),
-        uid: uuid(),
-        params: { roomId }
-      },
-      100
-    );
-    // 订阅房间投票
-    const roomVoteVersion = await getMessageVersioinByRank(
-      ChannelType.RoomVote,
-      1,
-      { roomId },
-      this.token
-    );
-    if (this.showLog) {
-      console.log(`订阅房间投票: roomId(${roomId}), 版本号(${roomVoteVersion})`);
-    }
-    this.registerChannel(
-      <RequestMessage<RoomBasicParam>>{
-        channel: ChannelType.RoomVote,
-        version: "1.0",
-        seq: roomVoteVersion,
-        ts: Date.now(),
-        uid: uuid(),
-        params: { roomId }
-      },
-      100
-    );
-    // 订阅房间消息
-    const roomMessageVersion = await getMessageVersioinByRank(
-      ChannelType.RoomMessage,
-      1,
-      { roomId },
-      this.token
-    );
-    if (this.showLog) {
-      console.log(`订阅房间消息: roomId(${roomId}), 版本号(${roomMessageVersion})`);
-    }
-    this.registerChannel(
-      <RequestMessage<RoomBasicParam>>{
-        channel: ChannelType.RoomMessage,
-        version: "1.0",
-        seq: roomMessageVersion,
-        ts: Date.now(),
-        uid: uuid(),
-        params: { roomId }
-      },
-      100
-    );
-    // 订阅房间用户消息
-    if (this.token) {
-      const roomUserMessageVersion = await getMessageVersioinByRank(
-        ChannelType.RoomUserMessage,
+      // 订阅房间团购详情
+      const roomGroupBuyingVersion = await getMessageVersioinByRank(
+        ChannelType.RoomGroupBuying,
         1,
         { roomId },
         this.token
       );
       if (this.showLog) {
         console.log(
-          `订阅房间用户消息: roomId(${roomId}), 版本号(${roomUserMessageVersion})`
+          `订阅房间团购详情: roomId(${roomId}), 版本号(${roomGroupBuyingVersion})`
         );
       }
       this.registerChannel(
         <RequestMessage<RoomBasicParam>>{
-          channel: ChannelType.RoomUserMessage,
+          channel: ChannelType.RoomGroupBuying,
           version: "1.0",
-          seq: roomUserMessageVersion,
+          seq: roomGroupBuyingVersion,
           ts: Date.now(),
           uid: uuid(),
           params: { roomId }
         },
         100
       );
-    }
+      // 订阅房间投票
+      const roomVoteVersion = await getMessageVersioinByRank(
+        ChannelType.RoomVote,
+        1,
+        { roomId },
+        this.token
+      );
+      if (this.showLog) {
+        console.log(`订阅房间投票: roomId(${roomId}), 版本号(${roomVoteVersion})`);
+      }
+      this.registerChannel(
+        <RequestMessage<RoomBasicParam>>{
+          channel: ChannelType.RoomVote,
+          version: "1.0",
+          seq: roomVoteVersion,
+          ts: Date.now(),
+          uid: uuid(),
+          params: { roomId }
+        },
+        100
+      );
+      // 订阅房间消息
+      const roomMessageVersion = await getMessageVersioinByRank(
+        ChannelType.RoomMessage,
+        1,
+        { roomId },
+        this.token
+      );
+      if (this.showLog) {
+        console.log(`订阅房间消息: roomId(${roomId}), 版本号(${roomMessageVersion})`);
+      }
+      this.registerChannel(
+        <RequestMessage<RoomBasicParam>>{
+          channel: ChannelType.RoomMessage,
+          version: "1.0",
+          seq: roomMessageVersion,
+          ts: Date.now(),
+          uid: uuid(),
+          params: { roomId }
+        },
+        100
+      );
+      // 订阅房间用户消息
+      if (this.token) {
+        const roomUserMessageVersion = await getMessageVersioinByRank(
+          ChannelType.RoomUserMessage,
+          1,
+          { roomId },
+          this.token
+        );
+        if (this.showLog) {
+          console.log(
+            `订阅房间用户消息: roomId(${roomId}), 版本号(${roomUserMessageVersion})`
+          );
+        }
+        this.registerChannel(
+          <RequestMessage<RoomBasicParam>>{
+            channel: ChannelType.RoomUserMessage,
+            version: "1.0",
+            seq: roomUserMessageVersion,
+            ts: Date.now(),
+            uid: uuid(),
+            params: { roomId }
+          },
+          100
+        );
+      }
     } catch (e) {
       console.error(e);
     }
@@ -557,7 +555,7 @@ function objectToQueryString(obj: any) {
       params.push(`${key}=${obj[key]}`);
     }
   }
-  return params.join('&');
+  return params.join("&");
 }
 
 export async function getMessageVersioinByRank(
@@ -572,7 +570,7 @@ export async function getMessageVersioinByRank(
   if (token) headers["token"] = token;
 
   const url = `${getBasicHttpUrl()}/getMessageVersioinByRank?`;
-  const queryString = objectToQueryString(Object.assign(params, { channel, rank }))
+  const queryString = objectToQueryString(Object.assign(params, { channel, rank }));
   if (process.env.UNI_PLATFORM === "app-plus") {
     return new Promise((resolve, reject) => {
       //@ts-ignore

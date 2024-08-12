@@ -95,7 +95,7 @@ export enum MessageType {
 // ============================================================ //
 
 /// 消息
-export interface Message {
+export interface Message<M = Uint8Array> {
   /**
    * 消息序号
    */
@@ -107,13 +107,13 @@ export interface Message {
   /**
    * 消息内容
    */
-  content: Uint8Array;
+  content: M;
 }
 
 /**
  * 请求消息
  */
-export interface RequestMessage {
+export interface RequestMessage<P = Uint8Array> {
   /**
    * 通道类型
    */
@@ -137,13 +137,13 @@ export interface RequestMessage {
   /**
    * 请求参数
    */
-  params: Uint8Array;
+  params: P;
 }
 
 /**
  * 响应消息
  */
-export interface ResponseMessage extends RequestMessage {
+export interface ResponseMessage<P = Uint8Array> extends RequestMessage<P> {
   /**
    * 响应序号
    */
@@ -250,17 +250,29 @@ export interface RoomGroupBuyingVote {
  * 房间团购下一个商品
  */
 export interface RoomGroupBuyingNextProduct {
-  // 团购ID
+  /**
+   * 团购ID
+   */
   groupBuyingId: bigint;
-  // 商品ID
+  /**
+   * 商品ID
+   */
   productId: bigint;
-  // 商品名称
+  /**
+   * 商品名称
+   */
   productName: string;
-  // 商品图片
+  /**
+   * 商品图片
+   */
   productImage: string;
-  // SKUID
+  /**
+   * SKUID
+   */
   skuId: bigint;
-  // 开始时间
+  /**
+   * 开始时间
+   */
   beginTime: number;
 }
 
