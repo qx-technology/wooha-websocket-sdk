@@ -1,60 +1,95 @@
 "use strict";
 // ============================================================ //
-// Websocket协议
+// 枚举
 // ============================================================ //
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ServiceType = exports.MessageType = exports.ChannelType = void 0;
-/// 通道类型
+exports.MessageType = exports.ChannelType = void 0;
+/**
+ * 通道类型
+ */
 var ChannelType;
 (function (ChannelType) {
-    /// 房间详情
-    ChannelType["RoomDetail"] = "RoomDetail";
-    /// 房间团购详情
-    ChannelType["RoomGroupBuying"] = "RoomGroupBuying";
-    /// 房间消息
-    ChannelType["RoomMessage"] = "RoomMessage";
-    /// 房间投票
-    ChannelType["RoomVote"] = "RoomVote";
-    /// 房间用户消息
-    ChannelType["RoomUserMessage"] = "RoomUserMessage";
+    /**
+     * 心跳
+     */
+    ChannelType[ChannelType["HEARTBEAT"] = 0] = "HEARTBEAT";
+    /**
+     * 房间详情
+     */
+    ChannelType[ChannelType["ROOM_DETAIL"] = 1] = "ROOM_DETAIL";
+    /**
+     * 房间团购详情
+     */
+    ChannelType[ChannelType["ROOM_GROUP_BUYING"] = 2] = "ROOM_GROUP_BUYING";
+    /**
+     * 房间消息
+     */
+    ChannelType[ChannelType["ROOM_MESSAGE"] = 3] = "ROOM_MESSAGE";
+    /**
+     * 房间投票
+     */
+    ChannelType[ChannelType["ROOM_VOTE"] = 4] = "ROOM_VOTE";
+    /**
+     * 房间用户消息
+     */
+    ChannelType[ChannelType["ROOM_USER_MESSAGE"] = 5] = "ROOM_USER_MESSAGE";
 })(ChannelType || (exports.ChannelType = ChannelType = {}));
-// ============================================================ //
-// 消息协议
-// ============================================================ //
-/// 消息类型
+/**
+ * 消息类型
+ */
 var MessageType;
 (function (MessageType) {
-    /// 普通消息
-    MessageType["Normal"] = "Normal";
+    /**
+     * 房间详情
+     */
+    MessageType[MessageType["ROOM_DETAIL"] = 0] = "ROOM_DETAIL";
+    /**
+     * 房间团购详情
+     */
+    MessageType[MessageType["ROOM_GROUP_BUYING_DETAIL"] = 1] = "ROOM_GROUP_BUYING_DETAIL";
+    /**
+     * 房间团购投票
+     */
+    MessageType[MessageType["ROOM_GROUP_BUYING_VOTE"] = 2] = "ROOM_GROUP_BUYING_VOTE";
+    /**
+     * 房间团购下一个商品
+     */
+    MessageType[MessageType["ROOM_GROUP_BUYING_NEXT_PRODUCT"] = 3] = "ROOM_GROUP_BUYING_NEXT_PRODUCT";
+    /**
+     * 房间团购开始
+     */
+    MessageType[MessageType["ROOM_GROUP_BUYING_START"] = 4] = "ROOM_GROUP_BUYING_START";
+    /**
+     * 房间团购正在开奖
+     */
+    MessageType[MessageType["ROOM_GROUP_BUYING_LOTTERY_OPENING"] = 5] = "ROOM_GROUP_BUYING_LOTTERY_OPENING";
+    /**
+     * 房间团购中奖
+     */
+    MessageType[MessageType["ROOM_GROUP_BUYING_WINNING"] = 6] = "ROOM_GROUP_BUYING_WINNING";
+    /**
+     * 房间团购竞拍还价所有人
+     */
+    MessageType[MessageType["ROOM_GROUP_BUYING_BIDDING_COUNTEROFFER"] = 7] = "ROOM_GROUP_BUYING_BIDDING_COUNTEROFFER";
+    /**
+     * 房间团购竞拍成交
+     */
+    MessageType[MessageType["ROOM_GROUP_BUYING_BIDDING_DEAL"] = 8] = "ROOM_GROUP_BUYING_BIDDING_DEAL";
+    /**
+     * 房间团购竞拍买家发起报价(私人)
+     */
+    MessageType[MessageType["ROOM_GROUP_BUYING_BIDDING_BUYER_INITIATES_OFFER"] = 9] = "ROOM_GROUP_BUYING_BIDDING_BUYER_INITIATES_OFFER";
+    /**
+     * 房间团购竞拍卖家收到报价(私人)
+     */
+    MessageType[MessageType["ROOM_GROUP_BUYING_BIDDING_SELLER_RECEIVES_OFFER"] = 10] = "ROOM_GROUP_BUYING_BIDDING_SELLER_RECEIVES_OFFER";
+    /**
+     * 房间团购竞拍买家收到还价(私人)
+     */
+    MessageType[MessageType["ROOM_GROUP_BUYING_BIDDING_SELLER_COUNTEROFFER"] = 11] = "ROOM_GROUP_BUYING_BIDDING_SELLER_COUNTEROFFER";
+    /**
+     * 房间团购竞拍买家报价被拒(私人)
+     */
+    MessageType[MessageType["ROOM_GROUP_BUYING_BIDDING_BUYER_OFFER_REJECTED"] = 12] = "ROOM_GROUP_BUYING_BIDDING_BUYER_OFFER_REJECTED";
 })(MessageType || (exports.MessageType = MessageType = {}));
-/// 业务类型
-var ServiceType;
-(function (ServiceType) {
-    /// 房间详情
-    ServiceType["RoomDetail"] = "RoomDetail";
-    /// 房间团购详情
-    ServiceType["RoomGroupBuying"] = "RoomGroupBuying";
-    /// 房间团购 投票
-    ServiceType["RoomGroupBuyingVote"] = "RoomGroupBuyingVote";
-    /// 房间团购 下一个商品
-    ServiceType["RoomGroupBuyingNextProduct"] = "RoomGroupBuyingNextProduct";
-    /// 房间团购 开始
-    ServiceType["RoomGroupBuyingStart"] = "RoomGroupBuyingStart";
-    /// 房间团购 正在开奖
-    ServiceType["RoomGroupBuyingLotteryOpening"] = "RoomGroupBuyingLotteryOpening";
-    /// 房间团购 中奖
-    ServiceType["RoomGroupBuyingWinning"] = "RoomGroupBuyingWinning";
-    /// 房间团购 竞拍还价所有人
-    ServiceType["RoomGroupBuyingBiddingCounteroffer"] = "RoomGroupBuyingBiddingCounteroffer";
-    /// 房间团购 竞拍成交
-    ServiceType["RoomGroupBuyingBiddingDeal"] = "RoomGroupBuyingBiddingDeal";
-    /// 房间团购 竞拍买家发起报价(私人)
-    ServiceType["RoomGroupBuyingBiddingBuyerInitiatesOffer"] = "RoomGroupBuyingBiddingBuyerInitiatesOffer";
-    /// 房间团购 竞拍卖家收到报价(私人)
-    ServiceType["RoomGroupBuyingBiddingSellerReceivesOffer"] = "RoomGroupBuyingBiddingSellerReceivesOffer";
-    /// 房间团购 竞拍买家收到还价(私人)
-    ServiceType["RoomGroupBuyingBiddingSellerCounteroffer"] = "RoomGroupBuyingBiddingSellerCounteroffer";
-    /// 房间团购 竞拍买家报价被拒(私人)
-    ServiceType["RoomGroupBuyingBiddingBuyerOfferRejected"] = "RoomGroupBuyingBiddingBuyerOfferRejected";
-})(ServiceType || (exports.ServiceType = ServiceType = {}));
 //# sourceMappingURL=types.js.map

@@ -16,8 +16,8 @@ exports.useWss = useWss;
 exports.newClient = newClient;
 exports.getMessageVersioinByRank = getMessageVersioinByRank;
 const types_1 = require("./types");
-// import { v4 as uuid } from "uuid";
 const socket_impl_1 = require("./socket_impl");
+const msgpack_1 = require("@msgpack/msgpack");
 function uuid() {
     return `${Date.now()}${Math.random()}`;
 }
@@ -118,63 +118,63 @@ class ClientProvider {
         return __awaiter(this, void 0, void 0, function* () {
             // 订阅房间详情
             this.registerChannel({
-                channel: types_1.ChannelType.RoomDetail,
+                channel: types_1.ChannelType.ROOM_DETAIL,
                 version: "1.0",
-                seq: "0",
+                seq: BigInt(0),
                 ts: Date.now(),
                 uid: uuid(),
                 params: { roomId }
             }, 1500, false);
             try {
                 // 订阅房间团购详情
-                const roomGroupBuyingVersion = yield getMessageVersioinByRank(types_1.ChannelType.RoomGroupBuying, 1, { roomId }, this.token);
+                const roomGroupBuyingVersion = yield getMessageVersioinByRank(types_1.ChannelType.ROOM_GROUP_BUYING, 1, { roomId }, this.token);
                 if (this.showLog) {
                     console.log(`订阅房间团购详情: roomId(${roomId}), 版本号(${roomGroupBuyingVersion})`);
                 }
                 this.registerChannel({
-                    channel: types_1.ChannelType.RoomGroupBuying,
+                    channel: types_1.ChannelType.ROOM_GROUP_BUYING,
                     version: "1.0",
-                    seq: roomGroupBuyingVersion,
+                    seq: BigInt(roomGroupBuyingVersion),
                     ts: Date.now(),
                     uid: uuid(),
                     params: { roomId }
                 }, 100);
                 // 订阅房间投票
-                const roomVoteVersion = yield getMessageVersioinByRank(types_1.ChannelType.RoomVote, 1, { roomId }, this.token);
+                const roomVoteVersion = yield getMessageVersioinByRank(types_1.ChannelType.ROOM_VOTE, 1, { roomId }, this.token);
                 if (this.showLog) {
                     console.log(`订阅房间投票: roomId(${roomId}), 版本号(${roomVoteVersion})`);
                 }
                 this.registerChannel({
-                    channel: types_1.ChannelType.RoomVote,
+                    channel: types_1.ChannelType.ROOM_VOTE,
                     version: "1.0",
-                    seq: roomVoteVersion,
+                    seq: BigInt(roomVoteVersion),
                     ts: Date.now(),
                     uid: uuid(),
                     params: { roomId }
                 }, 100);
                 // 订阅房间消息
-                const roomMessageVersion = yield getMessageVersioinByRank(types_1.ChannelType.RoomMessage, 1, { roomId }, this.token);
+                const roomMessageVersion = yield getMessageVersioinByRank(types_1.ChannelType.ROOM_MESSAGE, 1, { roomId }, this.token);
                 if (this.showLog) {
                     console.log(`订阅房间消息: roomId(${roomId}), 版本号(${roomMessageVersion})`);
                 }
                 this.registerChannel({
-                    channel: types_1.ChannelType.RoomMessage,
+                    channel: types_1.ChannelType.ROOM_MESSAGE,
                     version: "1.0",
-                    seq: roomMessageVersion,
+                    seq: BigInt(roomMessageVersion),
                     ts: Date.now(),
                     uid: uuid(),
                     params: { roomId }
                 }, 100);
                 // 订阅房间用户消息
                 if (this.token) {
-                    const roomUserMessageVersion = yield getMessageVersioinByRank(types_1.ChannelType.RoomUserMessage, 1, { roomId }, this.token);
+                    const roomUserMessageVersion = yield getMessageVersioinByRank(types_1.ChannelType.ROOM_USER_MESSAGE, 1, { roomId }, this.token);
                     if (this.showLog) {
                         console.log(`订阅房间用户消息: roomId(${roomId}), 版本号(${roomUserMessageVersion})`);
                     }
                     this.registerChannel({
-                        channel: types_1.ChannelType.RoomUserMessage,
+                        channel: types_1.ChannelType.ROOM_USER_MESSAGE,
                         version: "1.0",
-                        seq: roomUserMessageVersion,
+                        seq: BigInt(roomUserMessageVersion),
                         ts: Date.now(),
                         uid: uuid(),
                         params: { roomId }
@@ -189,11 +189,11 @@ class ClientProvider {
     }
     leaveRoom(roomId) {
         this.requests = this.requests.filter((request) => !([
-            types_1.ChannelType.RoomMessage,
-            types_1.ChannelType.RoomDetail,
-            types_1.ChannelType.RoomGroupBuying,
-            types_1.ChannelType.RoomVote,
-            types_1.ChannelType.RoomUserMessage
+            types_1.ChannelType.ROOM_MESSAGE,
+            types_1.ChannelType.ROOM_DETAIL,
+            types_1.ChannelType.ROOM_GROUP_BUYING,
+            types_1.ChannelType.ROOM_VOTE,
+            types_1.ChannelType.ROOM_USER_MESSAGE
         ].includes(request.config.channel) &&
             request.config.params.roomId === roomId));
         return this;
@@ -214,71 +214,71 @@ class ClientProvider {
     onMessage(event) {
         const now = Date.now();
         this.lastRpsTime = now;
-        const responses = JSON.parse(event.data);
+        const responses = (0, msgpack_1.decode)(event.data, {
+            useBigInt64: true
+        });
         // if (this.showLog) console.log("Websocket收到消息:", responses);
         for (const response of responses) {
             const request = this.requests.find((request) => request.config.uid === response.uid);
             if (!request)
                 continue;
             if (request.isIncrData) {
-                const currSeq = BigInt(request.config.seq);
-                const currRpsSeq = BigInt(response.rpsSeq);
-                if (currSeq >= currRpsSeq)
+                if (request.config.seq >= response.rpsSeq)
                     continue;
             }
             switch (response.channel) {
-                case types_1.ChannelType.RoomDetail:
-                    for (const message of response.data) {
+                case types_1.ChannelType.ROOM_DETAIL:
+                    for (const message of response.contents) {
                         this.callback.OnRoomDetail(this, request.config.params, message);
                     }
                     break;
-                case types_1.ChannelType.RoomGroupBuying:
-                    for (const message of response.data) {
+                case types_1.ChannelType.ROOM_GROUP_BUYING:
+                    for (const message of response.contents) {
                         this.callback.OnRoomGroupBuying(this, request.config.params, message);
                     }
                     break;
-                case types_1.ChannelType.RoomMessage:
-                    for (const message of response.data) {
-                        switch (message.serviceType) {
-                            case types_1.ServiceType.RoomGroupBuyingNextProduct:
+                case types_1.ChannelType.ROOM_MESSAGE:
+                    for (const message of response.contents) {
+                        switch (message.type) {
+                            case types_1.MessageType.ROOM_GROUP_BUYING_NEXT_PRODUCT:
                                 this.callback.OnRoomGroupBuyingNextProduct(this, request.config.params, message);
                                 break;
-                            case types_1.ServiceType.RoomGroupBuyingStart:
+                            case types_1.MessageType.ROOM_GROUP_BUYING_START:
                                 this.callback.OnRoomGroupBuyingStart(this, request.config.params, message);
                                 break;
-                            case types_1.ServiceType.RoomGroupBuyingLotteryOpening:
+                            case types_1.MessageType.ROOM_GROUP_BUYING_LOTTERY_OPENING:
                                 this.callback.OnRoomGroupBuyingLotteryOpening(this, request.config.params, message);
                                 break;
-                            case types_1.ServiceType.RoomGroupBuyingWinning:
+                            case types_1.MessageType.ROOM_GROUP_BUYING_WINNING:
                                 this.callback.OnRoomGroupBuyingWinning(this, request.config.params, message);
                                 break;
-                            case types_1.ServiceType.RoomGroupBuyingBiddingCounteroffer:
+                            case types_1.MessageType.ROOM_GROUP_BUYING_BIDDING_COUNTEROFFER:
                                 this.callback.OnRoomGroupBuyingBiddingCounteroffer(this, request.config.params, message);
                                 break;
-                            case types_1.ServiceType.RoomGroupBuyingBiddingDeal:
+                            case types_1.MessageType.ROOM_GROUP_BUYING_BIDDING_DEAL:
                                 this.callback.OnRoomGroupBuyingBiddingDeal(this, request.config.params, message);
                                 break;
                         }
                     }
                     break;
-                case types_1.ChannelType.RoomVote:
-                    for (const message of response.data) {
+                case types_1.ChannelType.ROOM_VOTE:
+                    for (const message of response.contents) {
                         this.callback.OnRoomGroupBuyingVote(this, request.config.params, message);
                     }
                     break;
-                case types_1.ChannelType.RoomUserMessage:
-                    for (const message of response.data) {
-                        switch (message.serviceType) {
-                            case types_1.ServiceType.RoomGroupBuyingBiddingBuyerInitiatesOffer:
+                case types_1.ChannelType.ROOM_USER_MESSAGE:
+                    for (const message of response.contents) {
+                        switch (message.type) {
+                            case types_1.MessageType.ROOM_GROUP_BUYING_BIDDING_BUYER_INITIATES_OFFER:
                                 this.callback.OnRoomGroupBuyingBiddingBuyerInitiatesOffer(this, request.config.params, message);
                                 break;
-                            case types_1.ServiceType.RoomGroupBuyingBiddingSellerReceivesOffer:
+                            case types_1.MessageType.ROOM_GROUP_BUYING_BIDDING_SELLER_RECEIVES_OFFER:
                                 this.callback.OnRoomGroupBuyingBiddingSellerReceivesOffer(this, request.config.params, message);
                                 break;
-                            case types_1.ServiceType.RoomGroupBuyingBiddingSellerCounteroffer:
+                            case types_1.MessageType.ROOM_GROUP_BUYING_BIDDING_SELLER_COUNTEROFFER:
                                 this.callback.OnRoomGroupBuyingBiddingSellerCounteroffer(this, request.config.params, message);
                                 break;
-                            case types_1.ServiceType.RoomGroupBuyingBiddingBuyerOfferRejected:
+                            case types_1.MessageType.ROOM_GROUP_BUYING_BIDDING_BUYER_OFFER_REJECTED:
                                 this.callback.OnRoomGroupBuyingBiddingBuyerOfferRejected(this, request.config.params, message);
                                 break;
                         }
@@ -321,7 +321,7 @@ class ClientProvider {
             requests.push(request.config);
         }
         // if (this.showLog) console.log("Websocket发送消息:", requests);
-        (_a = this.socket) === null || _a === void 0 ? void 0 : _a.send(JSON.stringify(requests));
+        (_a = this.socket) === null || _a === void 0 ? void 0 : _a.send((0, msgpack_1.encode)(requests));
         this.lastReqTime = now;
     }
 }
@@ -336,7 +336,7 @@ function objectToQueryString(obj) {
             params.push(`${key}=${obj[key]}`);
         }
     }
-    return params.join('&');
+    return params.join("&");
 }
 function getMessageVersioinByRank(channel_1) {
     return __awaiter(this, arguments, void 0, function* (channel, rank = 1, params = {}, token) {

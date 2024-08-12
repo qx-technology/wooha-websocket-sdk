@@ -5,8 +5,8 @@ export declare function useWss(): void;
 export interface Client {
     start(): Client;
     stop(autoConn?: boolean): Client;
-    enterRoom(roomId: string): Promise<Client>;
-    leaveRoom(roomId: string): Client;
+    enterRoom(roomId: bigint): Promise<Client>;
+    leaveRoom(roomId: bigint): Client;
 }
 export interface EventHandle {
     OnRoomDetail(client: Client, param: RoomBasicParam, message: Message<RoomDetail>): void;
@@ -46,8 +46,8 @@ export declare class ClientProvider implements Client {
     start(): Client;
     stop(autoConn?: boolean): Client;
     registerChannel(config: RequestMessage, interval: number, isIncrData?: boolean): void;
-    enterRoom(roomId: string): Promise<Client>;
-    leaveRoom(roomId: string): Client;
+    enterRoom(roomId: bigint): Promise<Client>;
+    leaveRoom(roomId: bigint): Client;
     private onOpen;
     private onClose;
     private onMessage;
@@ -56,4 +56,4 @@ export declare class ClientProvider implements Client {
     private handle;
 }
 export declare function newClient(eventHandle: EventHandle, token?: string, showLog?: boolean): Client;
-export declare function getMessageVersioinByRank(channel: ChannelType, rank?: number, params?: Record<string, any>, token?: string): Promise<String>;
+export declare function getMessageVersioinByRank(channel: ChannelType, rank?: number, params?: Record<string, any>, token?: string): Promise<string>;
