@@ -541,7 +541,8 @@ export class ClientProvider implements Client {
 
     // if (this.showLog) console.log("Websocket发送消息:", requests);
 
-    this.socket?.send(msgpackEncode(requests, { useBigInt64: true }));
+    const sendData = msgpackEncode(requests, { useBigInt64: true });
+    this.socket?.send(sendData);
     this.lastReqTime = now;
   }
 }
