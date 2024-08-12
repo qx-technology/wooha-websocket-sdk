@@ -20,6 +20,7 @@ import {
   RoomGroupBuyingBiddingBuyerOfferRejected
 } from "./types";
 import { WebFuket } from "./socket_impl";
+import { decode as msgpackDecode } from "@msgpack/msgpack";
 
 function uuid(): string {
   return `${Date.now()}${Math.random()}`;
@@ -387,7 +388,9 @@ export class ClientProvider implements Client {
   private onMessage(event: MessageEvent): void {
     const now = Date.now();
     this.lastRpsTime = now;
-    const responses: ResponseMessage<any, Message<any>>[] = JSON.parse(event.data);
+    const responses = msgpackDecode(event.data, {
+      useBigInt64: true
+    }) as ResponseMessage[];
     // if (this.showLog) console.log("Websocket收到消息:", responses);
     for (const response of responses) {
       const request = this.requests.find(
@@ -396,9 +399,7 @@ export class ClientProvider implements Client {
       if (!request) continue;
 
       if (request.isIncrData) {
-        const currSeq = BigInt(request.config.seq);
-        const currRpsSeq = BigInt(response.rpsSeq);
-        if (currSeq >= currRpsSeq) continue;
+        if (request.config.seq >= response.rpsSeq) continue;
       }
 
       switch (response.channel) {
