@@ -250,7 +250,7 @@ export class ClientProvider implements Client {
         channel: ChannelType.ROOM_DETAIL,
         version: "1.0",
         seq: BigInt(0),
-        ts: Date.now(),
+        ts: BigInt(Date.now()),
         uid: uuid(),
         params: { roomId }
       },
@@ -275,7 +275,7 @@ export class ClientProvider implements Client {
           channel: ChannelType.ROOM_GROUP_BUYING,
           version: "1.0",
           seq: BigInt(roomGroupBuyingVersion),
-          ts: Date.now(),
+          ts: BigInt(Date.now()),
           uid: uuid(),
           params: { roomId }
         },
@@ -296,7 +296,7 @@ export class ClientProvider implements Client {
           channel: ChannelType.ROOM_VOTE,
           version: "1.0",
           seq: BigInt(roomVoteVersion),
-          ts: Date.now(),
+          ts: BigInt(Date.now()),
           uid: uuid(),
           params: { roomId }
         },
@@ -317,7 +317,7 @@ export class ClientProvider implements Client {
           channel: ChannelType.ROOM_MESSAGE,
           version: "1.0",
           seq: BigInt(roomMessageVersion),
-          ts: Date.now(),
+          ts: BigInt(Date.now()),
           uid: uuid(),
           params: { roomId }
         },
@@ -341,7 +341,7 @@ export class ClientProvider implements Client {
             channel: ChannelType.ROOM_USER_MESSAGE,
             version: "1.0",
             seq: BigInt(roomUserMessageVersion),
-            ts: Date.now(),
+            ts: BigInt(Date.now()),
             uid: uuid(),
             params: { roomId }
           },

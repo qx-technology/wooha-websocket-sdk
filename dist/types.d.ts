@@ -117,7 +117,7 @@ export interface RequestMessage<P = any> {
     /**
      * 请求时间戳
      */
-    ts: number;
+    ts: bigint;
     /**
      * 请求唯一ID
      */
@@ -138,7 +138,7 @@ export interface ResponseMessage<P = any> extends RequestMessage<P> {
     /**
      * 响应时间戳
      */
-    rpsTs: number;
+    rpsTs: bigint;
     /**
      * 响应数据
      */
@@ -218,7 +218,7 @@ export interface RoomGroupBuyingVote {
     /**
      * 投票时间
      */
-    voteTime: number;
+    voteTime: bigint;
     /**
      * 票数
      */
@@ -251,7 +251,7 @@ export interface RoomGroupBuyingNextProduct {
     /**
      * 开始时间
      */
-    beginTime: number;
+    beginTime: bigint;
 }
 /**
  * 房间团购开始
@@ -286,7 +286,7 @@ export interface RoomGroupBuyingWinning {
     /**
      * 奖品领取时间
      */
-    prizeCollectionTime: number;
+    prizeCollectionTime: bigint;
     /**
      * 商品ID
      */
