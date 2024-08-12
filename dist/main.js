@@ -59,6 +59,7 @@ function main() {
     demo();
 }
 function demo() {
+    (0, socket_1.configSite)("127.0.0.1:8849");
     const client = (0, socket_1.newClient)(new MsgCallback(), token, true);
     client.start();
     client.enterRoom(BigInt(1));

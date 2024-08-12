@@ -1,4 +1,4 @@
-import { newClient, EventHandle, Client } from "./socket";
+import { newClient, EventHandle, Client, configSite } from "./socket";
 import {
   RoomBasicParam,
   Message,
@@ -143,6 +143,7 @@ function main() {
 }
 
 export function demo() {
+  configSite("127.0.0.1:8849");
   const client = newClient(new MsgCallback(), token, true);
   client.start();
   client.enterRoom(BigInt(1));
