@@ -201,6 +201,18 @@ export class ClientProvider implements Client {
     this.callback = eventHandle;
     this.requests = [];
     this.showLog = showLog;
+    // 5秒心跳
+    this.registerChannel(
+      <RequestMessage>{
+        channel: ChannelType.HEARTBEAT,
+        version: "1.0",
+        seq: BigInt(0),
+        ts: BigInt(Date.now()),
+        uid: uuid()
+      },
+      5000,
+      false
+    );
   }
 
   start(): Client {
@@ -504,6 +516,9 @@ export class ClientProvider implements Client {
                 break;
             }
           }
+          break;
+        case ChannelType.HEARTBEAT:
+          console.log("收到服务器心跳:", now);
           break;
       }
       request.config.seq = response.rpsSeq;

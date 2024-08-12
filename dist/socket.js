@@ -223,8 +223,7 @@ class ClientProvider {
             const responses = (0, msgpack_1.decode)(rpsData, {
                 useBigInt64: true
             });
-            if (this.showLog)
-                console.log("Websocket收到消息:", responses);
+            // if (this.showLog) console.log("Websocket收到消息:", responses);
             for (const response of responses) {
                 const request = this.requests.find((request) => request.config.uid === response.uid);
                 if (!request)
