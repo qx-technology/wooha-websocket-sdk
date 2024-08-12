@@ -74,9 +74,9 @@ export interface Client {
   /// 停止
   stop(autoConn?: boolean): Client;
   /// 进入房间
-  enterRoom(roomId: string): Promise<Client>;
+  enterRoom(roomId: bigint): Promise<Client>;
   /// 离开房间
-  leaveRoom(roomId: string): Client;
+  leaveRoom(roomId: bigint): Client;
 }
 
 /// 事件
@@ -242,13 +242,13 @@ export class ClientProvider implements Client {
     this.requests.push(new RequestInfo(config, interval, isIncrData));
   }
 
-  async enterRoom(roomId: string): Promise<Client> {
+  async enterRoom(roomId: bigint): Promise<Client> {
     // 订阅房间详情
     this.registerChannel(
       <RequestMessage<RoomBasicParam>>{
-        channel: ChannelType.RoomDetail,
+        channel: ChannelType.ROOM_DETAIL,
         version: "1.0",
-        seq: "0",
+        seq: BigInt(0),
         ts: Date.now(),
         uid: uuid(),
         params: { roomId }
@@ -259,7 +259,7 @@ export class ClientProvider implements Client {
     try {
       // 订阅房间团购详情
       const roomGroupBuyingVersion = await getMessageVersioinByRank(
-        ChannelType.RoomGroupBuying,
+        ChannelType.ROOM_GROUP_BUYING,
         1,
         { roomId },
         this.token
@@ -271,9 +271,9 @@ export class ClientProvider implements Client {
       }
       this.registerChannel(
         <RequestMessage<RoomBasicParam>>{
-          channel: ChannelType.RoomGroupBuying,
+          channel: ChannelType.ROOM_GROUP_BUYING,
           version: "1.0",
-          seq: roomGroupBuyingVersion,
+          seq: BigInt(roomGroupBuyingVersion),
           ts: Date.now(),
           uid: uuid(),
           params: { roomId }
@@ -282,7 +282,7 @@ export class ClientProvider implements Client {
       );
       // 订阅房间投票
       const roomVoteVersion = await getMessageVersioinByRank(
-        ChannelType.RoomVote,
+        ChannelType.ROOM_VOTE,
         1,
         { roomId },
         this.token
@@ -292,9 +292,9 @@ export class ClientProvider implements Client {
       }
       this.registerChannel(
         <RequestMessage<RoomBasicParam>>{
-          channel: ChannelType.RoomVote,
+          channel: ChannelType.ROOM_VOTE,
           version: "1.0",
-          seq: roomVoteVersion,
+          seq: BigInt(roomVoteVersion),
           ts: Date.now(),
           uid: uuid(),
           params: { roomId }
@@ -303,7 +303,7 @@ export class ClientProvider implements Client {
       );
       // 订阅房间消息
       const roomMessageVersion = await getMessageVersioinByRank(
-        ChannelType.RoomMessage,
+        ChannelType.ROOM_MESSAGE,
         1,
         { roomId },
         this.token
@@ -313,9 +313,9 @@ export class ClientProvider implements Client {
       }
       this.registerChannel(
         <RequestMessage<RoomBasicParam>>{
-          channel: ChannelType.RoomMessage,
+          channel: ChannelType.ROOM_MESSAGE,
           version: "1.0",
-          seq: roomMessageVersion,
+          seq: BigInt(roomMessageVersion),
           ts: Date.now(),
           uid: uuid(),
           params: { roomId }
@@ -325,7 +325,7 @@ export class ClientProvider implements Client {
       // 订阅房间用户消息
       if (this.token) {
         const roomUserMessageVersion = await getMessageVersioinByRank(
-          ChannelType.RoomUserMessage,
+          ChannelType.ROOM_USER_MESSAGE,
           1,
           { roomId },
           this.token
@@ -337,9 +337,9 @@ export class ClientProvider implements Client {
         }
         this.registerChannel(
           <RequestMessage<RoomBasicParam>>{
-            channel: ChannelType.RoomUserMessage,
+            channel: ChannelType.ROOM_USER_MESSAGE,
             version: "1.0",
-            seq: roomUserMessageVersion,
+            seq: BigInt(roomUserMessageVersion),
             ts: Date.now(),
             uid: uuid(),
             params: { roomId }
@@ -353,16 +353,16 @@ export class ClientProvider implements Client {
     return this;
   }
 
-  leaveRoom(roomId: string): Client {
+  leaveRoom(roomId: bigint): Client {
     this.requests = this.requests.filter(
       (request) =>
         !(
           [
-            ChannelType.RoomMessage,
-            ChannelType.RoomDetail,
-            ChannelType.RoomGroupBuying,
-            ChannelType.RoomVote,
-            ChannelType.RoomUserMessage
+            ChannelType.ROOM_MESSAGE,
+            ChannelType.ROOM_DETAIL,
+            ChannelType.ROOM_GROUP_BUYING,
+            ChannelType.ROOM_VOTE,
+            ChannelType.ROOM_USER_MESSAGE
           ].includes(request.config.channel) &&
           (<RoomBasicParam>request.config.params).roomId === roomId
         )
@@ -563,7 +563,7 @@ export async function getMessageVersioinByRank(
   rank: number = 1,
   params: Record<string, any> = {},
   token?: string
-): Promise<String> {
+): Promise<string> {
   const headers: Record<string, any> = {
     "Content-Type": "application/json"
   };

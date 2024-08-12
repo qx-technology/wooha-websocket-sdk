@@ -95,7 +95,7 @@ export enum MessageType {
 // ============================================================ //
 
 /// 消息
-export interface Message<M = Uint8Array> {
+export interface Message<M = any> {
   /**
    * 消息序号
    */
@@ -113,7 +113,7 @@ export interface Message<M = Uint8Array> {
 /**
  * 请求消息
  */
-export interface RequestMessage<P = Uint8Array> {
+export interface RequestMessage<P = any> {
   /**
    * 通道类型
    */
@@ -143,7 +143,7 @@ export interface RequestMessage<P = Uint8Array> {
 /**
  * 响应消息
  */
-export interface ResponseMessage<P = Uint8Array> extends RequestMessage<P> {
+export interface ResponseMessage<P = any> extends RequestMessage<P> {
   /**
    * 响应序号
    */
