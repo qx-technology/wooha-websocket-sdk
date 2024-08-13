@@ -236,7 +236,7 @@ class ClientProvider {
             }
             const responses = (0, msgpackr_1.unpack)(rpsData);
             if (this.showLog)
-                console.log("🌟接收消息:", responses.map((itme) => types_1.ChannelType[itme.channel]).join(", "));
+                console.log("🌟接收消息:", responses.map((itme) => types_1.ChannelType[itme.channel]).join(", "), rpsData.length, "Bytes");
             for (const response of responses) {
                 const request = this.requests.find((request) => request.config.uid === response.uid);
                 if (!request)
@@ -345,9 +345,9 @@ class ClientProvider {
         }
         if (requests.length == 0)
             return;
-        if (this.showLog)
-            console.log("⏫发送消息:", requests.map((itme) => types_1.ChannelType[itme.channel]).join(", "));
         const sendData = (0, msgpackr_1.pack)(requests);
+        if (this.showLog)
+            console.log("⏫发送消息:", requests.map((itme) => types_1.ChannelType[itme.channel]).join(", "), sendData.length, "Bytes");
         (_a = this.socket) === null || _a === void 0 ? void 0 : _a.send(sendData);
         this.lastReqTime = now;
     }

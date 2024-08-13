@@ -414,7 +414,9 @@ export class ClientProvider implements Client {
     if (this.showLog)
       console.log(
         "🌟接收消息:",
-        responses.map((itme) => ChannelType[itme.channel]).join(", ")
+        responses.map((itme) => ChannelType[itme.channel]).join(", "),
+        rpsData.length,
+        "Bytes"
       );
     for (const response of responses) {
       const request = this.requests.find(
@@ -564,13 +566,14 @@ export class ClientProvider implements Client {
 
     if (requests.length == 0) return;
 
+    const sendData = pack(requests);
     if (this.showLog)
       console.log(
         "⏫发送消息:",
-        requests.map((itme) => ChannelType[itme.channel]).join(", ")
+        requests.map((itme) => ChannelType[itme.channel]).join(", "),
+        sendData.length,
+        "Bytes"
       );
-
-    const sendData = pack(requests);
     this.socket?.send(sendData);
     this.lastReqTime = now;
   }
