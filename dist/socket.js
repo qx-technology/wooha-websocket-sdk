@@ -18,7 +18,6 @@ exports.getMessageVersioinByRank = getMessageVersioinByRank;
 const types_1 = require("./types");
 const socket_impl_1 = require("./socket_impl");
 const msgpackr_1 = require("msgpackr");
-let packr = new msgpackr_1.Packr({ useBigIntExtension: true });
 function uuid() {
     return `${Date.now()}${Math.random()}`;
 }
@@ -229,7 +228,7 @@ class ClientProvider {
             const now = Date.now();
             this.lastRpsTime = now;
             const rpsData = new Uint8Array(yield event.data.arrayBuffer());
-            const responses = packr.unpack(rpsData);
+            const responses = (0, msgpackr_1.unpack)(rpsData);
             if (this.showLog)
                 console.log("Websocket收到消息:", responses.map((itme) => itme.channel).join(","));
             for (const response of responses) {
@@ -341,7 +340,7 @@ class ClientProvider {
         if (requests.length == 0)
             return;
         // if (this.showLog) console.log("Websocket发送消息:", requests);
-        const sendData = packr.pack(requests);
+        const sendData = (0, msgpackr_1.pack)(requests);
         (_a = this.socket) === null || _a === void 0 ? void 0 : _a.send(sendData);
         this.lastReqTime = now;
     }
@@ -392,5 +391,8 @@ function getMessageVersioinByRank(channel_1) {
                 .then((json) => json.data);
         }
     });
+}
+function uint8ArrayToHex(uint8Array) {
+    return Array.from(uint8Array, (byte) => byte.toString(16).padStart(2, "0")).join("");
 }
 //# sourceMappingURL=socket.js.map

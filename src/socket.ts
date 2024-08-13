@@ -20,9 +20,7 @@ import {
   RoomGroupBuyingBiddingBuyerOfferRejected
 } from "./types";
 import { WebFuket } from "./socket_impl";
-import { Packr } from "msgpackr";
-
-let packr = new Packr({ useBigIntExtension: true });
+import { pack, unpack } from "msgpackr";
 
 function uuid(): string {
   return `${Date.now()}${Math.random()}`;
@@ -407,7 +405,7 @@ export class ClientProvider implements Client {
     const now = Date.now();
     this.lastRpsTime = now;
     const rpsData = new Uint8Array(await event.data.arrayBuffer());
-    const responses = packr.unpack(rpsData) as ResponseMessage[];
+    const responses = unpack(rpsData) as ResponseMessage[];
     if (this.showLog)
       console.log("Websocket收到消息:", responses.map((itme) => itme.channel).join(","));
     for (const response of responses) {
@@ -560,7 +558,7 @@ export class ClientProvider implements Client {
 
     // if (this.showLog) console.log("Websocket发送消息:", requests);
 
-    const sendData = packr.pack(requests);
+    const sendData = pack(requests);
     this.socket?.send(sendData);
     this.lastReqTime = now;
   }
@@ -619,4 +617,10 @@ export async function getMessageVersioinByRank(
       .then((res) => res.json())
       .then((json) => json.data);
   }
+}
+
+function uint8ArrayToHex(uint8Array: any) {
+  return Array.from(uint8Array, (byte: any) => byte.toString(16).padStart(2, "0")).join(
+    ""
+  );
 }
