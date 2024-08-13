@@ -266,7 +266,7 @@ export class ClientProvider implements Client {
         uid: uuid(),
         params: { roomId }
       },
-      1500,
+      3000,
       false
     );
     try {

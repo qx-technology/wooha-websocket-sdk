@@ -132,7 +132,7 @@ class ClientProvider {
                 ts: BigInt(Date.now()),
                 uid: uuid(),
                 params: { roomId }
-            }, 1500, false);
+            }, 3000, false);
             try {
                 // 订阅房间团购详情
                 const roomGroupBuyingVersion = yield getMessageVersioinByRank(types_1.ChannelType.ROOM_GROUP_BUYING, 1, { roomId }, this.token);
