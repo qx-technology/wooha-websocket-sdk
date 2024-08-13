@@ -64,6 +64,7 @@ class MsgCallback {
     }
 }
 function main() {
+    process.title = "WoohaSocketSDK";
     demo();
 }
 function demo() {

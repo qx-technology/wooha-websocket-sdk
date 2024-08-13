@@ -139,6 +139,7 @@ class MsgCallback implements EventHandle {
 }
 
 function main() {
+  process.title = "WoohaSocketSDK";
   demo();
 }
 

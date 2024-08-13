@@ -412,7 +412,10 @@ export class ClientProvider implements Client {
     }
     const responses = unpack(rpsData) as ResponseMessage[];
     if (this.showLog)
-      console.log("Websocket收到消息:", responses.map((itme) => itme.channel).join(","));
+      console.log(
+        "🌟接收消息:",
+        responses.map((itme) => ChannelType[itme.channel]).join(", ")
+      );
     for (const response of responses) {
       const request = this.requests.find(
         (request) => request.config.uid === response.uid
@@ -522,7 +525,7 @@ export class ClientProvider implements Client {
           }
           break;
         case ChannelType.HEARTBEAT:
-          console.log("收到服务器心跳:", now);
+          // console.log("收到服务器心跳:", now);
           break;
       }
       request.config.seq = response.rpsSeq;
@@ -561,7 +564,11 @@ export class ClientProvider implements Client {
 
     if (requests.length == 0) return;
 
-    // if (this.showLog) console.log("Websocket发送消息:", requests);
+    if (this.showLog)
+      console.log(
+        "⏫发送消息:",
+        requests.map((itme) => ChannelType[itme.channel]).join(", ")
+      );
 
     const sendData = pack(requests);
     this.socket?.send(sendData);
