@@ -11,7 +11,7 @@ class MsgCallback {
     }
     OnRoomGroupBuying(client, param, message) {
         const content = message.content;
-        console.log(`房间团购详情: 房间ID(${content.id}), 团购ID(${content.groupBuyingId}), 最大可投票数(${content.maxVoteTickets}), 用户最大可投票数(${content.userMaxVoteTickets}), 当前已投票数(${content.currentVoteTickets}), 投票进度(${content.voteProgress / BigInt(100)})`);
+        console.log(`房间团购详情: 房间ID(${content.id}), 团购ID(${content.groupBuyingId}), 最大可投票数(${content.maxVoteTickets}), 用户最大可投票数(${content.userMaxVoteTickets}), 当前已投票数(${content.currentVoteTickets}), 投票进度(${content.voteProgress / 100})`);
     }
     OnRoomGroupBuyingVote(client, param, message) {
         const content = message.content;
@@ -19,7 +19,7 @@ class MsgCallback {
     }
     OnRoomGroupBuyingNextProduct(client, param, message) {
         const content = message.content;
-        if (content.beginTime == BigInt(0)) {
+        if (content.beginTime == 0) {
             console.log(`房间团购下一轮商品: 团购ID(${content.groupBuyingId}), 商品ID(${content.productId}), SKUID(${content.skuId})`);
         }
         else {
@@ -62,7 +62,7 @@ function demo() {
     (0, socket_1.configSite)("127.0.0.1:8849");
     const client = (0, socket_1.newClient)(new MsgCallback(), token, true);
     client.start();
-    client.enterRoom(BigInt(1));
+    client.enterRoom(1);
 }
 if (require.main === module) {
     main();

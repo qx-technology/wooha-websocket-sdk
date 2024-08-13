@@ -5,8 +5,8 @@ export declare function useWss(): void;
 export interface Client {
     start(): Client;
     stop(autoConn?: boolean): Client;
-    enterRoom(roomId: bigint): Promise<Client>;
-    leaveRoom(roomId: bigint): Client;
+    enterRoom(roomId: number): Promise<Client>;
+    leaveRoom(roomId: number): Client;
 }
 export interface EventHandle {
     OnRoomDetail(client: Client, param: RoomBasicParam, message: Message<RoomDetail>): void;
@@ -46,8 +46,8 @@ export declare class ClientProvider implements Client {
     start(): Client;
     stop(autoConn?: boolean): Client;
     registerChannel(config: RequestMessage, interval: number, isIncrData?: boolean): void;
-    enterRoom(roomId: bigint): Promise<Client>;
-    leaveRoom(roomId: bigint): Client;
+    enterRoom(roomId: number): Promise<Client>;
+    leaveRoom(roomId: number): Client;
     private onOpen;
     private onClose;
     private onMessage;

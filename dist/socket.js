@@ -17,7 +17,8 @@ exports.newClient = newClient;
 exports.getMessageVersioinByRank = getMessageVersioinByRank;
 const types_1 = require("./types");
 const socket_impl_1 = require("./socket_impl");
-const msgpack_1 = require("@msgpack/msgpack");
+// import { decode as msgpackDecode, encode as msgpackEncode } from "@msgpack/msgpack";
+const msgpack_1 = require("@ygoe/msgpack");
 function uuid() {
     return `${Date.now()}${Math.random()}`;
 }
@@ -85,8 +86,8 @@ class ClientProvider {
         this.registerChannel({
             channel: types_1.ChannelType.HEARTBEAT,
             version: "1.0",
-            seq: BigInt(0),
-            ts: BigInt(Date.now()),
+            seq: 0,
+            ts: Date.now(),
             uid: uuid()
         }, 5000, false);
     }
@@ -128,8 +129,8 @@ class ClientProvider {
             this.registerChannel({
                 channel: types_1.ChannelType.ROOM_DETAIL,
                 version: "1.0",
-                seq: BigInt(0),
-                ts: BigInt(Date.now()),
+                seq: 0,
+                ts: Date.now(),
                 uid: uuid(),
                 params: { roomId }
             }, 1500, false);
@@ -142,8 +143,8 @@ class ClientProvider {
                 this.registerChannel({
                     channel: types_1.ChannelType.ROOM_GROUP_BUYING,
                     version: "1.0",
-                    seq: BigInt(roomGroupBuyingVersion),
-                    ts: BigInt(Date.now()),
+                    seq: Number(roomGroupBuyingVersion),
+                    ts: Date.now(),
                     uid: uuid(),
                     params: { roomId }
                 }, 100);
@@ -155,8 +156,8 @@ class ClientProvider {
                 this.registerChannel({
                     channel: types_1.ChannelType.ROOM_VOTE,
                     version: "1.0",
-                    seq: BigInt(roomVoteVersion),
-                    ts: BigInt(Date.now()),
+                    seq: Number(roomVoteVersion),
+                    ts: Date.now(),
                     uid: uuid(),
                     params: { roomId }
                 }, 100);
@@ -168,8 +169,8 @@ class ClientProvider {
                 this.registerChannel({
                     channel: types_1.ChannelType.ROOM_MESSAGE,
                     version: "1.0",
-                    seq: BigInt(roomMessageVersion),
-                    ts: BigInt(Date.now()),
+                    seq: Number(roomMessageVersion),
+                    ts: Date.now(),
                     uid: uuid(),
                     params: { roomId }
                 }, 100);
@@ -182,8 +183,8 @@ class ClientProvider {
                     this.registerChannel({
                         channel: types_1.ChannelType.ROOM_USER_MESSAGE,
                         version: "1.0",
-                        seq: BigInt(roomUserMessageVersion),
-                        ts: BigInt(Date.now()),
+                        seq: Number(roomUserMessageVersion),
+                        ts: Date.now(),
                         uid: uuid(),
                         params: { roomId }
                     }, 100);
@@ -228,9 +229,7 @@ class ClientProvider {
             const now = Date.now();
             this.lastRpsTime = now;
             const rpsData = new Uint8Array(yield event.data.arrayBuffer());
-            const responses = (0, msgpack_1.decode)(rpsData, {
-                useBigInt64: true
-            });
+            const responses = (0, msgpack_1.deserialize)(rpsData);
             if (this.showLog)
                 console.log("Websocket收到消息:", responses.map((itme) => itme.channel).join(","));
             for (const response of responses) {
@@ -342,7 +341,7 @@ class ClientProvider {
         if (requests.length == 0)
             return;
         // if (this.showLog) console.log("Websocket发送消息:", requests);
-        const sendData = (0, msgpack_1.encode)(requests, { useBigInt64: true });
+        const sendData = (0, msgpack_1.serialize)(requests);
         (_a = this.socket) === null || _a === void 0 ? void 0 : _a.send(sendData);
         this.lastReqTime = now;
     }

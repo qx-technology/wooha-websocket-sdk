@@ -20,7 +20,7 @@ import {
   RoomGroupBuyingBiddingBuyerOfferRejected
 } from "./types";
 import { WebFuket } from "./socket_impl";
-import { decode as msgpackDecode, encode as msgpackEncode } from "@msgpack/msgpack";
+import { serialize, deserialize } from "@ygoe/msgpack";
 
 function uuid(): string {
   return `${Date.now()}${Math.random()}`;
@@ -75,9 +75,9 @@ export interface Client {
   /// 停止
   stop(autoConn?: boolean): Client;
   /// 进入房间
-  enterRoom(roomId: bigint): Promise<Client>;
+  enterRoom(roomId: number): Promise<Client>;
   /// 离开房间
-  leaveRoom(roomId: bigint): Client;
+  leaveRoom(roomId: number): Client;
 }
 
 /// 事件
@@ -206,8 +206,8 @@ export class ClientProvider implements Client {
       <RequestMessage>{
         channel: ChannelType.HEARTBEAT,
         version: "1.0",
-        seq: BigInt(0),
-        ts: BigInt(Date.now()),
+        seq: 0,
+        ts: Date.now(),
         uid: uuid()
       },
       5000,
@@ -255,14 +255,14 @@ export class ClientProvider implements Client {
     this.requests.push(new RequestInfo(config, interval, isIncrData));
   }
 
-  async enterRoom(roomId: bigint): Promise<Client> {
+  async enterRoom(roomId: number): Promise<Client> {
     // 订阅房间详情
     this.registerChannel(
       <RequestMessage<RoomBasicParam>>{
         channel: ChannelType.ROOM_DETAIL,
         version: "1.0",
-        seq: BigInt(0),
-        ts: BigInt(Date.now()),
+        seq: 0,
+        ts: Date.now(),
         uid: uuid(),
         params: { roomId }
       },
@@ -286,8 +286,8 @@ export class ClientProvider implements Client {
         <RequestMessage<RoomBasicParam>>{
           channel: ChannelType.ROOM_GROUP_BUYING,
           version: "1.0",
-          seq: BigInt(roomGroupBuyingVersion),
-          ts: BigInt(Date.now()),
+          seq: Number(roomGroupBuyingVersion),
+          ts: Date.now(),
           uid: uuid(),
           params: { roomId }
         },
@@ -307,8 +307,8 @@ export class ClientProvider implements Client {
         <RequestMessage<RoomBasicParam>>{
           channel: ChannelType.ROOM_VOTE,
           version: "1.0",
-          seq: BigInt(roomVoteVersion),
-          ts: BigInt(Date.now()),
+          seq: Number(roomVoteVersion),
+          ts: Date.now(),
           uid: uuid(),
           params: { roomId }
         },
@@ -328,8 +328,8 @@ export class ClientProvider implements Client {
         <RequestMessage<RoomBasicParam>>{
           channel: ChannelType.ROOM_MESSAGE,
           version: "1.0",
-          seq: BigInt(roomMessageVersion),
-          ts: BigInt(Date.now()),
+          seq: Number(roomMessageVersion),
+          ts: Date.now(),
           uid: uuid(),
           params: { roomId }
         },
@@ -352,8 +352,8 @@ export class ClientProvider implements Client {
           <RequestMessage<RoomBasicParam>>{
             channel: ChannelType.ROOM_USER_MESSAGE,
             version: "1.0",
-            seq: BigInt(roomUserMessageVersion),
-            ts: BigInt(Date.now()),
+            seq: Number(roomUserMessageVersion),
+            ts: Date.now(),
             uid: uuid(),
             params: { roomId }
           },
@@ -366,7 +366,7 @@ export class ClientProvider implements Client {
     return this;
   }
 
-  leaveRoom(roomId: bigint): Client {
+  leaveRoom(roomId: number): Client {
     this.requests = this.requests.filter(
       (request) =>
         !(
@@ -405,9 +405,7 @@ export class ClientProvider implements Client {
     const now = Date.now();
     this.lastRpsTime = now;
     const rpsData = new Uint8Array(await event.data.arrayBuffer());
-    const responses = msgpackDecode(rpsData, {
-      useBigInt64: true
-    }) as ResponseMessage[];
+    const responses = deserialize(rpsData) as ResponseMessage[];
     if (this.showLog)
       console.log("Websocket收到消息:", responses.map((itme) => itme.channel).join(","));
     for (const response of responses) {
@@ -560,7 +558,7 @@ export class ClientProvider implements Client {
 
     // if (this.showLog) console.log("Websocket发送消息:", requests);
 
-    const sendData = msgpackEncode(requests, { useBigInt64: true });
+    const sendData = serialize(requests);
     this.socket?.send(sendData);
     this.lastReqTime = now;
   }
