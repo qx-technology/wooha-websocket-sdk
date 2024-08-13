@@ -17,7 +17,6 @@ exports.newClient = newClient;
 exports.getMessageVersioinByRank = getMessageVersioinByRank;
 const types_1 = require("./types");
 const socket_impl_1 = require("./socket_impl");
-// import { decode as msgpackDecode, encode as msgpackEncode } from "@msgpack/msgpack";
 const msgpack_1 = require("@ygoe/msgpack");
 function uuid() {
     return `${Date.now()}${Math.random()}`;
