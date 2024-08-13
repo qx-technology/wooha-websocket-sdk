@@ -16,7 +16,7 @@
     "typescript": "^5.5.4"
   },
   "dependencies": {
-    "@ygoe/msgpack": "^1.0.3",
+    "msgpackr": "^1.11.0",
     "plus-websocket": "^1.0.7"
   }
 }

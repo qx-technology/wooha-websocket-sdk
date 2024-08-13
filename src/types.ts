@@ -99,7 +99,7 @@ export interface Message<M = any> {
   /**
    * 消息序号
    */
-  seq: number;
+  seq: bigint;
   /**
    * 消息类型
    */
@@ -125,11 +125,11 @@ export interface RequestMessage<P = any> {
   /**
    * 请求序号
    */
-  seq: number;
+  seq: bigint;
   /**
    * 请求时间戳
    */
-  ts: number;
+  ts: bigint;
   /**
    * 请求唯一ID
    */
@@ -147,11 +147,11 @@ export interface ResponseMessage<P = any> extends RequestMessage<P> {
   /**
    * 响应序号
    */
-  rpsSeq: number;
+  rpsSeq: bigint;
   /**
    * 响应时间戳
    */
-  rpsTs: number;
+  rpsTs: bigint;
   /**
    * 响应数据
    */
@@ -169,7 +169,7 @@ export interface RoomBasicParam {
   /**
    * 房间ID
    */
-  roomId: number;
+  roomId: bigint;
 }
 
 /**
@@ -179,7 +179,7 @@ export interface RoomDetail {
   /**
    * 在线人数
    */
-  onlinePeople: number;
+  onlinePeople: bigint;
 }
 
 /**
@@ -189,27 +189,27 @@ export interface RoomGroupBuying {
   /**
    * 房间ID
    */
-  id: number;
+  id: bigint;
   /**
    * 团购ID
    */
-  groupBuyingId: number;
+  groupBuyingId: bigint;
   /**
    * 最大投票数
    */
-  maxVoteTickets: number;
+  maxVoteTickets: bigint;
   /**
    * 用户最大投票数
    */
-  userMaxVoteTickets: number;
+  userMaxVoteTickets: bigint;
   /**
    * 当前投票数
    */
-  currentVoteTickets: number;
+  currentVoteTickets: bigint;
   /**
    * 投票进度
    */
-  voteProgress: number;
+  voteProgress: bigint;
 }
 
 /**
@@ -219,11 +219,11 @@ export interface RoomGroupBuyingVote {
   /**
    * 团购ID
    */
-  groupBuyingId: number;
+  groupBuyingId: bigint;
   /**
    * 用户ID
    */
-  userId: number;
+  userId: bigint;
   /**
    * 用户名
    */
@@ -239,11 +239,11 @@ export interface RoomGroupBuyingVote {
   /**
    * 投票时间
    */
-  voteTime: number;
+  voteTime: bigint;
   /**
    * 票数
    */
-  tickets: number;
+  tickets: bigint;
 }
 
 /**
@@ -253,11 +253,11 @@ export interface RoomGroupBuyingNextProduct {
   /**
    * 团购ID
    */
-  groupBuyingId: number;
+  groupBuyingId: bigint;
   /**
    * 商品ID
    */
-  productId: number;
+  productId: bigint;
   /**
    * 商品名称
    */
@@ -269,11 +269,11 @@ export interface RoomGroupBuyingNextProduct {
   /**
    * SKUID
    */
-  skuId: number;
+  skuId: bigint;
   /**
    * 开始时间
    */
-  beginTime: number;
+  beginTime: bigint;
 }
 
 /**
@@ -293,7 +293,7 @@ export interface RoomGroupBuyingWinning {
   /**
    * 中奖用户ID
    */
-  winnerUserId: number;
+  winnerUserId: bigint;
   /**
    * 中奖用户名
    */
@@ -309,11 +309,11 @@ export interface RoomGroupBuyingWinning {
   /**
    * 奖品领取时间
    */
-  prizeCollectionTime: number;
+  prizeCollectionTime: bigint;
   /**
    * 商品ID
    */
-  productId: number;
+  productId: bigint;
   /**
    * 商品名
    */
@@ -325,11 +325,11 @@ export interface RoomGroupBuyingWinning {
   /**
    * SKUID
    */
-  skuId: number;
+  skuId: bigint;
   /**
    * 竞拍ID
    */
-  auctionId: number;
+  auctionId: bigint;
 }
 
 /**
@@ -339,11 +339,11 @@ export interface RoomGroupBuyingBiddingCounteroffer {
   /**
    * 竞拍ID
    */
-  auctionId: number;
+  auctionId: bigint;
   /**
    * 金额
    */
-  amount: number;
+  amount: bigint;
 }
 
 /**
@@ -353,19 +353,19 @@ export interface RoomGroupBuyingBiddingDeal {
   /**
    * 竞拍ID
    */
-  auctionId: number;
+  auctionId: bigint;
   /**
    * 出价用户ID
    */
-  userId: number;
+  userId: bigint;
   /**
    * 金额
    */
-  amount: number;
+  amount: bigint;
   /**
    * 卖家用户ID
    */
-  sellerUserId: number;
+  sellerUserId: bigint;
   /**
    * 卖家用户名
    */
@@ -395,15 +395,15 @@ export interface RoomGroupBuyingBiddingBuyerInitiatesOffer {
   /**
    * 竞拍ID
    */
-  auctionId: number;
+  auctionId: bigint;
   /**
    * 出价用户ID
    */
-  userId: number;
+  userId: bigint;
   /**
    * 金额
    */
-  amount: number;
+  amount: bigint;
 }
 
 /**
@@ -413,15 +413,15 @@ export interface RoomGroupBuyingBiddingSellerReceivesOffer {
   /**
    * 竞拍ID
    */
-  auctionId: number;
+  auctionId: bigint;
   /**
    * 出价用户ID
    */
-  userId: number;
+  userId: bigint;
   /**
    * 金额
    */
-  amount: number;
+  amount: bigint;
 }
 
 /**
@@ -431,11 +431,11 @@ export interface RoomGroupBuyingBiddingSellerCounteroffer {
   /**
    * 竞拍ID
    */
-  auctionId: number;
+  auctionId: bigint;
   /**
    * 金额
    */
-  amount: number;
+  amount: bigint;
 }
 
 /**
@@ -445,13 +445,13 @@ export interface RoomGroupBuyingBiddingBuyerOfferRejected {
   /**
    * 竞拍ID
    */
-  auctionId: number;
+  auctionId: bigint;
   /**
    * 出价用户ID
    */
-  userId: number;
+  userId: bigint;
   /**
    * 金额
    */
-  amount: number;
+  amount: bigint;
 }
