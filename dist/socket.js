@@ -227,82 +227,81 @@ class ClientProvider {
             }
             const now = Date.now();
             this.lastRpsTime = now;
-            const rpsData = new Uint8Array(yield event.data.arrayBuffer());
-            const responses = (0, msgpackr_1.unpack)(rpsData);
+            const responses = (0, msgpackr_1.unpack)(event.data);
             if (this.showLog)
-                console.log("Websocket收到消息:", responses.map((itme) => itme.channel).join(","));
-            for (const response of responses) {
-                const request = this.requests.find((request) => request.config.uid === response.uid);
-                if (!request)
-                    continue;
-                if (request.isIncrData) {
-                    if (request.config.seq >= response.rpsSeq)
+                // console.log("Websocket收到消息:", responses.map((itme) => itme.channel).join(","));
+                for (const response of responses) {
+                    const request = this.requests.find((request) => request.config.uid === response.uid);
+                    if (!request)
                         continue;
-                }
-                switch (response.channel) {
-                    case types_1.ChannelType.ROOM_DETAIL:
-                        for (const message of response.contents) {
-                            this.callback.OnRoomDetail(this, request.config.params, message);
-                        }
-                        break;
-                    case types_1.ChannelType.ROOM_GROUP_BUYING:
-                        for (const message of response.contents) {
-                            this.callback.OnRoomGroupBuying(this, request.config.params, message);
-                        }
-                        break;
-                    case types_1.ChannelType.ROOM_MESSAGE:
-                        for (const message of response.contents) {
-                            switch (message.type) {
-                                case types_1.MessageType.ROOM_GROUP_BUYING_NEXT_PRODUCT:
-                                    this.callback.OnRoomGroupBuyingNextProduct(this, request.config.params, message);
-                                    break;
-                                case types_1.MessageType.ROOM_GROUP_BUYING_START:
-                                    this.callback.OnRoomGroupBuyingStart(this, request.config.params, message);
-                                    break;
-                                case types_1.MessageType.ROOM_GROUP_BUYING_LOTTERY_OPENING:
-                                    this.callback.OnRoomGroupBuyingLotteryOpening(this, request.config.params, message);
-                                    break;
-                                case types_1.MessageType.ROOM_GROUP_BUYING_WINNING:
-                                    this.callback.OnRoomGroupBuyingWinning(this, request.config.params, message);
-                                    break;
-                                case types_1.MessageType.ROOM_GROUP_BUYING_BIDDING_COUNTEROFFER:
-                                    this.callback.OnRoomGroupBuyingBiddingCounteroffer(this, request.config.params, message);
-                                    break;
-                                case types_1.MessageType.ROOM_GROUP_BUYING_BIDDING_DEAL:
-                                    this.callback.OnRoomGroupBuyingBiddingDeal(this, request.config.params, message);
-                                    break;
+                    if (request.isIncrData) {
+                        if (request.config.seq >= response.rpsSeq)
+                            continue;
+                    }
+                    switch (response.channel) {
+                        case types_1.ChannelType.ROOM_DETAIL:
+                            for (const message of response.contents) {
+                                this.callback.OnRoomDetail(this, request.config.params, message);
                             }
-                        }
-                        break;
-                    case types_1.ChannelType.ROOM_VOTE:
-                        for (const message of response.contents) {
-                            this.callback.OnRoomGroupBuyingVote(this, request.config.params, message);
-                        }
-                        break;
-                    case types_1.ChannelType.ROOM_USER_MESSAGE:
-                        for (const message of response.contents) {
-                            switch (message.type) {
-                                case types_1.MessageType.ROOM_GROUP_BUYING_BIDDING_BUYER_INITIATES_OFFER:
-                                    this.callback.OnRoomGroupBuyingBiddingBuyerInitiatesOffer(this, request.config.params, message);
-                                    break;
-                                case types_1.MessageType.ROOM_GROUP_BUYING_BIDDING_SELLER_RECEIVES_OFFER:
-                                    this.callback.OnRoomGroupBuyingBiddingSellerReceivesOffer(this, request.config.params, message);
-                                    break;
-                                case types_1.MessageType.ROOM_GROUP_BUYING_BIDDING_SELLER_COUNTEROFFER:
-                                    this.callback.OnRoomGroupBuyingBiddingSellerCounteroffer(this, request.config.params, message);
-                                    break;
-                                case types_1.MessageType.ROOM_GROUP_BUYING_BIDDING_BUYER_OFFER_REJECTED:
-                                    this.callback.OnRoomGroupBuyingBiddingBuyerOfferRejected(this, request.config.params, message);
-                                    break;
+                            break;
+                        case types_1.ChannelType.ROOM_GROUP_BUYING:
+                            for (const message of response.contents) {
+                                this.callback.OnRoomGroupBuying(this, request.config.params, message);
                             }
-                        }
-                        break;
-                    case types_1.ChannelType.HEARTBEAT:
-                        console.log("收到服务器心跳:", now);
-                        break;
+                            break;
+                        case types_1.ChannelType.ROOM_MESSAGE:
+                            for (const message of response.contents) {
+                                switch (message.type) {
+                                    case types_1.MessageType.ROOM_GROUP_BUYING_NEXT_PRODUCT:
+                                        this.callback.OnRoomGroupBuyingNextProduct(this, request.config.params, message);
+                                        break;
+                                    case types_1.MessageType.ROOM_GROUP_BUYING_START:
+                                        this.callback.OnRoomGroupBuyingStart(this, request.config.params, message);
+                                        break;
+                                    case types_1.MessageType.ROOM_GROUP_BUYING_LOTTERY_OPENING:
+                                        this.callback.OnRoomGroupBuyingLotteryOpening(this, request.config.params, message);
+                                        break;
+                                    case types_1.MessageType.ROOM_GROUP_BUYING_WINNING:
+                                        this.callback.OnRoomGroupBuyingWinning(this, request.config.params, message);
+                                        break;
+                                    case types_1.MessageType.ROOM_GROUP_BUYING_BIDDING_COUNTEROFFER:
+                                        this.callback.OnRoomGroupBuyingBiddingCounteroffer(this, request.config.params, message);
+                                        break;
+                                    case types_1.MessageType.ROOM_GROUP_BUYING_BIDDING_DEAL:
+                                        this.callback.OnRoomGroupBuyingBiddingDeal(this, request.config.params, message);
+                                        break;
+                                }
+                            }
+                            break;
+                        case types_1.ChannelType.ROOM_VOTE:
+                            for (const message of response.contents) {
+                                this.callback.OnRoomGroupBuyingVote(this, request.config.params, message);
+                            }
+                            break;
+                        case types_1.ChannelType.ROOM_USER_MESSAGE:
+                            for (const message of response.contents) {
+                                switch (message.type) {
+                                    case types_1.MessageType.ROOM_GROUP_BUYING_BIDDING_BUYER_INITIATES_OFFER:
+                                        this.callback.OnRoomGroupBuyingBiddingBuyerInitiatesOffer(this, request.config.params, message);
+                                        break;
+                                    case types_1.MessageType.ROOM_GROUP_BUYING_BIDDING_SELLER_RECEIVES_OFFER:
+                                        this.callback.OnRoomGroupBuyingBiddingSellerReceivesOffer(this, request.config.params, message);
+                                        break;
+                                    case types_1.MessageType.ROOM_GROUP_BUYING_BIDDING_SELLER_COUNTEROFFER:
+                                        this.callback.OnRoomGroupBuyingBiddingSellerCounteroffer(this, request.config.params, message);
+                                        break;
+                                    case types_1.MessageType.ROOM_GROUP_BUYING_BIDDING_BUYER_OFFER_REJECTED:
+                                        this.callback.OnRoomGroupBuyingBiddingBuyerOfferRejected(this, request.config.params, message);
+                                        break;
+                                }
+                            }
+                            break;
+                        case types_1.ChannelType.HEARTBEAT:
+                            console.log("收到服务器心跳:", now);
+                            break;
+                    }
+                    request.config.seq = response.rpsSeq;
                 }
-                request.config.seq = response.rpsSeq;
-            }
         });
     }
     onError(event) {

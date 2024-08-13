@@ -27,24 +27,24 @@ class MsgCallback implements EventHandle {
     param: RoomBasicParam,
     message: Message<RoomDetail>
   ): void {
-    const content = message.content;
-    console.log(`房间详情: 在线人数(${content.onlinePeople}), 时间(${new Date()})`);
+    // const content = message.content;
+    // console.log(`房间详情: 在线人数(${content.onlinePeople}), 时间(${new Date()})`);
   }
   OnRoomGroupBuying(
     client: Client,
     param: RoomBasicParam,
     message: Message<RoomGroupBuying>
   ): void {
-    const content = message.content;
-    console.log(
-      `房间团购详情: 房间ID(${content.id}), 团购ID(${
-        content.groupBuyingId
-      }), 最大可投票数(${content.maxVoteTickets}), 用户最大可投票数(${
-        content.userMaxVoteTickets
-      }), 当前已投票数(${content.currentVoteTickets}), 投票进度(${
-        Number(content.voteProgress) / 100
-      })`
-    );
+    // const content = message.content;
+    // console.log(
+    //   `房间团购详情: 房间ID(${content.id}), 团购ID(${
+    //     content.groupBuyingId
+    //   }), 最大可投票数(${content.maxVoteTickets}), 用户最大可投票数(${
+    //     content.userMaxVoteTickets
+    //   }), 当前已投票数(${content.currentVoteTickets}), 投票进度(${
+    //     Number(content.voteProgress) / 100
+    //   })`
+    // );
   }
   OnRoomGroupBuyingVote(
     client: Client,
@@ -143,7 +143,7 @@ function main() {
 }
 
 export function demo() {
-  configSite("127.0.0.1:8849");
+  // configSite("127.0.0.1:8849");
   const client = newClient(new MsgCallback(), token, true);
   client.start();
   client.enterRoom(BigInt(1));

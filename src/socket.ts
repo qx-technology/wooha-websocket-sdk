@@ -404,7 +404,12 @@ export class ClientProvider implements Client {
     }
     const now = Date.now();
     this.lastRpsTime = now;
-    const rpsData = new Uint8Array(await event.data.arrayBuffer());
+    var rpsData;
+    if (process.env.UNI_PLATFORM === "app-plus") {
+      rpsData = new Uint8Array(event.data);
+    } else {
+      rpsData = new Uint8Array(await event.data.arrayBuffer());
+    }
     const responses = unpack(rpsData) as ResponseMessage[];
     if (this.showLog)
       console.log("Websocket收到消息:", responses.map((itme) => itme.channel).join(","));
