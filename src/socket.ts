@@ -408,7 +408,8 @@ export class ClientProvider implements Client {
     const responses = msgpackDecode(rpsData, {
       useBigInt64: true
     }) as ResponseMessage[];
-    // if (this.showLog) console.log("Websocket收到消息:", responses);
+    if (this.showLog)
+      console.log("Websocket收到消息:", responses.map((itme) => itme.channel).join(","));
     for (const response of responses) {
       const request = this.requests.find(
         (request) => request.config.uid === response.uid
