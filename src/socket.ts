@@ -85,17 +85,9 @@ export interface EventHandle {
   /// 房间详情
   OnRoomDetail(client: Client, param: RoomBasicParam, message: Message<RoomDetail>): void;
   /// 房间团购详情
-  OnRoomGroupBuying(
-    client: Client,
-    param: RoomBasicParam,
-    message: Message<RoomGroupBuying>
-  ): void;
+  OnRoomGroupBuying(client: Client, param: RoomBasicParam, message: Message<RoomGroupBuying>): void;
   /// 房间团购投票
-  OnRoomGroupBuyingVote(
-    client: Client,
-    param: RoomBasicParam,
-    message: Message<RoomGroupBuyingVote>
-  ): void;
+  OnRoomGroupBuyingVote(client: Client, param: RoomBasicParam, message: Message<RoomGroupBuyingVote>): void;
   /// 房间团购下一个商品
   OnRoomGroupBuyingNextProduct(
     client: Client,
@@ -103,11 +95,7 @@ export interface EventHandle {
     message: Message<RoomGroupBuyingNextProduct>
   ): void;
   /// 房间团购开始
-  OnRoomGroupBuyingStart(
-    client: Client,
-    param: RoomBasicParam,
-    message: Message<RoomGroupBuyingStart>
-  ): void;
+  OnRoomGroupBuyingStart(client: Client, param: RoomBasicParam, message: Message<RoomGroupBuyingStart>): void;
   /// 房间团购正在开奖
   OnRoomGroupBuyingLotteryOpening(
     client: Client,
@@ -115,11 +103,7 @@ export interface EventHandle {
     message: Message<RoomGroupBuyingLotteryOpening>
   ): void;
   /// 房间团购中奖
-  OnRoomGroupBuyingWinning(
-    client: Client,
-    param: RoomBasicParam,
-    message: Message<RoomGroupBuyingWinning>
-  ): void;
+  OnRoomGroupBuyingWinning(client: Client, param: RoomBasicParam, message: Message<RoomGroupBuyingWinning>): void;
   /// 房间团购竞拍还价所有人
   OnRoomGroupBuyingBiddingCounteroffer(
     client: Client,
@@ -256,20 +240,20 @@ export class ClientProvider implements Client {
   }
 
   async enterRoom(roomId: bigint): Promise<Client> {
-    // 订阅房间详情
-    this.registerChannel(
-      <RequestMessage<RoomBasicParam>>{
-        channel: ChannelType.ROOM_DETAIL,
-        version: "1.0",
-        seq: BigInt(0),
-        ts: BigInt(Date.now()),
-        uid: uuid(),
-        params: { roomId }
-      },
-      3000,
-      false
-    );
     try {
+      // 订阅房间详情
+      this.registerChannel(
+        <RequestMessage<RoomBasicParam>>{
+          channel: ChannelType.ROOM_DETAIL,
+          version: "1.0",
+          seq: BigInt(0),
+          ts: BigInt(Date.now()),
+          uid: uuid(),
+          params: { roomId }
+        },
+        3000,
+        false
+      );
       // 订阅房间团购详情
       const roomGroupBuyingVersion = await getMessageVersioinByRank(
         ChannelType.ROOM_GROUP_BUYING,
@@ -278,9 +262,7 @@ export class ClientProvider implements Client {
         this.token
       );
       if (this.showLog) {
-        console.log(
-          `订阅房间团购详情: roomId(${roomId}), 版本号(${roomGroupBuyingVersion})`
-        );
+        console.log(`订阅房间团购详情: roomId(${roomId}), 版本号(${roomGroupBuyingVersion})`);
       }
       this.registerChannel(
         <RequestMessage<RoomBasicParam>>{
@@ -294,12 +276,7 @@ export class ClientProvider implements Client {
         100
       );
       // 订阅房间投票
-      const roomVoteVersion = await getMessageVersioinByRank(
-        ChannelType.ROOM_VOTE,
-        1,
-        { roomId },
-        this.token
-      );
+      const roomVoteVersion = await getMessageVersioinByRank(ChannelType.ROOM_VOTE, 1, { roomId }, this.token);
       if (this.showLog) {
         console.log(`订阅房间投票: roomId(${roomId}), 版本号(${roomVoteVersion})`);
       }
@@ -315,12 +292,7 @@ export class ClientProvider implements Client {
         100
       );
       // 订阅房间消息
-      const roomMessageVersion = await getMessageVersioinByRank(
-        ChannelType.ROOM_MESSAGE,
-        1,
-        { roomId },
-        this.token
-      );
+      const roomMessageVersion = await getMessageVersioinByRank(ChannelType.ROOM_MESSAGE, 1, { roomId }, this.token);
       if (this.showLog) {
         console.log(`订阅房间消息: roomId(${roomId}), 版本号(${roomMessageVersion})`);
       }
@@ -344,9 +316,7 @@ export class ClientProvider implements Client {
           this.token
         );
         if (this.showLog) {
-          console.log(
-            `订阅房间用户消息: roomId(${roomId}), 版本号(${roomUserMessageVersion})`
-          );
+          console.log(`订阅房间用户消息: roomId(${roomId}), 版本号(${roomUserMessageVersion})`);
         }
         this.registerChannel(
           <RequestMessage<RoomBasicParam>>{
@@ -376,8 +346,7 @@ export class ClientProvider implements Client {
             ChannelType.ROOM_GROUP_BUYING,
             ChannelType.ROOM_VOTE,
             ChannelType.USER_ROOM_MESSAGE
-          ].includes(request.config.channel) &&
-          (<RoomBasicParam>request.config.params).roomId === roomId
+          ].includes(request.config.channel) && (<RoomBasicParam>request.config.params).roomId === roomId
         )
     );
     return this;
@@ -419,9 +388,7 @@ export class ClientProvider implements Client {
         "Bytes"
       );
     for (const response of responses) {
-      const request = this.requests.find(
-        (request) => request.config.uid === response.uid
-      );
+      const request = this.requests.find((request) => request.config.uid === response.uid);
       if (!request) continue;
 
       if (request.isIncrData) {
@@ -443,46 +410,22 @@ export class ClientProvider implements Client {
           for (const message of response.contents) {
             switch (message.type) {
               case MessageType.ROOM_GROUP_BUYING_NEXT_PRODUCT:
-                this.callback.OnRoomGroupBuyingNextProduct(
-                  this,
-                  request.config.params,
-                  message
-                );
+                this.callback.OnRoomGroupBuyingNextProduct(this, request.config.params, message);
                 break;
               case MessageType.ROOM_GROUP_BUYING_START:
-                this.callback.OnRoomGroupBuyingStart(
-                  this,
-                  request.config.params,
-                  message
-                );
+                this.callback.OnRoomGroupBuyingStart(this, request.config.params, message);
                 break;
               case MessageType.ROOM_GROUP_BUYING_LOTTERY_OPENING:
-                this.callback.OnRoomGroupBuyingLotteryOpening(
-                  this,
-                  request.config.params,
-                  message
-                );
+                this.callback.OnRoomGroupBuyingLotteryOpening(this, request.config.params, message);
                 break;
               case MessageType.ROOM_GROUP_BUYING_WINNING:
-                this.callback.OnRoomGroupBuyingWinning(
-                  this,
-                  request.config.params,
-                  message
-                );
+                this.callback.OnRoomGroupBuyingWinning(this, request.config.params, message);
                 break;
               case MessageType.ROOM_GROUP_BUYING_BIDDING_COUNTEROFFER:
-                this.callback.OnRoomGroupBuyingBiddingCounteroffer(
-                  this,
-                  request.config.params,
-                  message
-                );
+                this.callback.OnRoomGroupBuyingBiddingCounteroffer(this, request.config.params, message);
                 break;
               case MessageType.ROOM_GROUP_BUYING_BIDDING_DEAL:
-                this.callback.OnRoomGroupBuyingBiddingDeal(
-                  this,
-                  request.config.params,
-                  message
-                );
+                this.callback.OnRoomGroupBuyingBiddingDeal(this, request.config.params, message);
                 break;
             }
           }
@@ -496,32 +439,16 @@ export class ClientProvider implements Client {
           for (const message of response.contents) {
             switch (message.type) {
               case MessageType.USER_GROUP_BUYING_BIDDING_BUYER_INITIATES_OFFER:
-                this.callback.OnRoomGroupBuyingBiddingBuyerInitiatesOffer(
-                  this,
-                  request.config.params,
-                  message
-                );
+                this.callback.OnRoomGroupBuyingBiddingBuyerInitiatesOffer(this, request.config.params, message);
                 break;
               case MessageType.USER_GROUP_BUYING_BIDDING_SELLER_RECEIVES_OFFER:
-                this.callback.OnRoomGroupBuyingBiddingSellerReceivesOffer(
-                  this,
-                  request.config.params,
-                  message
-                );
+                this.callback.OnRoomGroupBuyingBiddingSellerReceivesOffer(this, request.config.params, message);
                 break;
               case MessageType.USER_GROUP_BUYING_BIDDING_SELLER_COUNTEROFFER:
-                this.callback.OnRoomGroupBuyingBiddingSellerCounteroffer(
-                  this,
-                  request.config.params,
-                  message
-                );
+                this.callback.OnRoomGroupBuyingBiddingSellerCounteroffer(this, request.config.params, message);
                 break;
               case MessageType.USER_GROUP_BUYING_BIDDING_BUYER_OFFER_REJECTED:
-                this.callback.OnRoomGroupBuyingBiddingBuyerOfferRejected(
-                  this,
-                  request.config.params,
-                  message
-                );
+                this.callback.OnRoomGroupBuyingBiddingBuyerOfferRejected(this, request.config.params, message);
                 break;
             }
           }
@@ -579,11 +506,7 @@ export class ClientProvider implements Client {
   }
 }
 
-export function newClient(
-  eventHandle: EventHandle,
-  token?: string,
-  showLog?: boolean
-): Client {
+export function newClient(eventHandle: EventHandle, token?: string, showLog?: boolean): Client {
   return new ClientProvider(eventHandle, token, showLog);
 }
 
@@ -635,7 +558,5 @@ export async function getMessageVersioinByRank(
 }
 
 function uint8ArrayToHex(uint8Array: any) {
-  return Array.from(uint8Array, (byte: any) => byte.toString(16).padStart(2, "0")).join(
-    ""
-  );
+  return Array.from(uint8Array, (byte: any) => byte.toString(16).padStart(2, "0")).join("");
 }

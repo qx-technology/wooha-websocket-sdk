@@ -22,19 +22,11 @@ const token =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzaG9wIiwiZXhwIjoxNzMwMTA2NDQ1LCJpYXQiOjE3MjIzMzA0NDUsImp0aSI6IjVkMTMwYTkyZGQ0MzE3ZTFiYWE2NTQ5YjNmNzU0NDgzIn0.QdOiSOjNxMv1sP7MzivqcbNi3bh0AtpU2Y0AGyqauNc";
 
 class MsgCallback implements EventHandle {
-  OnRoomDetail(
-    client: Client,
-    param: RoomBasicParam,
-    message: Message<RoomDetail>
-  ): void {
+  OnRoomDetail(client: Client, param: RoomBasicParam, message: Message<RoomDetail>): void {
     // const content = message.content;
     // console.log(`房间详情: 在线人数(${content.onlinePeople}), 时间(${new Date()})`);
   }
-  OnRoomGroupBuying(
-    client: Client,
-    param: RoomBasicParam,
-    message: Message<RoomGroupBuying>
-  ): void {
+  OnRoomGroupBuying(client: Client, param: RoomBasicParam, message: Message<RoomGroupBuying>): void {
     // const content = message.content;
     // console.log(
     //   `房间团购详情: 房间ID(${content.id}), 团购ID(${
@@ -46,11 +38,7 @@ class MsgCallback implements EventHandle {
     //   })`
     // );
   }
-  OnRoomGroupBuyingVote(
-    client: Client,
-    param: RoomBasicParam,
-    message: Message<RoomGroupBuyingVote>
-  ): void {
+  OnRoomGroupBuyingVote(client: Client, param: RoomBasicParam, message: Message<RoomGroupBuyingVote>): void {
     const content = message.content;
     console.log(
       `房间团购投票: 团购ID(${content.groupBuyingId}), 用户ID(${content.userId}), 投票时间(${content.voteTime}), 投票数(${content.tickets})`
@@ -70,11 +58,7 @@ class MsgCallback implements EventHandle {
       console.log(`房间团购下一轮商品: 开始时间(${content.beginTime})`);
     }
   }
-  OnRoomGroupBuyingStart(
-    client: Client,
-    param: RoomBasicParam,
-    message: Message<RoomGroupBuyingStart>
-  ): void {
+  OnRoomGroupBuyingStart(client: Client, param: RoomBasicParam, message: Message<RoomGroupBuyingStart>): void {
     console.log("房间团购开始");
   }
   OnRoomGroupBuyingLotteryOpening(
@@ -84,11 +68,7 @@ class MsgCallback implements EventHandle {
   ): void {
     console.log("房间团购开奖中");
   }
-  OnRoomGroupBuyingWinning(
-    client: Client,
-    param: RoomBasicParam,
-    message: Message<RoomGroupBuyingWinning>
-  ): void {
+  OnRoomGroupBuyingWinning(client: Client, param: RoomBasicParam, message: Message<RoomGroupBuyingWinning>): void {
     const content = message.content;
     console.log(
       `房间团购用户中奖: 用户ID(${content.winnerUserId}), 奖品可领奖时间(${content.prizeCollectionTime}), 竞拍ID(${content.auctionId})`
