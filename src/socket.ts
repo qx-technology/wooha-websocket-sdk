@@ -355,15 +355,13 @@ export class ClientProvider implements Client {
     this.requests = this.requests.filter(
       (request) =>
         !(
-          ([
+          [
             ChannelType.ROOM_MSG,
             ChannelType.ROOM,
             ChannelType.GROUPBUYING,
             ChannelType.GROUPBUYING_VOTE,
             ChannelType.USER_ROOM_MSG
-          ].includes(request.config.channel) &&
-            (<RoomParam>request.config.params).roomId === roomId) ||
-          [ChannelType.ROOM_AGG_MSG, ChannelType.USER_ROOM_AGG_MSG].includes(request.config.channel)
+          ].includes(request.config.channel) && (<RoomParam>request.config.params).roomId === roomId
         )
     );
     return this;
@@ -424,6 +422,7 @@ export class ClientProvider implements Client {
           }
           break;
         case ChannelType.ROOM_MSG:
+        case ChannelType.ROOM_AGG_MSG:
           for (const message of response.contents) {
             switch (message.type) {
               case MessageType.GROUPBUYING_NEXT_PRODUCT:
@@ -453,6 +452,7 @@ export class ClientProvider implements Client {
           }
           break;
         case ChannelType.USER_ROOM_MSG:
+        case ChannelType.USER_ROOM_AGG_MSG:
           for (const message of response.contents) {
             switch (message.type) {
               case MessageType.USER_BIDDING_INITIATE_OFFER:
