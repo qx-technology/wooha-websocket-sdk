@@ -244,7 +244,7 @@ export class ClientProvider implements Client {
       // 订阅房间详情
       this.registerChannel(
         <RequestMessage<RoomBasicParam>>{
-          channel: ChannelType.ROOM_DETAIL,
+          channel: ChannelType.ROOM,
           version: "1.0",
           seq: BigInt(0),
           ts: BigInt(Date.now()),
@@ -255,18 +255,13 @@ export class ClientProvider implements Client {
         false
       );
       // 订阅房间团购详情
-      const roomGroupBuyingVersion = await getMessageVersioinByRank(
-        ChannelType.ROOM_GROUP_BUYING,
-        1,
-        { roomId },
-        this.token
-      );
+      const roomGroupBuyingVersion = await getMessageVersioinByRank(ChannelType.GROUPBUYING, 1, { roomId }, this.token);
       if (this.showLog) {
         console.log(`订阅房间团购详情: roomId(${roomId}), 版本号(${roomGroupBuyingVersion})`);
       }
       this.registerChannel(
         <RequestMessage<RoomBasicParam>>{
-          channel: ChannelType.ROOM_GROUP_BUYING,
+          channel: ChannelType.GROUPBUYING,
           version: "1.0",
           seq: BigInt(roomGroupBuyingVersion),
           ts: BigInt(Date.now()),
@@ -276,13 +271,13 @@ export class ClientProvider implements Client {
         100
       );
       // 订阅房间投票
-      const roomVoteVersion = await getMessageVersioinByRank(ChannelType.ROOM_VOTE, 1, { roomId }, this.token);
+      const roomVoteVersion = await getMessageVersioinByRank(ChannelType.GROUPBUYING_VOTE, 1, { roomId }, this.token);
       if (this.showLog) {
         console.log(`订阅房间投票: roomId(${roomId}), 版本号(${roomVoteVersion})`);
       }
       this.registerChannel(
         <RequestMessage<RoomBasicParam>>{
-          channel: ChannelType.ROOM_VOTE,
+          channel: ChannelType.GROUPBUYING_VOTE,
           version: "1.0",
           seq: BigInt(roomVoteVersion),
           ts: BigInt(Date.now()),
@@ -292,13 +287,13 @@ export class ClientProvider implements Client {
         100
       );
       // 订阅房间消息
-      const roomMessageVersion = await getMessageVersioinByRank(ChannelType.ROOM_MESSAGE, 1, { roomId }, this.token);
+      const roomMessageVersion = await getMessageVersioinByRank(ChannelType.ROOM_MSG, 1, { roomId }, this.token);
       if (this.showLog) {
         console.log(`订阅房间消息: roomId(${roomId}), 版本号(${roomMessageVersion})`);
       }
       this.registerChannel(
         <RequestMessage<RoomBasicParam>>{
-          channel: ChannelType.ROOM_MESSAGE,
+          channel: ChannelType.ROOM_MSG,
           version: "1.0",
           seq: BigInt(roomMessageVersion),
           ts: BigInt(Date.now()),
@@ -309,7 +304,7 @@ export class ClientProvider implements Client {
       );
       // 订阅房间聚合消息
       const roomAggregateMessageVersion = await getMessageVersioinByRank(
-        ChannelType.ROOM_AGGREGATE_MESSAGE,
+        ChannelType.ROOM_AGG_MSG,
         1,
         { roomId },
         this.token
@@ -319,7 +314,7 @@ export class ClientProvider implements Client {
       }
       this.registerChannel(
         <RequestMessage>{
-          channel: ChannelType.ROOM_AGGREGATE_MESSAGE,
+          channel: ChannelType.ROOM_AGG_MSG,
           version: "1.0",
           seq: BigInt(roomAggregateMessageVersion),
           ts: BigInt(Date.now()),
@@ -331,7 +326,7 @@ export class ClientProvider implements Client {
       if (this.token) {
         // 订阅用户房间消息
         const userRoomMessageVersion = await getMessageVersioinByRank(
-          ChannelType.USER_ROOM_MESSAGE,
+          ChannelType.USER_ROOM_MSG,
           1,
           { roomId },
           this.token
@@ -341,7 +336,7 @@ export class ClientProvider implements Client {
         }
         this.registerChannel(
           <RequestMessage<RoomBasicParam>>{
-            channel: ChannelType.USER_ROOM_MESSAGE,
+            channel: ChannelType.USER_ROOM_MSG,
             version: "1.0",
             seq: BigInt(userRoomMessageVersion),
             ts: BigInt(Date.now()),
@@ -352,7 +347,7 @@ export class ClientProvider implements Client {
         );
         // 订阅用户房间聚合消息
         const userRoomAggregateMessageVersion = await getMessageVersioinByRank(
-          ChannelType.USER_ROOM_AGGREGATE_MESSAGE,
+          ChannelType.USER_ROOM_AGG_MSG,
           1,
           { roomId },
           this.token
@@ -362,7 +357,7 @@ export class ClientProvider implements Client {
         }
         this.registerChannel(
           <RequestMessage<RoomBasicParam>>{
-            channel: ChannelType.USER_ROOM_AGGREGATE_MESSAGE,
+            channel: ChannelType.USER_ROOM_AGG_MSG,
             version: "1.0",
             seq: BigInt(userRoomAggregateMessageVersion),
             ts: BigInt(Date.now()),
@@ -383,14 +378,14 @@ export class ClientProvider implements Client {
       (request) =>
         !(
           ([
-            ChannelType.ROOM_MESSAGE,
-            ChannelType.ROOM_DETAIL,
-            ChannelType.ROOM_GROUP_BUYING,
-            ChannelType.ROOM_VOTE,
-            ChannelType.USER_ROOM_MESSAGE
+            ChannelType.ROOM_MSG,
+            ChannelType.ROOM,
+            ChannelType.GROUPBUYING,
+            ChannelType.GROUPBUYING_VOTE,
+            ChannelType.USER_ROOM_MSG
           ].includes(request.config.channel) &&
             (<RoomBasicParam>request.config.params).roomId === roomId) ||
-          [ChannelType.ROOM_AGGREGATE_MESSAGE, ChannelType.USER_ROOM_AGGREGATE_MESSAGE].includes(request.config.channel)
+          [ChannelType.ROOM_AGG_MSG, ChannelType.USER_ROOM_AGG_MSG].includes(request.config.channel)
         )
     );
     return this;
@@ -440,17 +435,17 @@ export class ClientProvider implements Client {
       }
 
       switch (response.channel) {
-        case ChannelType.ROOM_DETAIL:
+        case ChannelType.ROOM:
           for (const message of response.contents) {
             this.callback.OnRoomDetail(this, request.config.params, message);
           }
           break;
-        case ChannelType.ROOM_GROUP_BUYING:
+        case ChannelType.GROUPBUYING:
           for (const message of response.contents) {
             this.callback.OnRoomGroupBuying(this, request.config.params, message);
           }
           break;
-        case ChannelType.ROOM_MESSAGE:
+        case ChannelType.ROOM_MSG:
           for (const message of response.contents) {
             switch (message.type) {
               case MessageType.ROOM_GROUP_BUYING_NEXT_PRODUCT:
@@ -474,12 +469,12 @@ export class ClientProvider implements Client {
             }
           }
           break;
-        case ChannelType.ROOM_VOTE:
+        case ChannelType.GROUPBUYING_VOTE:
           for (const message of response.contents) {
             this.callback.OnRoomGroupBuyingVote(this, request.config.params, message);
           }
           break;
-        case ChannelType.USER_ROOM_MESSAGE:
+        case ChannelType.USER_ROOM_MSG:
           for (const message of response.contents) {
             switch (message.type) {
               case MessageType.USER_GROUP_BUYING_BIDDING_BUYER_INITIATES_OFFER:

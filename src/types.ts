@@ -9,35 +9,35 @@ export enum ChannelType {
   /**
    * 心跳
    */
-  HEARTBEAT,
+  HEARTBEAT = 0,
   /**
    * 房间详情
    */
-  ROOM_DETAIL,
+  ROOM = 1,
   /**
-   * 房间团购详情
+   * 团购详情
    */
-  ROOM_GROUP_BUYING,
+  GROUPBUYING = 2,
+  /**
+   * 团购投票
+   */
+  GROUPBUYING_VOTE = 3,
   /**
    * 房间消息
    */
-  ROOM_MESSAGE,
-  /**
-   * 房间投票
-   */
-  ROOM_VOTE,
-  /**
-   * 用户房间消息
-   */
-  USER_ROOM_MESSAGE,
+  ROOM_MSG = 4,
   /**
    * 房间聚合消息
    */
-  ROOM_AGGREGATE_MESSAGE,
+  ROOM_AGG_MSG = 5,
+  /**
+   * 用户房间消息
+   */
+  USER_ROOM_MSG = 6,
   /**
    * 用户房间聚合消息
    */
-  USER_ROOM_AGGREGATE_MESSAGE
+  USER_ROOM_AGG_MSG = 7
 }
 
 /**
