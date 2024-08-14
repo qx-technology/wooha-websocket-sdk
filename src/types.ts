@@ -47,55 +47,55 @@ export enum MessageType {
   /**
    * 房间详情
    */
-  ROOM_DETAIL,
+  ROOM,
   /**
-   * 房间团购详情
+   * 团购详情
    */
-  ROOM_GROUP_BUYING_DETAIL,
+  GROUPBUYING,
   /**
-   * 房间团购投票
+   * 团购投票
    */
-  ROOM_GROUP_BUYING_VOTE,
+  GROUPBUYING_VOTE,
   /**
-   * 房间团购下一个商品
+   * 团购下一个商品
    */
-  ROOM_GROUP_BUYING_NEXT_PRODUCT,
+  GROUPBUYING_NEXT_PRODUCT,
   /**
-   * 房间团购开始
+   * 团购开始
    */
-  ROOM_GROUP_BUYING_START,
+  GROUPBUYING_START,
   /**
-   * 房间团购正在开奖
+   * 团购正在开奖
    */
-  ROOM_GROUP_BUYING_LOTTERY_OPENING,
+  GROUPBUYING_LOTTERY_OPENING,
   /**
-   * 房间团购中奖
+   * 团购中奖
    */
-  ROOM_GROUP_BUYING_WINNING,
+  GROUPBUYING_WINNING,
   /**
-   * 房间团购竞拍还价所有人
+   * 竞拍还价所有人
    */
-  ROOM_GROUP_BUYING_BIDDING_COUNTEROFFER,
+  BIDDING_ALL_COUNTEROFFER,
   /**
-   * 房间团购竞拍成交
+   * 竞拍成交
    */
-  ROOM_GROUP_BUYING_BIDDING_DEAL,
+  BIDDING_DEAL,
   /**
-   * 用户团购竞拍买家发起报价(私人)
+   * 用户竞拍买家发起报价(私人)
    */
-  USER_GROUP_BUYING_BIDDING_BUYER_INITIATES_OFFER,
+  USER_BIDDING_INITIATE_OFFER,
   /**
-   * 用户团购竞拍卖家收到报价(私人)
+   * 用户竞拍卖家收到报价(私人)
    */
-  USER_GROUP_BUYING_BIDDING_SELLER_RECEIVES_OFFER,
+  USER_BIDDING_RECEIVES_OFFER,
   /**
-   * 用户团购竞拍买家收到还价(私人)
+   * 用户竞拍买家收到还价(私人)
    */
-  USER_GROUP_BUYING_BIDDING_SELLER_COUNTEROFFER,
+  USER_BIDDING_RECEIVES_COUNTEROFFER,
   /**
-   * 用户团购竞拍买家报价被拒(私人)
+   * 用户竞拍买家报价被拒(私人)
    */
-  USER_GROUP_BUYING_BIDDING_BUYER_OFFER_REJECTED
+  USER_BIDDING_REJECTED_OFFER
 }
 
 // ============================================================ //

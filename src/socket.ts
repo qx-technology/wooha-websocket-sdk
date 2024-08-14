@@ -448,22 +448,22 @@ export class ClientProvider implements Client {
         case ChannelType.ROOM_MSG:
           for (const message of response.contents) {
             switch (message.type) {
-              case MessageType.ROOM_GROUP_BUYING_NEXT_PRODUCT:
+              case MessageType.GROUPBUYING_NEXT_PRODUCT:
                 this.callback.OnRoomGroupBuyingNextProduct(this, request.config.params, message);
                 break;
-              case MessageType.ROOM_GROUP_BUYING_START:
+              case MessageType.GROUPBUYING_START:
                 this.callback.OnRoomGroupBuyingStart(this, request.config.params, message);
                 break;
-              case MessageType.ROOM_GROUP_BUYING_LOTTERY_OPENING:
+              case MessageType.GROUPBUYING_LOTTERY_OPENING:
                 this.callback.OnRoomGroupBuyingLotteryOpening(this, request.config.params, message);
                 break;
-              case MessageType.ROOM_GROUP_BUYING_WINNING:
+              case MessageType.GROUPBUYING_WINNING:
                 this.callback.OnRoomGroupBuyingWinning(this, request.config.params, message);
                 break;
-              case MessageType.ROOM_GROUP_BUYING_BIDDING_COUNTEROFFER:
+              case MessageType.BIDDING_ALL_COUNTEROFFER:
                 this.callback.OnRoomGroupBuyingBiddingCounteroffer(this, request.config.params, message);
                 break;
-              case MessageType.ROOM_GROUP_BUYING_BIDDING_DEAL:
+              case MessageType.BIDDING_DEAL:
                 this.callback.OnRoomGroupBuyingBiddingDeal(this, request.config.params, message);
                 break;
             }
@@ -477,16 +477,16 @@ export class ClientProvider implements Client {
         case ChannelType.USER_ROOM_MSG:
           for (const message of response.contents) {
             switch (message.type) {
-              case MessageType.USER_GROUP_BUYING_BIDDING_BUYER_INITIATES_OFFER:
+              case MessageType.USER_BIDDING_INITIATE_OFFER:
                 this.callback.OnUserGroupBuyingBiddingBuyerInitiatesOffer(this, request.config.params, message);
                 break;
-              case MessageType.USER_GROUP_BUYING_BIDDING_SELLER_RECEIVES_OFFER:
+              case MessageType.USER_BIDDING_RECEIVES_OFFER:
                 this.callback.OnUserGroupBuyingBiddingSellerReceivesOffer(this, request.config.params, message);
                 break;
-              case MessageType.USER_GROUP_BUYING_BIDDING_SELLER_COUNTEROFFER:
+              case MessageType.USER_BIDDING_RECEIVES_COUNTEROFFER:
                 this.callback.OnUserGroupBuyingBiddingSellerCounteroffer(this, request.config.params, message);
                 break;
-              case MessageType.USER_GROUP_BUYING_BIDDING_BUYER_OFFER_REJECTED:
+              case MessageType.USER_BIDDING_REJECTED_OFFER:
                 this.callback.OnUserGroupBuyingBiddingBuyerOfferRejected(this, request.config.params, message);
                 break;
             }
