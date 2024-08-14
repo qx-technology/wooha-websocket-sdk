@@ -16,31 +16,31 @@ var ChannelType;
     /**
      * 房间详情
      */
-    ChannelType[ChannelType["ROOM_DETAIL"] = 1] = "ROOM_DETAIL";
+    ChannelType[ChannelType["ROOM"] = 1] = "ROOM";
     /**
-     * 房间团购详情
+     * 团购详情
      */
-    ChannelType[ChannelType["ROOM_GROUP_BUYING"] = 2] = "ROOM_GROUP_BUYING";
+    ChannelType[ChannelType["GROUPBUYING"] = 2] = "GROUPBUYING";
+    /**
+     * 团购投票
+     */
+    ChannelType[ChannelType["GROUPBUYING_VOTE"] = 3] = "GROUPBUYING_VOTE";
     /**
      * 房间消息
      */
-    ChannelType[ChannelType["ROOM_MESSAGE"] = 3] = "ROOM_MESSAGE";
-    /**
-     * 房间投票
-     */
-    ChannelType[ChannelType["ROOM_VOTE"] = 4] = "ROOM_VOTE";
-    /**
-     * 用户房间消息
-     */
-    ChannelType[ChannelType["USER_ROOM_MESSAGE"] = 5] = "USER_ROOM_MESSAGE";
+    ChannelType[ChannelType["ROOM_MSG"] = 4] = "ROOM_MSG";
     /**
      * 房间聚合消息
      */
-    ChannelType[ChannelType["ROOM_AGGREGATE_MESSAGE"] = 6] = "ROOM_AGGREGATE_MESSAGE";
+    ChannelType[ChannelType["ROOM_AGG_MSG"] = 5] = "ROOM_AGG_MSG";
+    /**
+     * 用户房间消息
+     */
+    ChannelType[ChannelType["USER_ROOM_MSG"] = 6] = "USER_ROOM_MSG";
     /**
      * 用户房间聚合消息
      */
-    ChannelType[ChannelType["USER_ROOM_AGGREGATE_MESSAGE"] = 7] = "USER_ROOM_AGGREGATE_MESSAGE";
+    ChannelType[ChannelType["USER_ROOM_AGG_MSG"] = 7] = "USER_ROOM_AGG_MSG";
 })(ChannelType || (exports.ChannelType = ChannelType = {}));
 /**
  * 消息类型
@@ -50,54 +50,54 @@ var MessageType;
     /**
      * 房间详情
      */
-    MessageType[MessageType["ROOM_DETAIL"] = 0] = "ROOM_DETAIL";
+    MessageType[MessageType["ROOM"] = 0] = "ROOM";
     /**
-     * 房间团购详情
+     * 团购详情
      */
-    MessageType[MessageType["ROOM_GROUP_BUYING_DETAIL"] = 1] = "ROOM_GROUP_BUYING_DETAIL";
+    MessageType[MessageType["GROUPBUYING"] = 1] = "GROUPBUYING";
     /**
-     * 房间团购投票
+     * 团购投票
      */
-    MessageType[MessageType["ROOM_GROUP_BUYING_VOTE"] = 2] = "ROOM_GROUP_BUYING_VOTE";
+    MessageType[MessageType["GROUPBUYING_VOTE"] = 2] = "GROUPBUYING_VOTE";
     /**
-     * 房间团购下一个商品
+     * 团购下一个商品
      */
-    MessageType[MessageType["ROOM_GROUP_BUYING_NEXT_PRODUCT"] = 3] = "ROOM_GROUP_BUYING_NEXT_PRODUCT";
+    MessageType[MessageType["GROUPBUYING_NEXT_PRODUCT"] = 3] = "GROUPBUYING_NEXT_PRODUCT";
     /**
-     * 房间团购开始
+     * 团购开始
      */
-    MessageType[MessageType["ROOM_GROUP_BUYING_START"] = 4] = "ROOM_GROUP_BUYING_START";
+    MessageType[MessageType["GROUPBUYING_START"] = 4] = "GROUPBUYING_START";
     /**
-     * 房间团购正在开奖
+     * 团购正在开奖
      */
-    MessageType[MessageType["ROOM_GROUP_BUYING_LOTTERY_OPENING"] = 5] = "ROOM_GROUP_BUYING_LOTTERY_OPENING";
+    MessageType[MessageType["GROUPBUYING_LOTTERY_OPENING"] = 5] = "GROUPBUYING_LOTTERY_OPENING";
     /**
-     * 房间团购中奖
+     * 团购中奖
      */
-    MessageType[MessageType["ROOM_GROUP_BUYING_WINNING"] = 6] = "ROOM_GROUP_BUYING_WINNING";
+    MessageType[MessageType["GROUPBUYING_WINNING"] = 6] = "GROUPBUYING_WINNING";
     /**
-     * 房间团购竞拍还价所有人
+     * 竞拍还价所有人
      */
-    MessageType[MessageType["ROOM_GROUP_BUYING_BIDDING_COUNTEROFFER"] = 7] = "ROOM_GROUP_BUYING_BIDDING_COUNTEROFFER";
+    MessageType[MessageType["BIDDING_ALL_COUNTEROFFER"] = 7] = "BIDDING_ALL_COUNTEROFFER";
     /**
-     * 房间团购竞拍成交
+     * 竞拍成交
      */
-    MessageType[MessageType["ROOM_GROUP_BUYING_BIDDING_DEAL"] = 8] = "ROOM_GROUP_BUYING_BIDDING_DEAL";
+    MessageType[MessageType["BIDDING_DEAL"] = 8] = "BIDDING_DEAL";
     /**
-     * 用户团购竞拍买家发起报价(私人)
+     * 用户竞拍买家发起报价(私人)
      */
-    MessageType[MessageType["USER_GROUP_BUYING_BIDDING_BUYER_INITIATES_OFFER"] = 9] = "USER_GROUP_BUYING_BIDDING_BUYER_INITIATES_OFFER";
+    MessageType[MessageType["USER_BIDDING_INITIATE_OFFER"] = 9] = "USER_BIDDING_INITIATE_OFFER";
     /**
-     * 用户团购竞拍卖家收到报价(私人)
+     * 用户竞拍卖家收到报价(私人)
      */
-    MessageType[MessageType["USER_GROUP_BUYING_BIDDING_SELLER_RECEIVES_OFFER"] = 10] = "USER_GROUP_BUYING_BIDDING_SELLER_RECEIVES_OFFER";
+    MessageType[MessageType["USER_BIDDING_RECEIVES_OFFER"] = 10] = "USER_BIDDING_RECEIVES_OFFER";
     /**
-     * 用户团购竞拍买家收到还价(私人)
+     * 用户竞拍买家收到还价(私人)
      */
-    MessageType[MessageType["USER_GROUP_BUYING_BIDDING_SELLER_COUNTEROFFER"] = 11] = "USER_GROUP_BUYING_BIDDING_SELLER_COUNTEROFFER";
+    MessageType[MessageType["USER_BIDDING_RECEIVES_COUNTEROFFER"] = 11] = "USER_BIDDING_RECEIVES_COUNTEROFFER";
     /**
-     * 用户团购竞拍买家报价被拒(私人)
+     * 用户竞拍买家报价被拒(私人)
      */
-    MessageType[MessageType["USER_GROUP_BUYING_BIDDING_BUYER_OFFER_REJECTED"] = 12] = "USER_GROUP_BUYING_BIDDING_BUYER_OFFER_REJECTED";
+    MessageType[MessageType["USER_BIDDING_REJECTED_OFFER"] = 12] = "USER_BIDDING_REJECTED_OFFER";
 })(MessageType || (exports.MessageType = MessageType = {}));
 //# sourceMappingURL=types.js.map

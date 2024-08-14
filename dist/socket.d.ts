@@ -1,27 +1,29 @@
-import { RequestMessage, RoomBasicParam, ChannelType, Message, RoomDetail, RoomGroupBuying, RoomGroupBuyingVote, RoomGroupBuyingNextProduct, RoomGroupBuyingStart, RoomGroupBuyingLotteryOpening, RoomGroupBuyingWinning, RoomGroupBuyingBiddingCounteroffer, RoomGroupBuyingBiddingDeal, RoomGroupBuyingBiddingBuyerInitiatesOffer, RoomGroupBuyingBiddingSellerReceivesOffer, RoomGroupBuyingBiddingSellerCounteroffer, RoomGroupBuyingBiddingBuyerOfferRejected } from "./types";
+import { RequestMessage, RoomParam, ChannelType, Message, Room, GroupBuying, GroupBuyingVote, GroupBuyingNextProduct, GroupBuyingStart, GroupBuyingLotteryOpening, GroupBuyingWinning, BiddingAllCounteroffer, BiddingDeal, UserBiddingInitiateOffer, UserBiddingReceivesOffer, UserBiddingReceivesCounteroffer, UserBiddingRejectedOffer } from "./types";
 export declare function configSite(url: string): void;
 export declare function useHttps(): void;
 export declare function useWss(): void;
 export interface Client {
     start(): Client;
     stop(autoConn?: boolean): Client;
+    enterAggRoom(): Promise<Client>;
+    leaveAggRoom(): Client;
     enterRoom(roomId: bigint): Promise<Client>;
     leaveRoom(roomId: bigint): Client;
 }
 export interface EventHandle {
-    OnRoomDetail(client: Client, param: RoomBasicParam, message: Message<RoomDetail>): void;
-    OnRoomGroupBuying(client: Client, param: RoomBasicParam, message: Message<RoomGroupBuying>): void;
-    OnRoomGroupBuyingVote(client: Client, param: RoomBasicParam, message: Message<RoomGroupBuyingVote>): void;
-    OnRoomGroupBuyingNextProduct(client: Client, param: RoomBasicParam, message: Message<RoomGroupBuyingNextProduct>): void;
-    OnRoomGroupBuyingStart(client: Client, param: RoomBasicParam, message: Message<RoomGroupBuyingStart>): void;
-    OnRoomGroupBuyingLotteryOpening(client: Client, param: RoomBasicParam, message: Message<RoomGroupBuyingLotteryOpening>): void;
-    OnRoomGroupBuyingWinning(client: Client, param: RoomBasicParam, message: Message<RoomGroupBuyingWinning>): void;
-    OnRoomGroupBuyingBiddingCounteroffer(client: Client, param: RoomBasicParam, message: Message<RoomGroupBuyingBiddingCounteroffer>): void;
-    OnRoomGroupBuyingBiddingDeal(client: Client, param: RoomBasicParam, message: Message<RoomGroupBuyingBiddingDeal>): void;
-    OnUserGroupBuyingBiddingBuyerInitiatesOffer(client: Client, param: RoomBasicParam, message: Message<RoomGroupBuyingBiddingBuyerInitiatesOffer>): void;
-    OnUserGroupBuyingBiddingSellerReceivesOffer(client: Client, param: RoomBasicParam, message: Message<RoomGroupBuyingBiddingSellerReceivesOffer>): void;
-    OnUserGroupBuyingBiddingSellerCounteroffer(client: Client, param: RoomBasicParam, message: Message<RoomGroupBuyingBiddingSellerCounteroffer>): void;
-    OnUserGroupBuyingBiddingBuyerOfferRejected(client: Client, param: RoomBasicParam, message: Message<RoomGroupBuyingBiddingBuyerOfferRejected>): void;
+    OnRoom(client: Client, param: RoomParam, message: Message<Room>): void;
+    OnGroupBuying(client: Client, param: RoomParam, message: Message<GroupBuying>): void;
+    OnGroupBuyingVote(client: Client, param: RoomParam, message: Message<GroupBuyingVote>): void;
+    OnGroupBuyingNextProduct(client: Client, param: RoomParam, message: Message<GroupBuyingNextProduct>): void;
+    OnGroupBuyingStart(client: Client, param: RoomParam, message: Message<GroupBuyingStart>): void;
+    OnGroupBuyingLotteryOpening(client: Client, param: RoomParam, message: Message<GroupBuyingLotteryOpening>): void;
+    OnGroupBuyingWinning(client: Client, param: RoomParam, message: Message<GroupBuyingWinning>): void;
+    OnBiddingAllCounteroffer(client: Client, param: RoomParam, message: Message<BiddingAllCounteroffer>): void;
+    OnBiddingDeal(client: Client, param: RoomParam, message: Message<BiddingDeal>): void;
+    OnUserBiddingInitiateOffer(client: Client, param: RoomParam, message: Message<UserBiddingInitiateOffer>): void;
+    OnUserBiddingReceivesOffer(client: Client, param: RoomParam, message: Message<UserBiddingReceivesOffer>): void;
+    OnUserBiddingReceivesCounteroffer(client: Client, param: RoomParam, message: Message<UserBiddingReceivesCounteroffer>): void;
+    OnUserBiddingRejectedOffer(client: Client, param: RoomParam, message: Message<UserBiddingRejectedOffer>): void;
 }
 export declare class RequestInfo {
     config: RequestMessage;
@@ -46,6 +48,8 @@ export declare class ClientProvider implements Client {
     start(): Client;
     stop(autoConn?: boolean): Client;
     registerChannel(config: RequestMessage, interval: number, isIncrData?: boolean): void;
+    enterAggRoom(): Promise<Client>;
+    leaveAggRoom(): Client;
     enterRoom(roomId: bigint): Promise<Client>;
     leaveRoom(roomId: bigint): Client;
     private onOpen;
@@ -56,4 +60,4 @@ export declare class ClientProvider implements Client {
     private handle;
 }
 export declare function newClient(eventHandle: EventHandle, token?: string, showLog?: boolean): Client;
-export declare function getMessageVersioinByRank(channel: ChannelType, rank?: number, params?: Record<string, any>, token?: string): Promise<string>;
+export declare function getMsgSeqByRank(channel: ChannelType, rank?: number, params?: Record<string, any>, token?: string): Promise<string>;

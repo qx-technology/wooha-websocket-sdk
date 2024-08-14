@@ -6,7 +6,7 @@ import {
   GroupBuyingVote,
   GroupBuyingNextProduct,
   GroupBuyingStart,
-  GroupBuyingWinning,
+  GroupBuyingLotteryOpening,
   GroupBuyingWinning,
   BiddingAllCounteroffer,
   BiddingDeal,
@@ -57,7 +57,7 @@ class MsgCallback implements EventHandle {
   OnGroupBuyingStart(client: Client, param: RoomParam, message: Message<GroupBuyingStart>): void {
     console.log("房间团购开始");
   }
-  OnGroupBuyingLotteryOpening(client: Client, param: RoomParam, message: Message<GroupBuyingWinning>): void {
+  OnGroupBuyingLotteryOpening(client: Client, param: RoomParam, message: Message<GroupBuyingLotteryOpening>): void {
     console.log("房间团购开奖中");
   }
   OnGroupBuyingWinning(client: Client, param: RoomParam, message: Message<GroupBuyingWinning>): void {
