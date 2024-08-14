@@ -338,7 +338,7 @@ export class ClientProvider implements Client {
       // 订阅房间用户消息
       if (this.token) {
         const roomUserMessageVersion = await getMessageVersioinByRank(
-          ChannelType.ROOM_USER_MESSAGE,
+          ChannelType.USER_ROOM_MESSAGE,
           1,
           { roomId },
           this.token
@@ -350,7 +350,7 @@ export class ClientProvider implements Client {
         }
         this.registerChannel(
           <RequestMessage<RoomBasicParam>>{
-            channel: ChannelType.ROOM_USER_MESSAGE,
+            channel: ChannelType.USER_ROOM_MESSAGE,
             version: "1.0",
             seq: BigInt(roomUserMessageVersion),
             ts: BigInt(Date.now()),
@@ -375,7 +375,7 @@ export class ClientProvider implements Client {
             ChannelType.ROOM_DETAIL,
             ChannelType.ROOM_GROUP_BUYING,
             ChannelType.ROOM_VOTE,
-            ChannelType.ROOM_USER_MESSAGE
+            ChannelType.USER_ROOM_MESSAGE
           ].includes(request.config.channel) &&
           (<RoomBasicParam>request.config.params).roomId === roomId
         )
@@ -492,7 +492,7 @@ export class ClientProvider implements Client {
             this.callback.OnRoomGroupBuyingVote(this, request.config.params, message);
           }
           break;
-        case ChannelType.ROOM_USER_MESSAGE:
+        case ChannelType.USER_ROOM_MESSAGE:
           for (const message of response.contents) {
             switch (message.type) {
               case MessageType.ROOM_GROUP_BUYING_BIDDING_BUYER_INITIATES_OFFER:

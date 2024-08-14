@@ -27,9 +27,17 @@ export enum ChannelType {
    */
   ROOM_VOTE,
   /**
-   * 房间用户消息
+   * 用户房间消息
    */
-  ROOM_USER_MESSAGE
+  USER_ROOM_MESSAGE,
+  /**
+   * 房间聚合消息
+   */
+  ROOM_AGGREGATE_MESSAGE,
+  /**
+   * 用户房间聚合消息
+   */
+  USER_ROOM_AGGREGATE_MESSAGE
 }
 
 /**
