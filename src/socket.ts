@@ -74,6 +74,10 @@ export interface Client {
   start(): Client;
   /// 停止
   stop(autoConn?: boolean): Client;
+  /// 进入聚合房间
+  enterAggRoom(): Promise<Client>;
+  /// 离开聚合房间
+  leaveAggRoom(): Client;
   /// 进入房间
   enterRoom(roomId: bigint): Promise<Client>;
   /// 离开房间
@@ -211,6 +215,55 @@ export class ClientProvider implements Client {
     this.requests.push(new RequestInfo(config, interval, isIncrData));
   }
 
+  async enterAggRoom(): Promise<Client> {
+    try {
+      // 订阅房间聚合消息
+      const roomAggMsgSeq = await getMsgSeqByRank(ChannelType.ROOM_AGG_MSG, 1, {}, this.token);
+      if (this.showLog) {
+        console.log(`订阅房间聚合消息: 版本号(${roomAggMsgSeq})`);
+      }
+      this.registerChannel(
+        <RequestMessage>{
+          channel: ChannelType.ROOM_AGG_MSG,
+          version: "1.0",
+          seq: BigInt(roomAggMsgSeq),
+          ts: BigInt(Date.now()),
+          uid: uuid(),
+          params: {}
+        },
+        100
+      );
+      if (this.token) {
+        // 订阅用户房间聚合消息
+        const userRoomAggMsgSeq = await getMsgSeqByRank(ChannelType.USER_ROOM_AGG_MSG, 1, {}, this.token);
+        if (this.showLog) {
+          console.log(`订阅用户房间聚合消息: 版本号(${userRoomAggMsgSeq})`);
+        }
+        this.registerChannel(
+          <RequestMessage<RoomParam>>{
+            channel: ChannelType.USER_ROOM_AGG_MSG,
+            version: "1.0",
+            seq: BigInt(userRoomAggMsgSeq),
+            ts: BigInt(Date.now()),
+            uid: uuid(),
+            params: {}
+          },
+          100
+        );
+      }
+    } catch (e) {
+      console.error(e);
+    }
+    return this;
+  }
+
+  leaveAggRoom(): Client {
+    this.requests = this.requests.filter(
+      (request) => ![ChannelType.ROOM_AGG_MSG, ChannelType.USER_ROOM_AGG_MSG].includes(request.config.channel)
+    );
+    return this;
+  }
+
   async enterRoom(roomId: bigint): Promise<Client> {
     try {
       // 订阅房间详情
@@ -226,32 +279,32 @@ export class ClientProvider implements Client {
         3000,
         false
       );
-      // 订阅房间团购详情
-      const roomGroupBuyingVersion = await getMessageVersioinByRank(ChannelType.GROUPBUYING, 1, { roomId }, this.token);
+      // 订阅团购详情
+      const groupBuyingSeq = await getMsgSeqByRank(ChannelType.GROUPBUYING, 1, { roomId }, this.token);
       if (this.showLog) {
-        console.log(`订阅房间团购详情: roomId(${roomId}), 版本号(${roomGroupBuyingVersion})`);
+        console.log(`订阅团购详情: roomId(${roomId}), 版本号(${groupBuyingSeq})`);
       }
       this.registerChannel(
         <RequestMessage<RoomParam>>{
           channel: ChannelType.GROUPBUYING,
           version: "1.0",
-          seq: BigInt(roomGroupBuyingVersion),
+          seq: BigInt(groupBuyingSeq),
           ts: BigInt(Date.now()),
           uid: uuid(),
           params: { roomId }
         },
         100
       );
-      // 订阅房间投票
-      const roomVoteVersion = await getMessageVersioinByRank(ChannelType.GROUPBUYING_VOTE, 1, { roomId }, this.token);
+      // 订阅团购投票
+      const groupBuyingVoteSeq = await getMsgSeqByRank(ChannelType.GROUPBUYING_VOTE, 1, { roomId }, this.token);
       if (this.showLog) {
-        console.log(`订阅房间投票: roomId(${roomId}), 版本号(${roomVoteVersion})`);
+        console.log(`订阅团购投票: roomId(${roomId}), 版本号(${groupBuyingVoteSeq})`);
       }
       this.registerChannel(
         <RequestMessage<RoomParam>>{
           channel: ChannelType.GROUPBUYING_VOTE,
           version: "1.0",
-          seq: BigInt(roomVoteVersion),
+          seq: BigInt(groupBuyingVoteSeq),
           ts: BigInt(Date.now()),
           uid: uuid(),
           params: { roomId }
@@ -259,79 +312,32 @@ export class ClientProvider implements Client {
         100
       );
       // 订阅房间消息
-      const roomMessageVersion = await getMessageVersioinByRank(ChannelType.ROOM_MSG, 1, { roomId }, this.token);
+      const roomMsgSeq = await getMsgSeqByRank(ChannelType.ROOM_MSG, 1, { roomId }, this.token);
       if (this.showLog) {
-        console.log(`订阅房间消息: roomId(${roomId}), 版本号(${roomMessageVersion})`);
+        console.log(`订阅房间消息: roomId(${roomId}), 版本号(${roomMsgSeq})`);
       }
       this.registerChannel(
         <RequestMessage<RoomParam>>{
           channel: ChannelType.ROOM_MSG,
           version: "1.0",
-          seq: BigInt(roomMessageVersion),
+          seq: BigInt(roomMsgSeq),
           ts: BigInt(Date.now()),
           uid: uuid(),
           params: { roomId }
         },
         100
       );
-      // 订阅房间聚合消息
-      const roomAggregateMessageVersion = await getMessageVersioinByRank(
-        ChannelType.ROOM_AGG_MSG,
-        1,
-        { roomId },
-        this.token
-      );
-      if (this.showLog) {
-        console.log(`订阅房间消息: roomId(${roomId}), 版本号(${roomAggregateMessageVersion})`);
-      }
-      this.registerChannel(
-        <RequestMessage>{
-          channel: ChannelType.ROOM_AGG_MSG,
-          version: "1.0",
-          seq: BigInt(roomAggregateMessageVersion),
-          ts: BigInt(Date.now()),
-          uid: uuid(),
-          params: null
-        },
-        100
-      );
       if (this.token) {
         // 订阅用户房间消息
-        const userRoomMessageVersion = await getMessageVersioinByRank(
-          ChannelType.USER_ROOM_MSG,
-          1,
-          { roomId },
-          this.token
-        );
+        const userRoomMsgSeq = await getMsgSeqByRank(ChannelType.USER_ROOM_MSG, 1, { roomId }, this.token);
         if (this.showLog) {
-          console.log(`订阅用户房间消息: roomId(${roomId}), 版本号(${userRoomMessageVersion})`);
+          console.log(`订阅用户房间消息: roomId(${roomId}), 版本号(${userRoomMsgSeq})`);
         }
         this.registerChannel(
           <RequestMessage<RoomParam>>{
             channel: ChannelType.USER_ROOM_MSG,
             version: "1.0",
-            seq: BigInt(userRoomMessageVersion),
-            ts: BigInt(Date.now()),
-            uid: uuid(),
-            params: { roomId }
-          },
-          100
-        );
-        // 订阅用户房间聚合消息
-        const userRoomAggregateMessageVersion = await getMessageVersioinByRank(
-          ChannelType.USER_ROOM_AGG_MSG,
-          1,
-          { roomId },
-          this.token
-        );
-        if (this.showLog) {
-          console.log(`订阅用户房间聚合消息: roomId(${roomId}), 版本号(${userRoomAggregateMessageVersion})`);
-        }
-        this.registerChannel(
-          <RequestMessage<RoomParam>>{
-            channel: ChannelType.USER_ROOM_AGG_MSG,
-            version: "1.0",
-            seq: BigInt(userRoomAggregateMessageVersion),
+            seq: BigInt(userRoomMsgSeq),
             ts: BigInt(Date.now()),
             uid: uuid(),
             params: { roomId }
@@ -531,7 +537,7 @@ function objectToQueryString(obj: any) {
   return params.join("&");
 }
 
-export async function getMessageVersioinByRank(
+export async function getMsgSeqByRank(
   channel: ChannelType,
   rank: number = 1,
   params: Record<string, any> = {},
@@ -568,6 +574,6 @@ export async function getMessageVersioinByRank(
   }
 }
 
-function uint8ArrayToHex(uint8Array: any) {
-  return Array.from(uint8Array, (byte: any) => byte.toString(16).padStart(2, "0")).join("");
-}
+// function uint8ArrayToHex(uint8Array: any) {
+//   return Array.from(uint8Array, (byte: any) => byte.toString(16).padStart(2, "0")).join("");
+// }
