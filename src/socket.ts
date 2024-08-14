@@ -307,22 +307,64 @@ export class ClientProvider implements Client {
         },
         100
       );
-      // 订阅房间用户消息
+      // 订阅房间聚合消息
+      const roomAggregateMessageVersion = await getMessageVersioinByRank(
+        ChannelType.ROOM_AGGREGATE_MESSAGE,
+        1,
+        { roomId },
+        this.token
+      );
+      if (this.showLog) {
+        console.log(`订阅房间消息: roomId(${roomId}), 版本号(${roomAggregateMessageVersion})`);
+      }
+      this.registerChannel(
+        <RequestMessage>{
+          channel: ChannelType.ROOM_AGGREGATE_MESSAGE,
+          version: "1.0",
+          seq: BigInt(roomAggregateMessageVersion),
+          ts: BigInt(Date.now()),
+          uid: uuid(),
+          params: null
+        },
+        100
+      );
       if (this.token) {
-        const roomUserMessageVersion = await getMessageVersioinByRank(
+        // 订阅用户房间消息
+        const userRoomMessageVersion = await getMessageVersioinByRank(
           ChannelType.USER_ROOM_MESSAGE,
           1,
           { roomId },
           this.token
         );
         if (this.showLog) {
-          console.log(`订阅房间用户消息: roomId(${roomId}), 版本号(${roomUserMessageVersion})`);
+          console.log(`订阅用户房间消息: roomId(${roomId}), 版本号(${userRoomMessageVersion})`);
         }
         this.registerChannel(
           <RequestMessage<RoomBasicParam>>{
             channel: ChannelType.USER_ROOM_MESSAGE,
             version: "1.0",
-            seq: BigInt(roomUserMessageVersion),
+            seq: BigInt(userRoomMessageVersion),
+            ts: BigInt(Date.now()),
+            uid: uuid(),
+            params: { roomId }
+          },
+          100
+        );
+        // 订阅用户房间聚合消息
+        const userRoomAggregateMessageVersion = await getMessageVersioinByRank(
+          ChannelType.USER_ROOM_AGGREGATE_MESSAGE,
+          1,
+          { roomId },
+          this.token
+        );
+        if (this.showLog) {
+          console.log(`订阅用户房间聚合消息: roomId(${roomId}), 版本号(${userRoomAggregateMessageVersion})`);
+        }
+        this.registerChannel(
+          <RequestMessage<RoomBasicParam>>{
+            channel: ChannelType.USER_ROOM_AGGREGATE_MESSAGE,
+            version: "1.0",
+            seq: BigInt(userRoomAggregateMessageVersion),
             ts: BigInt(Date.now()),
             uid: uuid(),
             params: { roomId }
@@ -340,13 +382,15 @@ export class ClientProvider implements Client {
     this.requests = this.requests.filter(
       (request) =>
         !(
-          [
+          ([
             ChannelType.ROOM_MESSAGE,
             ChannelType.ROOM_DETAIL,
             ChannelType.ROOM_GROUP_BUYING,
             ChannelType.ROOM_VOTE,
             ChannelType.USER_ROOM_MESSAGE
-          ].includes(request.config.channel) && (<RoomBasicParam>request.config.params).roomId === roomId
+          ].includes(request.config.channel) &&
+            (<RoomBasicParam>request.config.params).roomId === roomId) ||
+          [ChannelType.ROOM_AGGREGATE_MESSAGE, ChannelType.USER_ROOM_AGGREGATE_MESSAGE].includes(request.config.channel)
         )
     );
     return this;
