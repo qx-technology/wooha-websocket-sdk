@@ -81,19 +81,19 @@ export enum MessageType {
    */
   ROOM_GROUP_BUYING_BIDDING_DEAL,
   /**
-   * 房间团购竞拍买家发起报价(私人)
+   * 用户团购竞拍买家发起报价(私人)
    */
   USER_GROUP_BUYING_BIDDING_BUYER_INITIATES_OFFER,
   /**
-   * 房间团购竞拍卖家收到报价(私人)
+   * 用户团购竞拍卖家收到报价(私人)
    */
   USER_GROUP_BUYING_BIDDING_SELLER_RECEIVES_OFFER,
   /**
-   * 房间团购竞拍买家收到还价(私人)
+   * 用户团购竞拍买家收到还价(私人)
    */
   USER_GROUP_BUYING_BIDDING_SELLER_COUNTEROFFER,
   /**
-   * 房间团购竞拍买家报价被拒(私人)
+   * 用户团购竞拍买家报价被拒(私人)
    */
   USER_GROUP_BUYING_BIDDING_BUYER_OFFER_REJECTED
 }
@@ -431,7 +431,7 @@ export interface RoomGroupBuyingBiddingDeal {
 }
 
 /**
- * 房间团购竞拍买家发起报价(私人)
+ * 用户团购竞拍买家发起报价(私人)
  */
 export interface RoomGroupBuyingBiddingBuyerInitiatesOffer {
   /**
@@ -457,7 +457,7 @@ export interface RoomGroupBuyingBiddingBuyerInitiatesOffer {
 }
 
 /**
- * 房间团购竞拍卖家收到报价(私人)
+ * 用户团购竞拍卖家收到报价(私人)
  */
 export interface RoomGroupBuyingBiddingSellerReceivesOffer {
   /**
@@ -483,7 +483,7 @@ export interface RoomGroupBuyingBiddingSellerReceivesOffer {
 }
 
 /**
- * 房间团购竞拍买家收到还价(私人)
+ * 用户团购竞拍买家收到还价(私人)
  */
 export interface RoomGroupBuyingBiddingSellerCounteroffer {
   /**
@@ -505,7 +505,7 @@ export interface RoomGroupBuyingBiddingSellerCounteroffer {
 }
 
 /**
- * 房间团购竞拍买家报价被拒(私人)
+ * 用户团购竞拍买家报价被拒(私人)
  */
 export interface RoomGroupBuyingBiddingBuyerOfferRejected {
   /**
