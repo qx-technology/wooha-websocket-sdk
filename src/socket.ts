@@ -495,28 +495,28 @@ export class ClientProvider implements Client {
         case ChannelType.USER_ROOM_MESSAGE:
           for (const message of response.contents) {
             switch (message.type) {
-              case MessageType.ROOM_GROUP_BUYING_BIDDING_BUYER_INITIATES_OFFER:
+              case MessageType.USER_GROUP_BUYING_BIDDING_BUYER_INITIATES_OFFER:
                 this.callback.OnRoomGroupBuyingBiddingBuyerInitiatesOffer(
                   this,
                   request.config.params,
                   message
                 );
                 break;
-              case MessageType.ROOM_GROUP_BUYING_BIDDING_SELLER_RECEIVES_OFFER:
+              case MessageType.USER_GROUP_BUYING_BIDDING_SELLER_RECEIVES_OFFER:
                 this.callback.OnRoomGroupBuyingBiddingSellerReceivesOffer(
                   this,
                   request.config.params,
                   message
                 );
                 break;
-              case MessageType.ROOM_GROUP_BUYING_BIDDING_SELLER_COUNTEROFFER:
+              case MessageType.USER_GROUP_BUYING_BIDDING_SELLER_COUNTEROFFER:
                 this.callback.OnRoomGroupBuyingBiddingSellerCounteroffer(
                   this,
                   request.config.params,
                   message
                 );
                 break;
-              case MessageType.ROOM_GROUP_BUYING_BIDDING_BUYER_OFFER_REJECTED:
+              case MessageType.USER_GROUP_BUYING_BIDDING_BUYER_OFFER_REJECTED:
                 this.callback.OnRoomGroupBuyingBiddingBuyerOfferRejected(
                   this,
                   request.config.params,

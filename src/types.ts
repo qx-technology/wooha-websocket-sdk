@@ -83,19 +83,19 @@ export enum MessageType {
   /**
    * 房间团购竞拍买家发起报价(私人)
    */
-  ROOM_GROUP_BUYING_BIDDING_BUYER_INITIATES_OFFER,
+  USER_GROUP_BUYING_BIDDING_BUYER_INITIATES_OFFER,
   /**
    * 房间团购竞拍卖家收到报价(私人)
    */
-  ROOM_GROUP_BUYING_BIDDING_SELLER_RECEIVES_OFFER,
+  USER_GROUP_BUYING_BIDDING_SELLER_RECEIVES_OFFER,
   /**
    * 房间团购竞拍买家收到还价(私人)
    */
-  ROOM_GROUP_BUYING_BIDDING_SELLER_COUNTEROFFER,
+  USER_GROUP_BUYING_BIDDING_SELLER_COUNTEROFFER,
   /**
    * 房间团购竞拍买家报价被拒(私人)
    */
-  ROOM_GROUP_BUYING_BIDDING_BUYER_OFFER_REJECTED
+  USER_GROUP_BUYING_BIDDING_BUYER_OFFER_REJECTED
 }
 
 // ============================================================ //
