@@ -47,55 +47,55 @@ export enum MessageType {
   /**
    * 房间详情
    */
-  ROOM,
+  ROOM = 0,
   /**
    * 团购详情
    */
-  GROUPBUYING,
+  GROUPBUYING = 1,
   /**
    * 团购投票
    */
-  GROUPBUYING_VOTE,
+  GROUPBUYING_VOTE = 2,
   /**
    * 团购下一个商品
    */
-  GROUPBUYING_NEXT_PRODUCT,
+  GROUPBUYING_NEXT_PRODUCT = 3,
   /**
    * 团购开始
    */
-  GROUPBUYING_START,
+  GROUPBUYING_START = 4,
   /**
    * 团购正在开奖
    */
-  GROUPBUYING_LOTTERY_OPENING,
+  GROUPBUYING_LOTTERY_OPENING = 5,
   /**
    * 团购中奖
    */
-  GROUPBUYING_WINNING,
+  GROUPBUYING_WINNING = 6,
   /**
    * 竞拍还价所有人
    */
-  BIDDING_ALL_COUNTEROFFER,
+  BIDDING_ALL_COUNTEROFFER = 7,
   /**
    * 竞拍成交
    */
-  BIDDING_DEAL,
+  BIDDING_DEAL = 8,
   /**
    * 用户竞拍买家发起报价(私人)
    */
-  USER_BIDDING_INITIATE_OFFER,
+  USER_BIDDING_INITIATE_OFFER = 9,
   /**
    * 用户竞拍卖家收到报价(私人)
    */
-  USER_BIDDING_RECEIVES_OFFER,
+  USER_BIDDING_RECEIVES_OFFER = 10,
   /**
    * 用户竞拍买家收到还价(私人)
    */
-  USER_BIDDING_RECEIVES_COUNTEROFFER,
+  USER_BIDDING_RECEIVES_COUNTEROFFER = 11,
   /**
    * 用户竞拍买家报价被拒(私人)
    */
-  USER_BIDDING_REJECTED_OFFER
+  USER_BIDDING_REJECTED_OFFER = 12
 }
 
 // ============================================================ //
