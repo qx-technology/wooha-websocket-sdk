@@ -185,6 +185,10 @@ export interface RoomBasicParam {
  */
 export interface RoomDetail {
   /**
+   * 房间ID
+   */
+  roomId: bigint;
+  /**
    * 在线人数
    */
   onlinePeople: bigint;
@@ -197,7 +201,7 @@ export interface RoomGroupBuying {
   /**
    * 房间ID
    */
-  id: bigint;
+  roomId: bigint;
   /**
    * 团购ID
    */
@@ -224,6 +228,10 @@ export interface RoomGroupBuying {
  * 房间团购投票
  */
 export interface RoomGroupBuyingVote {
+  /**
+   * 房间ID
+   */
+  roomId: bigint;
   /**
    * 团购ID
    */
@@ -259,6 +267,10 @@ export interface RoomGroupBuyingVote {
  */
 export interface RoomGroupBuyingNextProduct {
   /**
+   * 房间ID
+   */
+  roomId: bigint;
+  /**
    * 团购ID
    */
   groupBuyingId: bigint;
@@ -287,17 +299,31 @@ export interface RoomGroupBuyingNextProduct {
 /**
  * 房间团购开始
  */
-export interface RoomGroupBuyingStart {}
+export interface RoomGroupBuyingStart {
+  /**
+   * 房间ID
+   */
+  roomId: bigint;
+}
 
 /**
  * 房间团购正在开奖
  */
-export interface RoomGroupBuyingLotteryOpening {}
+export interface RoomGroupBuyingLotteryOpening {
+  /**
+   * 房间ID
+   */
+  roomId: bigint;
+}
 
 /**
  * 房间团购中奖
  */
 export interface RoomGroupBuyingWinning {
+  /**
+   * 房间ID
+   */
+  roomId: bigint;
   /**
    * 中奖用户ID
    */
@@ -305,7 +331,7 @@ export interface RoomGroupBuyingWinning {
   /**
    * 中奖用户名
    */
-  winnerUserName: string;
+  winnerUsername: string;
   /**
    * 中奖用户头像
    */
@@ -345,6 +371,10 @@ export interface RoomGroupBuyingWinning {
  */
 export interface RoomGroupBuyingBiddingCounteroffer {
   /**
+   * 房间ID
+   */
+  roomId: bigint;
+  /**
    * 竞拍ID
    */
   auctionId: bigint;
@@ -358,6 +388,10 @@ export interface RoomGroupBuyingBiddingCounteroffer {
  * 房间团购竞拍成交
  */
 export interface RoomGroupBuyingBiddingDeal {
+  /**
+   * 房间ID
+   */
+  roomId: bigint;
   /**
    * 竞拍ID
    */
@@ -401,13 +435,21 @@ export interface RoomGroupBuyingBiddingDeal {
  */
 export interface RoomGroupBuyingBiddingBuyerInitiatesOffer {
   /**
-   * 竞拍ID
+   * 房间ID
    */
-  auctionId: bigint;
+  roomId: bigint;
+  /**
+   * 用户ID
+   */
+  userId: bigint;
   /**
    * 出价用户ID
    */
-  userId: bigint;
+  biddingUserId: bigint;
+  /**
+   * 竞拍ID
+   */
+  auctionId: bigint;
   /**
    * 金额
    */
@@ -419,13 +461,21 @@ export interface RoomGroupBuyingBiddingBuyerInitiatesOffer {
  */
 export interface RoomGroupBuyingBiddingSellerReceivesOffer {
   /**
-   * 竞拍ID
+   * 房间ID
    */
-  auctionId: bigint;
+  roomId: bigint;
+  /**
+   * 用户ID
+   */
+  userId: bigint;
   /**
    * 出价用户ID
    */
-  userId: bigint;
+  biddingUserId: bigint;
+  /**
+   * 竞拍ID
+   */
+  auctionId: bigint;
   /**
    * 金额
    */
@@ -436,6 +486,14 @@ export interface RoomGroupBuyingBiddingSellerReceivesOffer {
  * 房间团购竞拍买家收到还价(私人)
  */
 export interface RoomGroupBuyingBiddingSellerCounteroffer {
+  /**
+   * 房间ID
+   */
+  roomId: bigint;
+  /**
+   * 用户ID
+   */
+  userId: bigint;
   /**
    * 竞拍ID
    */
@@ -451,13 +509,21 @@ export interface RoomGroupBuyingBiddingSellerCounteroffer {
  */
 export interface RoomGroupBuyingBiddingBuyerOfferRejected {
   /**
-   * 竞拍ID
+   * 房间ID
    */
-  auctionId: bigint;
+  roomId: bigint;
+  /**
+   * 用户ID
+   */
+  userId: bigint;
   /**
    * 出价用户ID
    */
-  userId: bigint;
+  biddingUserId: bigint;
+  /**
+   * 竞拍ID
+   */
+  auctionId: bigint;
   /**
    * 金额
    */
