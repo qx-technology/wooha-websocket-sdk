@@ -117,25 +117,25 @@ export interface EventHandle {
     message: Message<RoomGroupBuyingBiddingDeal>
   ): void;
   /// 房间团购竞拍买家发起报价(私人)
-  OnRoomGroupBuyingBiddingBuyerInitiatesOffer(
+  OnUserGroupBuyingBiddingBuyerInitiatesOffer(
     client: Client,
     param: RoomBasicParam,
     message: Message<RoomGroupBuyingBiddingBuyerInitiatesOffer>
   ): void;
   /// 房间团购竞拍卖家收到报价(私人)
-  OnRoomGroupBuyingBiddingSellerReceivesOffer(
+  OnUserGroupBuyingBiddingSellerReceivesOffer(
     client: Client,
     param: RoomBasicParam,
     message: Message<RoomGroupBuyingBiddingSellerReceivesOffer>
   ): void;
   /// 房间团购竞拍买家收到还价(私人)
-  OnRoomGroupBuyingBiddingSellerCounteroffer(
+  OnUserGroupBuyingBiddingSellerCounteroffer(
     client: Client,
     param: RoomBasicParam,
     message: Message<RoomGroupBuyingBiddingSellerCounteroffer>
   ): void;
   /// 房间团购竞拍买家报价被拒(私人)
-  OnRoomGroupBuyingBiddingBuyerOfferRejected(
+  OnUserGroupBuyingBiddingBuyerOfferRejected(
     client: Client,
     param: RoomBasicParam,
     message: Message<RoomGroupBuyingBiddingBuyerOfferRejected>
@@ -439,16 +439,16 @@ export class ClientProvider implements Client {
           for (const message of response.contents) {
             switch (message.type) {
               case MessageType.USER_GROUP_BUYING_BIDDING_BUYER_INITIATES_OFFER:
-                this.callback.OnRoomGroupBuyingBiddingBuyerInitiatesOffer(this, request.config.params, message);
+                this.callback.OnUserGroupBuyingBiddingBuyerInitiatesOffer(this, request.config.params, message);
                 break;
               case MessageType.USER_GROUP_BUYING_BIDDING_SELLER_RECEIVES_OFFER:
-                this.callback.OnRoomGroupBuyingBiddingSellerReceivesOffer(this, request.config.params, message);
+                this.callback.OnUserGroupBuyingBiddingSellerReceivesOffer(this, request.config.params, message);
                 break;
               case MessageType.USER_GROUP_BUYING_BIDDING_SELLER_COUNTEROFFER:
-                this.callback.OnRoomGroupBuyingBiddingSellerCounteroffer(this, request.config.params, message);
+                this.callback.OnUserGroupBuyingBiddingSellerCounteroffer(this, request.config.params, message);
                 break;
               case MessageType.USER_GROUP_BUYING_BIDDING_BUYER_OFFER_REJECTED:
-                this.callback.OnRoomGroupBuyingBiddingBuyerOfferRejected(this, request.config.params, message);
+                this.callback.OnUserGroupBuyingBiddingBuyerOfferRejected(this, request.config.params, message);
                 break;
             }
           }

@@ -88,28 +88,28 @@ class MsgCallback implements EventHandle {
   ): void {
     console.log("房间团购竞拍成交");
   }
-  OnRoomGroupBuyingBiddingBuyerInitiatesOffer(
+  OnUserGroupBuyingBiddingBuyerInitiatesOffer(
     client: Client,
     param: RoomBasicParam,
     message: Message<RoomGroupBuyingBiddingBuyerInitiatesOffer>
   ): void {
     console.log("房间团购竞拍买家发起报价");
   }
-  OnRoomGroupBuyingBiddingSellerReceivesOffer(
+  OnUserGroupBuyingBiddingSellerReceivesOffer(
     client: Client,
     param: RoomBasicParam,
     message: Message<RoomGroupBuyingBiddingSellerReceivesOffer>
   ): void {
     console.log("房间团购竞拍买家收到报价");
   }
-  OnRoomGroupBuyingBiddingSellerCounteroffer(
+  OnUserGroupBuyingBiddingSellerCounteroffer(
     client: Client,
     param: RoomBasicParam,
     message: Message<RoomGroupBuyingBiddingSellerCounteroffer>
   ): void {
     console.log("房间团购竞拍买家收到还价");
   }
-  OnRoomGroupBuyingBiddingBuyerOfferRejected(
+  OnUserGroupBuyingBiddingBuyerOfferRejected(
     client: Client,
     param: RoomBasicParam,
     message: Message<RoomGroupBuyingBiddingBuyerOfferRejected>
