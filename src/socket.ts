@@ -1,23 +1,23 @@
 import {
   RequestMessage,
-  RoomBasicParam,
+  RoomParam,
   ChannelType,
   ResponseMessage,
   Message,
   MessageType,
-  RoomDetail,
-  RoomGroupBuying,
-  RoomGroupBuyingVote,
-  RoomGroupBuyingNextProduct,
-  RoomGroupBuyingStart,
-  RoomGroupBuyingLotteryOpening,
-  RoomGroupBuyingWinning,
-  RoomGroupBuyingBiddingCounteroffer,
-  RoomGroupBuyingBiddingDeal,
-  RoomGroupBuyingBiddingBuyerInitiatesOffer,
-  RoomGroupBuyingBiddingSellerReceivesOffer,
-  RoomGroupBuyingBiddingSellerCounteroffer,
-  RoomGroupBuyingBiddingBuyerOfferRejected
+  Room,
+  GroupBuying,
+  GroupBuyingVote,
+  GroupBuyingNextProduct,
+  GroupBuyingStart,
+  GroupBuyingWinning,
+  GroupBuyingWinning,
+  BiddingAllCounteroffer,
+  BiddingDeal,
+  UserBiddingInitiateOffer,
+  UserBiddingReceivesOffer,
+  UserBiddingReceivesCounteroffer,
+  UserBiddingRejectedOffer
 } from "./types";
 import { WebFuket } from "./socket_impl";
 import { pack, unpack } from "msgpackr";
@@ -83,62 +83,50 @@ export interface Client {
 /// 事件
 export interface EventHandle {
   /// 房间详情
-  OnRoomDetail(client: Client, param: RoomBasicParam, message: Message<RoomDetail>): void;
+  OnRoomDetail(client: Client, param: RoomParam, message: Message<Room>): void;
   /// 房间团购详情
-  OnRoomGroupBuying(client: Client, param: RoomBasicParam, message: Message<RoomGroupBuying>): void;
+  OnRoomGroupBuying(client: Client, param: RoomParam, message: Message<GroupBuying>): void;
   /// 房间团购投票
-  OnRoomGroupBuyingVote(client: Client, param: RoomBasicParam, message: Message<RoomGroupBuyingVote>): void;
+  OnRoomGroupBuyingVote(client: Client, param: RoomParam, message: Message<GroupBuyingVote>): void;
   /// 房间团购下一个商品
-  OnRoomGroupBuyingNextProduct(
-    client: Client,
-    param: RoomBasicParam,
-    message: Message<RoomGroupBuyingNextProduct>
-  ): void;
+  OnRoomGroupBuyingNextProduct(client: Client, param: RoomParam, message: Message<GroupBuyingNextProduct>): void;
   /// 房间团购开始
-  OnRoomGroupBuyingStart(client: Client, param: RoomBasicParam, message: Message<RoomGroupBuyingStart>): void;
+  OnRoomGroupBuyingStart(client: Client, param: RoomParam, message: Message<GroupBuyingStart>): void;
   /// 房间团购正在开奖
-  OnRoomGroupBuyingLotteryOpening(
-    client: Client,
-    param: RoomBasicParam,
-    message: Message<RoomGroupBuyingLotteryOpening>
-  ): void;
+  OnRoomGroupBuyingLotteryOpening(client: Client, param: RoomParam, message: Message<GroupBuyingWinning>): void;
   /// 房间团购中奖
-  OnRoomGroupBuyingWinning(client: Client, param: RoomBasicParam, message: Message<RoomGroupBuyingWinning>): void;
+  OnRoomGroupBuyingWinning(client: Client, param: RoomParam, message: Message<GroupBuyingWinning>): void;
   /// 房间团购竞拍还价所有人
   OnRoomGroupBuyingBiddingCounteroffer(
     client: Client,
-    param: RoomBasicParam,
-    message: Message<RoomGroupBuyingBiddingCounteroffer>
+    param: RoomParam,
+    message: Message<BiddingAllCounteroffer>
   ): void;
   /// 房间团购竞拍成交
-  OnRoomGroupBuyingBiddingDeal(
-    client: Client,
-    param: RoomBasicParam,
-    message: Message<RoomGroupBuyingBiddingDeal>
-  ): void;
+  OnRoomGroupBuyingBiddingDeal(client: Client, param: RoomParam, message: Message<BiddingDeal>): void;
   /// 房间团购竞拍买家发起报价(私人)
   OnUserGroupBuyingBiddingBuyerInitiatesOffer(
     client: Client,
-    param: RoomBasicParam,
-    message: Message<RoomGroupBuyingBiddingBuyerInitiatesOffer>
+    param: RoomParam,
+    message: Message<UserBiddingInitiateOffer>
   ): void;
   /// 房间团购竞拍卖家收到报价(私人)
   OnUserGroupBuyingBiddingSellerReceivesOffer(
     client: Client,
-    param: RoomBasicParam,
-    message: Message<RoomGroupBuyingBiddingSellerReceivesOffer>
+    param: RoomParam,
+    message: Message<UserBiddingReceivesOffer>
   ): void;
   /// 房间团购竞拍买家收到还价(私人)
   OnUserGroupBuyingBiddingSellerCounteroffer(
     client: Client,
-    param: RoomBasicParam,
-    message: Message<RoomGroupBuyingBiddingSellerCounteroffer>
+    param: RoomParam,
+    message: Message<UserBiddingReceivesCounteroffer>
   ): void;
   /// 房间团购竞拍买家报价被拒(私人)
   OnUserGroupBuyingBiddingBuyerOfferRejected(
     client: Client,
-    param: RoomBasicParam,
-    message: Message<RoomGroupBuyingBiddingBuyerOfferRejected>
+    param: RoomParam,
+    message: Message<UserBiddingRejectedOffer>
   ): void;
 }
 
@@ -243,7 +231,7 @@ export class ClientProvider implements Client {
     try {
       // 订阅房间详情
       this.registerChannel(
-        <RequestMessage<RoomBasicParam>>{
+        <RequestMessage<RoomParam>>{
           channel: ChannelType.ROOM,
           version: "1.0",
           seq: BigInt(0),
@@ -260,7 +248,7 @@ export class ClientProvider implements Client {
         console.log(`订阅房间团购详情: roomId(${roomId}), 版本号(${roomGroupBuyingVersion})`);
       }
       this.registerChannel(
-        <RequestMessage<RoomBasicParam>>{
+        <RequestMessage<RoomParam>>{
           channel: ChannelType.GROUPBUYING,
           version: "1.0",
           seq: BigInt(roomGroupBuyingVersion),
@@ -276,7 +264,7 @@ export class ClientProvider implements Client {
         console.log(`订阅房间投票: roomId(${roomId}), 版本号(${roomVoteVersion})`);
       }
       this.registerChannel(
-        <RequestMessage<RoomBasicParam>>{
+        <RequestMessage<RoomParam>>{
           channel: ChannelType.GROUPBUYING_VOTE,
           version: "1.0",
           seq: BigInt(roomVoteVersion),
@@ -292,7 +280,7 @@ export class ClientProvider implements Client {
         console.log(`订阅房间消息: roomId(${roomId}), 版本号(${roomMessageVersion})`);
       }
       this.registerChannel(
-        <RequestMessage<RoomBasicParam>>{
+        <RequestMessage<RoomParam>>{
           channel: ChannelType.ROOM_MSG,
           version: "1.0",
           seq: BigInt(roomMessageVersion),
@@ -335,7 +323,7 @@ export class ClientProvider implements Client {
           console.log(`订阅用户房间消息: roomId(${roomId}), 版本号(${userRoomMessageVersion})`);
         }
         this.registerChannel(
-          <RequestMessage<RoomBasicParam>>{
+          <RequestMessage<RoomParam>>{
             channel: ChannelType.USER_ROOM_MSG,
             version: "1.0",
             seq: BigInt(userRoomMessageVersion),
@@ -356,7 +344,7 @@ export class ClientProvider implements Client {
           console.log(`订阅用户房间聚合消息: roomId(${roomId}), 版本号(${userRoomAggregateMessageVersion})`);
         }
         this.registerChannel(
-          <RequestMessage<RoomBasicParam>>{
+          <RequestMessage<RoomParam>>{
             channel: ChannelType.USER_ROOM_AGG_MSG,
             version: "1.0",
             seq: BigInt(userRoomAggregateMessageVersion),
@@ -384,7 +372,7 @@ export class ClientProvider implements Client {
             ChannelType.GROUPBUYING_VOTE,
             ChannelType.USER_ROOM_MSG
           ].includes(request.config.channel) &&
-            (<RoomBasicParam>request.config.params).roomId === roomId) ||
+            (<RoomParam>request.config.params).roomId === roomId) ||
           [ChannelType.ROOM_AGG_MSG, ChannelType.USER_ROOM_AGG_MSG].includes(request.config.channel)
         )
     );

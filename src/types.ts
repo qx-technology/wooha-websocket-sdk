@@ -171,9 +171,9 @@ export interface ResponseMessage<P = any> extends RequestMessage<P> {
 // ============================================================ //
 
 /**
- * 房间基础请求参数
+ * 房间请求参数
  */
-export interface RoomBasicParam {
+export interface RoomParam {
   /**
    * 房间ID
    */
@@ -183,7 +183,7 @@ export interface RoomBasicParam {
 /**
  * 房间详情
  */
-export interface RoomDetail {
+export interface Room {
   /**
    * 房间ID
    */
@@ -195,9 +195,9 @@ export interface RoomDetail {
 }
 
 /**
- * 房间团购详情
+ * 团购详情
  */
-export interface RoomGroupBuying {
+export interface GroupBuying {
   /**
    * 房间ID
    */
@@ -225,9 +225,9 @@ export interface RoomGroupBuying {
 }
 
 /**
- * 房间团购投票
+ * 团购投票
  */
-export interface RoomGroupBuyingVote {
+export interface GroupBuyingVote {
   /**
    * 房间ID
    */
@@ -263,9 +263,9 @@ export interface RoomGroupBuyingVote {
 }
 
 /**
- * 房间团购下一个商品
+ * 团购下一个商品
  */
-export interface RoomGroupBuyingNextProduct {
+export interface GroupBuyingNextProduct {
   /**
    * 房间ID
    */
@@ -297,9 +297,9 @@ export interface RoomGroupBuyingNextProduct {
 }
 
 /**
- * 房间团购开始
+ * 团购开始
  */
-export interface RoomGroupBuyingStart {
+export interface GroupBuyingStart {
   /**
    * 房间ID
    */
@@ -307,9 +307,9 @@ export interface RoomGroupBuyingStart {
 }
 
 /**
- * 房间团购正在开奖
+ * 团购正在开奖
  */
-export interface RoomGroupBuyingLotteryOpening {
+export interface GroupBuyingLotteryOpening {
   /**
    * 房间ID
    */
@@ -317,9 +317,9 @@ export interface RoomGroupBuyingLotteryOpening {
 }
 
 /**
- * 房间团购中奖
+ * 团购中奖
  */
-export interface RoomGroupBuyingWinning {
+export interface GroupBuyingWinning {
   /**
    * 房间ID
    */
@@ -367,9 +367,9 @@ export interface RoomGroupBuyingWinning {
 }
 
 /**
- * 房间团购竞拍还价所有人
+ * 竞拍还价所有人
  */
-export interface RoomGroupBuyingBiddingCounteroffer {
+export interface BiddingAllCounteroffer {
   /**
    * 房间ID
    */
@@ -385,9 +385,9 @@ export interface RoomGroupBuyingBiddingCounteroffer {
 }
 
 /**
- * 房间团购竞拍成交
+ * 竞拍成交
  */
-export interface RoomGroupBuyingBiddingDeal {
+export interface BiddingDeal {
   /**
    * 房间ID
    */
@@ -431,9 +431,9 @@ export interface RoomGroupBuyingBiddingDeal {
 }
 
 /**
- * 用户团购竞拍买家发起报价(私人)
+ * 用户竞拍买家发起报价(私人)
  */
-export interface RoomGroupBuyingBiddingBuyerInitiatesOffer {
+export interface UserBiddingInitiateOffer {
   /**
    * 房间ID
    */
@@ -457,9 +457,9 @@ export interface RoomGroupBuyingBiddingBuyerInitiatesOffer {
 }
 
 /**
- * 用户团购竞拍卖家收到报价(私人)
+ * 用户竞拍卖家收到报价(私人)
  */
-export interface RoomGroupBuyingBiddingSellerReceivesOffer {
+export interface UserBiddingReceivesOffer {
   /**
    * 房间ID
    */
@@ -483,9 +483,9 @@ export interface RoomGroupBuyingBiddingSellerReceivesOffer {
 }
 
 /**
- * 用户团购竞拍买家收到还价(私人)
+ * 用户竞拍买家收到还价(私人)
  */
-export interface RoomGroupBuyingBiddingSellerCounteroffer {
+export interface UserBiddingReceivesCounteroffer {
   /**
    * 房间ID
    */
@@ -505,9 +505,9 @@ export interface RoomGroupBuyingBiddingSellerCounteroffer {
 }
 
 /**
- * 用户团购竞拍买家报价被拒(私人)
+ * 用户竞拍买家报价被拒(私人)
  */
-export interface RoomGroupBuyingBiddingBuyerOfferRejected {
+export interface UserBiddingRejectedOffer {
   /**
    * 房间ID
    */
