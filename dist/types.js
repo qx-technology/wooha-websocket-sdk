@@ -30,9 +30,17 @@ var ChannelType;
      */
     ChannelType[ChannelType["ROOM_VOTE"] = 4] = "ROOM_VOTE";
     /**
-     * 房间用户消息
+     * 用户房间消息
      */
-    ChannelType[ChannelType["ROOM_USER_MESSAGE"] = 5] = "ROOM_USER_MESSAGE";
+    ChannelType[ChannelType["USER_ROOM_MESSAGE"] = 5] = "USER_ROOM_MESSAGE";
+    /**
+     * 房间聚合消息
+     */
+    ChannelType[ChannelType["ROOM_AGGREGATE_MESSAGE"] = 6] = "ROOM_AGGREGATE_MESSAGE";
+    /**
+     * 用户房间聚合消息
+     */
+    ChannelType[ChannelType["USER_ROOM_AGGREGATE_MESSAGE"] = 7] = "USER_ROOM_AGGREGATE_MESSAGE";
 })(ChannelType || (exports.ChannelType = ChannelType = {}));
 /**
  * 消息类型
@@ -76,20 +84,20 @@ var MessageType;
      */
     MessageType[MessageType["ROOM_GROUP_BUYING_BIDDING_DEAL"] = 8] = "ROOM_GROUP_BUYING_BIDDING_DEAL";
     /**
-     * 房间团购竞拍买家发起报价(私人)
+     * 用户团购竞拍买家发起报价(私人)
      */
-    MessageType[MessageType["ROOM_GROUP_BUYING_BIDDING_BUYER_INITIATES_OFFER"] = 9] = "ROOM_GROUP_BUYING_BIDDING_BUYER_INITIATES_OFFER";
+    MessageType[MessageType["USER_GROUP_BUYING_BIDDING_BUYER_INITIATES_OFFER"] = 9] = "USER_GROUP_BUYING_BIDDING_BUYER_INITIATES_OFFER";
     /**
-     * 房间团购竞拍卖家收到报价(私人)
+     * 用户团购竞拍卖家收到报价(私人)
      */
-    MessageType[MessageType["ROOM_GROUP_BUYING_BIDDING_SELLER_RECEIVES_OFFER"] = 10] = "ROOM_GROUP_BUYING_BIDDING_SELLER_RECEIVES_OFFER";
+    MessageType[MessageType["USER_GROUP_BUYING_BIDDING_SELLER_RECEIVES_OFFER"] = 10] = "USER_GROUP_BUYING_BIDDING_SELLER_RECEIVES_OFFER";
     /**
-     * 房间团购竞拍买家收到还价(私人)
+     * 用户团购竞拍买家收到还价(私人)
      */
-    MessageType[MessageType["ROOM_GROUP_BUYING_BIDDING_SELLER_COUNTEROFFER"] = 11] = "ROOM_GROUP_BUYING_BIDDING_SELLER_COUNTEROFFER";
+    MessageType[MessageType["USER_GROUP_BUYING_BIDDING_SELLER_COUNTEROFFER"] = 11] = "USER_GROUP_BUYING_BIDDING_SELLER_COUNTEROFFER";
     /**
-     * 房间团购竞拍买家报价被拒(私人)
+     * 用户团购竞拍买家报价被拒(私人)
      */
-    MessageType[MessageType["ROOM_GROUP_BUYING_BIDDING_BUYER_OFFER_REJECTED"] = 12] = "ROOM_GROUP_BUYING_BIDDING_BUYER_OFFER_REJECTED";
+    MessageType[MessageType["USER_GROUP_BUYING_BIDDING_BUYER_OFFER_REJECTED"] = 12] = "USER_GROUP_BUYING_BIDDING_BUYER_OFFER_REJECTED";
 })(MessageType || (exports.MessageType = MessageType = {}));
 //# sourceMappingURL=types.js.map

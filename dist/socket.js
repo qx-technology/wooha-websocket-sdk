@@ -124,16 +124,16 @@ class ClientProvider {
     }
     enterRoom(roomId) {
         return __awaiter(this, void 0, void 0, function* () {
-            // 订阅房间详情
-            this.registerChannel({
-                channel: types_1.ChannelType.ROOM_DETAIL,
-                version: "1.0",
-                seq: BigInt(0),
-                ts: BigInt(Date.now()),
-                uid: uuid(),
-                params: { roomId }
-            }, 3000, false);
             try {
+                // 订阅房间详情
+                this.registerChannel({
+                    channel: types_1.ChannelType.ROOM_DETAIL,
+                    version: "1.0",
+                    seq: BigInt(0),
+                    ts: BigInt(Date.now()),
+                    uid: uuid(),
+                    params: { roomId }
+                }, 3000, false);
                 // 订阅房间团购详情
                 const roomGroupBuyingVersion = yield getMessageVersioinByRank(types_1.ChannelType.ROOM_GROUP_BUYING, 1, { roomId }, this.token);
                 if (this.showLog) {
@@ -173,16 +173,42 @@ class ClientProvider {
                     uid: uuid(),
                     params: { roomId }
                 }, 100);
-                // 订阅房间用户消息
+                // 订阅房间聚合消息
+                const roomAggregateMessageVersion = yield getMessageVersioinByRank(types_1.ChannelType.ROOM_AGGREGATE_MESSAGE, 1, { roomId }, this.token);
+                if (this.showLog) {
+                    console.log(`订阅房间消息: roomId(${roomId}), 版本号(${roomAggregateMessageVersion})`);
+                }
+                this.registerChannel({
+                    channel: types_1.ChannelType.ROOM_AGGREGATE_MESSAGE,
+                    version: "1.0",
+                    seq: BigInt(roomAggregateMessageVersion),
+                    ts: BigInt(Date.now()),
+                    uid: uuid(),
+                    params: null
+                }, 100);
                 if (this.token) {
-                    const roomUserMessageVersion = yield getMessageVersioinByRank(types_1.ChannelType.ROOM_USER_MESSAGE, 1, { roomId }, this.token);
+                    // 订阅用户房间消息
+                    const userRoomMessageVersion = yield getMessageVersioinByRank(types_1.ChannelType.USER_ROOM_MESSAGE, 1, { roomId }, this.token);
                     if (this.showLog) {
-                        console.log(`订阅房间用户消息: roomId(${roomId}), 版本号(${roomUserMessageVersion})`);
+                        console.log(`订阅用户房间消息: roomId(${roomId}), 版本号(${userRoomMessageVersion})`);
                     }
                     this.registerChannel({
-                        channel: types_1.ChannelType.ROOM_USER_MESSAGE,
+                        channel: types_1.ChannelType.USER_ROOM_MESSAGE,
                         version: "1.0",
-                        seq: BigInt(roomUserMessageVersion),
+                        seq: BigInt(userRoomMessageVersion),
+                        ts: BigInt(Date.now()),
+                        uid: uuid(),
+                        params: { roomId }
+                    }, 100);
+                    // 订阅用户房间聚合消息
+                    const userRoomAggregateMessageVersion = yield getMessageVersioinByRank(types_1.ChannelType.USER_ROOM_AGGREGATE_MESSAGE, 1, { roomId }, this.token);
+                    if (this.showLog) {
+                        console.log(`订阅用户房间聚合消息: roomId(${roomId}), 版本号(${userRoomAggregateMessageVersion})`);
+                    }
+                    this.registerChannel({
+                        channel: types_1.ChannelType.USER_ROOM_AGGREGATE_MESSAGE,
+                        version: "1.0",
+                        seq: BigInt(userRoomAggregateMessageVersion),
                         ts: BigInt(Date.now()),
                         uid: uuid(),
                         params: { roomId }
@@ -196,14 +222,15 @@ class ClientProvider {
         });
     }
     leaveRoom(roomId) {
-        this.requests = this.requests.filter((request) => !([
+        this.requests = this.requests.filter((request) => !(([
             types_1.ChannelType.ROOM_MESSAGE,
             types_1.ChannelType.ROOM_DETAIL,
             types_1.ChannelType.ROOM_GROUP_BUYING,
             types_1.ChannelType.ROOM_VOTE,
-            types_1.ChannelType.ROOM_USER_MESSAGE
+            types_1.ChannelType.USER_ROOM_MESSAGE
         ].includes(request.config.channel) &&
-            request.config.params.roomId === roomId));
+            request.config.params.roomId === roomId) ||
+            [types_1.ChannelType.ROOM_AGGREGATE_MESSAGE, types_1.ChannelType.USER_ROOM_AGGREGATE_MESSAGE].includes(request.config.channel)));
         return this;
     }
     onOpen() {
@@ -285,20 +312,20 @@ class ClientProvider {
                             this.callback.OnRoomGroupBuyingVote(this, request.config.params, message);
                         }
                         break;
-                    case types_1.ChannelType.ROOM_USER_MESSAGE:
+                    case types_1.ChannelType.USER_ROOM_MESSAGE:
                         for (const message of response.contents) {
                             switch (message.type) {
-                                case types_1.MessageType.ROOM_GROUP_BUYING_BIDDING_BUYER_INITIATES_OFFER:
-                                    this.callback.OnRoomGroupBuyingBiddingBuyerInitiatesOffer(this, request.config.params, message);
+                                case types_1.MessageType.USER_GROUP_BUYING_BIDDING_BUYER_INITIATES_OFFER:
+                                    this.callback.OnUserGroupBuyingBiddingBuyerInitiatesOffer(this, request.config.params, message);
                                     break;
-                                case types_1.MessageType.ROOM_GROUP_BUYING_BIDDING_SELLER_RECEIVES_OFFER:
-                                    this.callback.OnRoomGroupBuyingBiddingSellerReceivesOffer(this, request.config.params, message);
+                                case types_1.MessageType.USER_GROUP_BUYING_BIDDING_SELLER_RECEIVES_OFFER:
+                                    this.callback.OnUserGroupBuyingBiddingSellerReceivesOffer(this, request.config.params, message);
                                     break;
-                                case types_1.MessageType.ROOM_GROUP_BUYING_BIDDING_SELLER_COUNTEROFFER:
-                                    this.callback.OnRoomGroupBuyingBiddingSellerCounteroffer(this, request.config.params, message);
+                                case types_1.MessageType.USER_GROUP_BUYING_BIDDING_SELLER_COUNTEROFFER:
+                                    this.callback.OnUserGroupBuyingBiddingSellerCounteroffer(this, request.config.params, message);
                                     break;
-                                case types_1.MessageType.ROOM_GROUP_BUYING_BIDDING_BUYER_OFFER_REJECTED:
-                                    this.callback.OnRoomGroupBuyingBiddingBuyerOfferRejected(this, request.config.params, message);
+                                case types_1.MessageType.USER_GROUP_BUYING_BIDDING_BUYER_OFFER_REJECTED:
+                                    this.callback.OnUserGroupBuyingBiddingBuyerOfferRejected(this, request.config.params, message);
                                     break;
                             }
                         }

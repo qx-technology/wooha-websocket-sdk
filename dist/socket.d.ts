@@ -18,10 +18,10 @@ export interface EventHandle {
     OnRoomGroupBuyingWinning(client: Client, param: RoomBasicParam, message: Message<RoomGroupBuyingWinning>): void;
     OnRoomGroupBuyingBiddingCounteroffer(client: Client, param: RoomBasicParam, message: Message<RoomGroupBuyingBiddingCounteroffer>): void;
     OnRoomGroupBuyingBiddingDeal(client: Client, param: RoomBasicParam, message: Message<RoomGroupBuyingBiddingDeal>): void;
-    OnRoomGroupBuyingBiddingBuyerInitiatesOffer(client: Client, param: RoomBasicParam, message: Message<RoomGroupBuyingBiddingBuyerInitiatesOffer>): void;
-    OnRoomGroupBuyingBiddingSellerReceivesOffer(client: Client, param: RoomBasicParam, message: Message<RoomGroupBuyingBiddingSellerReceivesOffer>): void;
-    OnRoomGroupBuyingBiddingSellerCounteroffer(client: Client, param: RoomBasicParam, message: Message<RoomGroupBuyingBiddingSellerCounteroffer>): void;
-    OnRoomGroupBuyingBiddingBuyerOfferRejected(client: Client, param: RoomBasicParam, message: Message<RoomGroupBuyingBiddingBuyerOfferRejected>): void;
+    OnUserGroupBuyingBiddingBuyerInitiatesOffer(client: Client, param: RoomBasicParam, message: Message<RoomGroupBuyingBiddingBuyerInitiatesOffer>): void;
+    OnUserGroupBuyingBiddingSellerReceivesOffer(client: Client, param: RoomBasicParam, message: Message<RoomGroupBuyingBiddingSellerReceivesOffer>): void;
+    OnUserGroupBuyingBiddingSellerCounteroffer(client: Client, param: RoomBasicParam, message: Message<RoomGroupBuyingBiddingSellerCounteroffer>): void;
+    OnUserGroupBuyingBiddingBuyerOfferRejected(client: Client, param: RoomBasicParam, message: Message<RoomGroupBuyingBiddingBuyerOfferRejected>): void;
 }
 export declare class RequestInfo {
     config: RequestMessage;

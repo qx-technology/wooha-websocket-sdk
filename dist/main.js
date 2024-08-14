@@ -50,16 +50,16 @@ class MsgCallback {
     OnRoomGroupBuyingBiddingDeal(client, param, message) {
         console.log("房间团购竞拍成交");
     }
-    OnRoomGroupBuyingBiddingBuyerInitiatesOffer(client, param, message) {
+    OnUserGroupBuyingBiddingBuyerInitiatesOffer(client, param, message) {
         console.log("房间团购竞拍买家发起报价");
     }
-    OnRoomGroupBuyingBiddingSellerReceivesOffer(client, param, message) {
+    OnUserGroupBuyingBiddingSellerReceivesOffer(client, param, message) {
         console.log("房间团购竞拍买家收到报价");
     }
-    OnRoomGroupBuyingBiddingSellerCounteroffer(client, param, message) {
+    OnUserGroupBuyingBiddingSellerCounteroffer(client, param, message) {
         console.log("房间团购竞拍买家收到还价");
     }
-    OnRoomGroupBuyingBiddingBuyerOfferRejected(client, param, message) {
+    OnUserGroupBuyingBiddingBuyerOfferRejected(client, param, message) {
         console.log("房间团购竞拍买家报价被拒");
     }
 }
@@ -68,7 +68,7 @@ function main() {
     demo();
 }
 function demo() {
-    // configSite("127.0.0.1:8849");
+    (0, socket_1.configSite)("127.0.0.1:8849");
     const client = (0, socket_1.newClient)(new MsgCallback(), token, true);
     client.start();
     client.enterRoom(BigInt(1));

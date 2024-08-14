@@ -124,7 +124,7 @@ function main() {
 }
 
 export function demo() {
-  // configSite("127.0.0.1:8849");
+  configSite("127.0.0.1:8849");
   const client = newClient(new MsgCallback(), token, true);
   client.start();
   client.enterRoom(BigInt(1));
