@@ -87,35 +87,81 @@ export interface Client {
 /// 事件
 export interface EventHandle {
   /// 房间详情
-  OnRoom(client: Client, param: RoomParam, message: Message<Room>): void;
+  OnRoom(client: Client, param: RoomParam, message: Message<Room>, response: ResponseMessage): void;
   /// 团购详情
-  OnGroupBuying(client: Client, param: RoomParam, message: Message<GroupBuying>): void;
+  OnGroupBuying(client: Client, param: RoomParam, message: Message<GroupBuying>, response: ResponseMessage): void;
   /// 团购投票
-  OnGroupBuyingVote(client: Client, param: RoomParam, message: Message<GroupBuyingVote>): void;
+  OnGroupBuyingVote(
+    client: Client,
+    param: RoomParam,
+    message: Message<GroupBuyingVote>,
+    response: ResponseMessage
+  ): void;
   /// 团购下一个商品
-  OnGroupBuyingNextProduct(client: Client, param: RoomParam, message: Message<GroupBuyingNextProduct>): void;
+  OnGroupBuyingNextProduct(
+    client: Client,
+    param: RoomParam,
+    message: Message<GroupBuyingNextProduct>,
+    response: ResponseMessage
+  ): void;
   /// 团购开始
-  OnGroupBuyingStart(client: Client, param: RoomParam, message: Message<GroupBuyingStart>): void;
+  OnGroupBuyingStart(
+    client: Client,
+    param: RoomParam,
+    message: Message<GroupBuyingStart>,
+    response: ResponseMessage
+  ): void;
   /// 团购正在开奖
-  OnGroupBuyingLotteryOpening(client: Client, param: RoomParam, message: Message<GroupBuyingLotteryOpening>): void;
+  OnGroupBuyingLotteryOpening(
+    client: Client,
+    param: RoomParam,
+    message: Message<GroupBuyingLotteryOpening>,
+    response: ResponseMessage
+  ): void;
   /// 团购中奖
-  OnGroupBuyingWinning(client: Client, param: RoomParam, message: Message<GroupBuyingWinning>): void;
+  OnGroupBuyingWinning(
+    client: Client,
+    param: RoomParam,
+    message: Message<GroupBuyingWinning>,
+    response: ResponseMessage
+  ): void;
   /// 竞拍还价所有人
-  OnBiddingAllCounteroffer(client: Client, param: RoomParam, message: Message<BiddingAllCounteroffer>): void;
+  OnBiddingAllCounteroffer(
+    client: Client,
+    param: RoomParam,
+    message: Message<BiddingAllCounteroffer>,
+    response: ResponseMessage
+  ): void;
   /// 竞拍成交
-  OnBiddingDeal(client: Client, param: RoomParam, message: Message<BiddingDeal>): void;
+  OnBiddingDeal(client: Client, param: RoomParam, message: Message<BiddingDeal>, response: ResponseMessage): void;
   /// 用户竞拍买家发起报价(私人)
-  OnUserBiddingInitiateOffer(client: Client, param: RoomParam, message: Message<UserBiddingInitiateOffer>): void;
+  OnUserBiddingInitiateOffer(
+    client: Client,
+    param: RoomParam,
+    message: Message<UserBiddingInitiateOffer>,
+    response: ResponseMessage
+  ): void;
   /// 用户竞拍卖家收到报价(私人)
-  OnUserBiddingReceivesOffer(client: Client, param: RoomParam, message: Message<UserBiddingReceivesOffer>): void;
+  OnUserBiddingReceivesOffer(
+    client: Client,
+    param: RoomParam,
+    message: Message<UserBiddingReceivesOffer>,
+    response: ResponseMessage
+  ): void;
   /// 用户竞拍买家收到还价(私人)
   OnUserBiddingReceivesCounteroffer(
     client: Client,
     param: RoomParam,
-    message: Message<UserBiddingReceivesCounteroffer>
+    message: Message<UserBiddingReceivesCounteroffer>,
+    response: ResponseMessage
   ): void;
   /// 用户竞拍买家报价被拒(私人)
-  OnUserBiddingRejectedOffer(client: Client, param: RoomParam, message: Message<UserBiddingRejectedOffer>): void;
+  OnUserBiddingRejectedOffer(
+    client: Client,
+    param: RoomParam,
+    message: Message<UserBiddingRejectedOffer>,
+    response: ResponseMessage
+  ): void;
 }
 
 export class RequestInfo {
@@ -413,12 +459,12 @@ export class ClientProvider implements Client {
       switch (response.channel) {
         case ChannelType.ROOM:
           for (const message of response.contents) {
-            this.callback.OnRoom(this, request.config.params, message);
+            this.callback.OnRoom(this, request.config.params, message, response);
           }
           break;
         case ChannelType.GROUPBUYING:
           for (const message of response.contents) {
-            this.callback.OnGroupBuying(this, request.config.params, message);
+            this.callback.OnGroupBuying(this, request.config.params, message, response);
           }
           break;
         case ChannelType.ROOM_MSG:
@@ -426,29 +472,29 @@ export class ClientProvider implements Client {
           for (const message of response.contents) {
             switch (message.type) {
               case MessageType.GROUPBUYING_NEXT_PRODUCT:
-                this.callback.OnGroupBuyingNextProduct(this, request.config.params, message);
+                this.callback.OnGroupBuyingNextProduct(this, request.config.params, message, response);
                 break;
               case MessageType.GROUPBUYING_START:
-                this.callback.OnGroupBuyingStart(this, request.config.params, message);
+                this.callback.OnGroupBuyingStart(this, request.config.params, message, response);
                 break;
               case MessageType.GROUPBUYING_LOTTERY_OPENING:
-                this.callback.OnGroupBuyingLotteryOpening(this, request.config.params, message);
+                this.callback.OnGroupBuyingLotteryOpening(this, request.config.params, message, response);
                 break;
               case MessageType.GROUPBUYING_WINNING:
-                this.callback.OnGroupBuyingWinning(this, request.config.params, message);
+                this.callback.OnGroupBuyingWinning(this, request.config.params, message, response);
                 break;
               case MessageType.BIDDING_ALL_COUNTEROFFER:
-                this.callback.OnBiddingAllCounteroffer(this, request.config.params, message);
+                this.callback.OnBiddingAllCounteroffer(this, request.config.params, message, response);
                 break;
               case MessageType.BIDDING_DEAL:
-                this.callback.OnBiddingDeal(this, request.config.params, message);
+                this.callback.OnBiddingDeal(this, request.config.params, message, response);
                 break;
             }
           }
           break;
         case ChannelType.GROUPBUYING_VOTE:
           for (const message of response.contents) {
-            this.callback.OnGroupBuyingVote(this, request.config.params, message);
+            this.callback.OnGroupBuyingVote(this, request.config.params, message, response);
           }
           break;
         case ChannelType.USER_ROOM_MSG:
@@ -456,16 +502,16 @@ export class ClientProvider implements Client {
           for (const message of response.contents) {
             switch (message.type) {
               case MessageType.USER_BIDDING_INITIATE_OFFER:
-                this.callback.OnUserBiddingInitiateOffer(this, request.config.params, message);
+                this.callback.OnUserBiddingInitiateOffer(this, request.config.params, message, response);
                 break;
               case MessageType.USER_BIDDING_RECEIVES_OFFER:
-                this.callback.OnUserBiddingReceivesOffer(this, request.config.params, message);
+                this.callback.OnUserBiddingReceivesOffer(this, request.config.params, message, response);
                 break;
               case MessageType.USER_BIDDING_RECEIVES_COUNTEROFFER:
-                this.callback.OnUserBiddingReceivesCounteroffer(this, request.config.params, message);
+                this.callback.OnUserBiddingReceivesCounteroffer(this, request.config.params, message, response);
                 break;
               case MessageType.USER_BIDDING_REJECTED_OFFER:
-                this.callback.OnUserBiddingRejectedOffer(this, request.config.params, message);
+                this.callback.OnUserBiddingRejectedOffer(this, request.config.params, message, response);
                 break;
             }
           }

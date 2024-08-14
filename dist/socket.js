@@ -289,12 +289,12 @@ class ClientProvider {
                 switch (response.channel) {
                     case types_1.ChannelType.ROOM:
                         for (const message of response.contents) {
-                            this.callback.OnRoom(this, request.config.params, message);
+                            this.callback.OnRoom(this, request.config.params, message, response);
                         }
                         break;
                     case types_1.ChannelType.GROUPBUYING:
                         for (const message of response.contents) {
-                            this.callback.OnGroupBuying(this, request.config.params, message);
+                            this.callback.OnGroupBuying(this, request.config.params, message, response);
                         }
                         break;
                     case types_1.ChannelType.ROOM_MSG:
@@ -302,29 +302,29 @@ class ClientProvider {
                         for (const message of response.contents) {
                             switch (message.type) {
                                 case types_1.MessageType.GROUPBUYING_NEXT_PRODUCT:
-                                    this.callback.OnGroupBuyingNextProduct(this, request.config.params, message);
+                                    this.callback.OnGroupBuyingNextProduct(this, request.config.params, message, response);
                                     break;
                                 case types_1.MessageType.GROUPBUYING_START:
-                                    this.callback.OnGroupBuyingStart(this, request.config.params, message);
+                                    this.callback.OnGroupBuyingStart(this, request.config.params, message, response);
                                     break;
                                 case types_1.MessageType.GROUPBUYING_LOTTERY_OPENING:
-                                    this.callback.OnGroupBuyingLotteryOpening(this, request.config.params, message);
+                                    this.callback.OnGroupBuyingLotteryOpening(this, request.config.params, message, response);
                                     break;
                                 case types_1.MessageType.GROUPBUYING_WINNING:
-                                    this.callback.OnGroupBuyingWinning(this, request.config.params, message);
+                                    this.callback.OnGroupBuyingWinning(this, request.config.params, message, response);
                                     break;
                                 case types_1.MessageType.BIDDING_ALL_COUNTEROFFER:
-                                    this.callback.OnBiddingAllCounteroffer(this, request.config.params, message);
+                                    this.callback.OnBiddingAllCounteroffer(this, request.config.params, message, response);
                                     break;
                                 case types_1.MessageType.BIDDING_DEAL:
-                                    this.callback.OnBiddingDeal(this, request.config.params, message);
+                                    this.callback.OnBiddingDeal(this, request.config.params, message, response);
                                     break;
                             }
                         }
                         break;
                     case types_1.ChannelType.GROUPBUYING_VOTE:
                         for (const message of response.contents) {
-                            this.callback.OnGroupBuyingVote(this, request.config.params, message);
+                            this.callback.OnGroupBuyingVote(this, request.config.params, message, response);
                         }
                         break;
                     case types_1.ChannelType.USER_ROOM_MSG:
@@ -332,16 +332,16 @@ class ClientProvider {
                         for (const message of response.contents) {
                             switch (message.type) {
                                 case types_1.MessageType.USER_BIDDING_INITIATE_OFFER:
-                                    this.callback.OnUserBiddingInitiateOffer(this, request.config.params, message);
+                                    this.callback.OnUserBiddingInitiateOffer(this, request.config.params, message, response);
                                     break;
                                 case types_1.MessageType.USER_BIDDING_RECEIVES_OFFER:
-                                    this.callback.OnUserBiddingReceivesOffer(this, request.config.params, message);
+                                    this.callback.OnUserBiddingReceivesOffer(this, request.config.params, message, response);
                                     break;
                                 case types_1.MessageType.USER_BIDDING_RECEIVES_COUNTEROFFER:
-                                    this.callback.OnUserBiddingReceivesCounteroffer(this, request.config.params, message);
+                                    this.callback.OnUserBiddingReceivesCounteroffer(this, request.config.params, message, response);
                                     break;
                                 case types_1.MessageType.USER_BIDDING_REJECTED_OFFER:
-                                    this.callback.OnUserBiddingRejectedOffer(this, request.config.params, message);
+                                    this.callback.OnUserBiddingRejectedOffer(this, request.config.params, message, response);
                                     break;
                             }
                         }
