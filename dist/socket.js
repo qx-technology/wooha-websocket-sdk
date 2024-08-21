@@ -269,7 +269,7 @@ class ClientProvider {
             const now = Date.now();
             this.lastRpsTime = now;
             var rpsData;
-            if (process.env.UNI_PLATFORM === "app-plus") {
+            if (process.env['UNI_PLATFORM'] === "app-plus") {
                 rpsData = new Uint8Array(event.data);
             }
             else {
@@ -417,7 +417,7 @@ function getMsgSeqByRank(channel_1) {
             headers["token"] = token;
         const url = `${getBasicHttpUrl()}/getMessageVersioinByRank?`;
         const queryString = objectToQueryString(Object.assign(params, { channel, rank }));
-        if (process.env.UNI_PLATFORM === "app-plus") {
+        if (process.env['UNI_PLATFORM'] === "app-plus") {
             return new Promise((resolve, reject) => {
                 //@ts-ignore
                 uni.request({

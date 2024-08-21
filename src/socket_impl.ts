@@ -28,8 +28,8 @@ export class WebFuket implements WebFuketInterface {
       protocols.push(this.token);
     }
 
-    console.log("process.env.UNI_PLATFORM", process.env.UNI_PLATFORM);
-    if (process.env.UNI_PLATFORM === "app-plus") {
+    console.log("process.env['UNI_PLATFORM']", process.env['UNI_PLATFORM']);
+    if (process.env['UNI_PLATFORM'] === "app-plus") {
       //@ts-ignore
       Object.assign(uni, socket);
       //@ts-ignore
@@ -88,7 +88,7 @@ export class WebFuket implements WebFuketInterface {
     this.socket.close();
   }
   send(data: string | ArrayBufferLike | Blob | ArrayBufferView): void {
-    if (process.env.UNI_PLATFORM === "app-plus") {
+    if (process.env['UNI_PLATFORM'] === "app-plus") {
       this.socket.send({ data });
       return;
     }

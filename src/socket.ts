@@ -435,7 +435,7 @@ export class ClientProvider implements Client {
     const now = Date.now();
     this.lastRpsTime = now;
     var rpsData;
-    if (process.env.UNI_PLATFORM === "app-plus") {
+    if (process.env['UNI_PLATFORM'] === "app-plus") {
       rpsData = new Uint8Array(event.data);
     } else {
       rpsData = new Uint8Array(await event.data.arrayBuffer());
@@ -596,7 +596,7 @@ export async function getMsgSeqByRank(
 
   const url = `${getBasicHttpUrl()}/getMessageVersioinByRank?`;
   const queryString = objectToQueryString(Object.assign(params, { channel, rank }));
-  if (process.env.UNI_PLATFORM === "app-plus") {
+  if (process.env['UNI_PLATFORM'] === "app-plus") {
     return new Promise((resolve, reject) => {
       //@ts-ignore
       uni.request({
