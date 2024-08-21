@@ -9,12 +9,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ClientProvider = exports.RequestInfo = void 0;
+exports.ClientProvider = exports.RequestInfo = exports.Platform = void 0;
 exports.configSite = configSite;
 exports.useHttps = useHttps;
 exports.useWss = useWss;
 exports.newClient = newClient;
-exports.getMsgSeqByRank = getMsgSeqByRank;
 const types_1 = require("./types");
 const socket_impl_1 = require("./socket_impl");
 const msgpackr_1 = require("msgpackr");
@@ -58,6 +57,11 @@ function getBasicHttpUrl() {
         return `http://${site}`;
     }
 }
+var Platform;
+(function (Platform) {
+    Platform["WEB"] = "web";
+    Platform["UniApp"] = "uni-app";
+})(Platform || (exports.Platform = Platform = {}));
 class RequestInfo {
     constructor(config, interval, isIncrData = true) {
         const now = Date.now();
@@ -69,7 +73,7 @@ class RequestInfo {
 }
 exports.RequestInfo = RequestInfo;
 class ClientProvider {
-    constructor(eventHandle, token, showLog = false) {
+    constructor(eventHandle, token, showLog = false, platform = Platform.UniApp) {
         this.socket = null;
         this.url = getBasicWebsocketUrl() + "/ws";
         this.token = token;
@@ -81,6 +85,7 @@ class ClientProvider {
         this.callback = eventHandle;
         this.requests = [];
         this.showLog = showLog;
+        this.platform = platform;
         // 5秒心跳
         this.registerChannel({
             channel: types_1.ChannelType.HEARTBEAT,
@@ -95,7 +100,7 @@ class ClientProvider {
         const now = Date.now();
         this.lastReqTime = now;
         this.lastRpsTime = now;
-        this.socket = new socket_impl_1.WebFuket(this.url, this.token);
+        this.socket = new socket_impl_1.WebFuket(this.url, this.token, this.platform);
         this.socket.onopen = this.onOpen.bind(this);
         this.socket.onclose = this.onClose.bind(this);
         this.socket.onmessage = this.onMessage.bind(this);
@@ -126,7 +131,7 @@ class ClientProvider {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 // 订阅房间聚合消息
-                const roomAggMsgSeq = yield getMsgSeqByRank(types_1.ChannelType.ROOM_AGG_MSG, 1, {}, this.token);
+                const roomAggMsgSeq = yield this.getMsgSeqByRank(types_1.ChannelType.ROOM_AGG_MSG, 1, {}, this.token);
                 if (this.showLog) {
                     console.log(`订阅房间聚合消息: 版本号(${roomAggMsgSeq})`);
                 }
@@ -140,7 +145,7 @@ class ClientProvider {
                 }, 100);
                 if (this.token) {
                     // 订阅用户房间聚合消息
-                    const userRoomAggMsgSeq = yield getMsgSeqByRank(types_1.ChannelType.USER_ROOM_AGG_MSG, 1, {}, this.token);
+                    const userRoomAggMsgSeq = yield this.getMsgSeqByRank(types_1.ChannelType.USER_ROOM_AGG_MSG, 1, {}, this.token);
                     if (this.showLog) {
                         console.log(`订阅用户房间聚合消息: 版本号(${userRoomAggMsgSeq})`);
                     }
@@ -177,7 +182,7 @@ class ClientProvider {
                     params: { roomId }
                 }, 3000, false);
                 // 订阅团购详情
-                const groupBuyingSeq = yield getMsgSeqByRank(types_1.ChannelType.GROUPBUYING, 1, { roomId }, this.token);
+                const groupBuyingSeq = yield this.getMsgSeqByRank(types_1.ChannelType.GROUPBUYING, 1, { roomId }, this.token);
                 if (this.showLog) {
                     console.log(`订阅团购详情: roomId(${roomId}), 版本号(${groupBuyingSeq})`);
                 }
@@ -190,7 +195,7 @@ class ClientProvider {
                     params: { roomId }
                 }, 100);
                 // 订阅团购投票
-                const groupBuyingVoteSeq = yield getMsgSeqByRank(types_1.ChannelType.GROUPBUYING_VOTE, 1, { roomId }, this.token);
+                const groupBuyingVoteSeq = yield this.getMsgSeqByRank(types_1.ChannelType.GROUPBUYING_VOTE, 1, { roomId }, this.token);
                 if (this.showLog) {
                     console.log(`订阅团购投票: roomId(${roomId}), 版本号(${groupBuyingVoteSeq})`);
                 }
@@ -203,7 +208,7 @@ class ClientProvider {
                     params: { roomId }
                 }, 100);
                 // 订阅房间消息
-                const roomMsgSeq = yield getMsgSeqByRank(types_1.ChannelType.ROOM_MSG, 1, { roomId }, this.token);
+                const roomMsgSeq = yield this.getMsgSeqByRank(types_1.ChannelType.ROOM_MSG, 1, { roomId }, this.token);
                 if (this.showLog) {
                     console.log(`订阅房间消息: roomId(${roomId}), 版本号(${roomMsgSeq})`);
                 }
@@ -217,7 +222,7 @@ class ClientProvider {
                 }, 100);
                 if (this.token) {
                     // 订阅用户房间消息
-                    const userRoomMsgSeq = yield getMsgSeqByRank(types_1.ChannelType.USER_ROOM_MSG, 1, { roomId }, this.token);
+                    const userRoomMsgSeq = yield this.getMsgSeqByRank(types_1.ChannelType.USER_ROOM_MSG, 1, { roomId }, this.token);
                     if (this.showLog) {
                         console.log(`订阅用户房间消息: roomId(${roomId}), 版本号(${userRoomMsgSeq})`);
                     }
@@ -269,7 +274,7 @@ class ClientProvider {
             const now = Date.now();
             this.lastRpsTime = now;
             var rpsData;
-            if (process.env['UNI_PLATFORM'] === "app-plus") {
+            if (this.platform === Platform.UniApp) {
                 rpsData = new Uint8Array(event.data);
             }
             else {
@@ -394,6 +399,40 @@ class ClientProvider {
         (_a = this.socket) === null || _a === void 0 ? void 0 : _a.send(sendData);
         this.lastReqTime = now;
     }
+    getMsgSeqByRank(channel_1) {
+        return __awaiter(this, arguments, void 0, function* (channel, rank = 1, params = {}, token) {
+            const headers = {
+                "Content-Type": "application/json"
+            };
+            if (token)
+                headers["token"] = token;
+            const url = `${getBasicHttpUrl()}/getMessageVersioinByRank?`;
+            const queryString = objectToQueryString(Object.assign(params, { channel, rank }));
+            if (this.platform === Platform.UniApp) {
+                return new Promise((resolve, reject) => {
+                    //@ts-ignore
+                    uni.request({
+                        url: `${url}${queryString}`,
+                        header: headers,
+                        success: (res) => {
+                            resolve(res.data.data);
+                        },
+                        fail: () => {
+                            reject();
+                        }
+                    });
+                });
+            }
+            else {
+                return fetch(`${url}${queryString}`, {
+                    method: "GET",
+                    headers
+                })
+                    .then((res) => res.json())
+                    .then((json) => json.data);
+            }
+        });
+    }
 }
 exports.ClientProvider = ClientProvider;
 function newClient(eventHandle, token, showLog) {
@@ -407,40 +446,6 @@ function objectToQueryString(obj) {
         }
     }
     return params.join("&");
-}
-function getMsgSeqByRank(channel_1) {
-    return __awaiter(this, arguments, void 0, function* (channel, rank = 1, params = {}, token) {
-        const headers = {
-            "Content-Type": "application/json"
-        };
-        if (token)
-            headers["token"] = token;
-        const url = `${getBasicHttpUrl()}/getMessageVersioinByRank?`;
-        const queryString = objectToQueryString(Object.assign(params, { channel, rank }));
-        if (process.env['UNI_PLATFORM'] === "app-plus") {
-            return new Promise((resolve, reject) => {
-                //@ts-ignore
-                uni.request({
-                    url: `${url}${queryString}`,
-                    header: headers,
-                    success: (res) => {
-                        resolve(res.data.data);
-                    },
-                    fail: () => {
-                        reject();
-                    }
-                });
-            });
-        }
-        else {
-            return fetch(`${url}${queryString}`, {
-                method: "GET",
-                headers
-            })
-                .then((res) => res.json())
-                .then((json) => json.data);
-        }
-    });
 }
 // function uint8ArrayToHex(uint8Array: any) {
 //   return Array.from(uint8Array, (byte: any) => byte.toString(16).padStart(2, "0")).join("");

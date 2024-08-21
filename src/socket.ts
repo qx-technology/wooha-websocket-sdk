@@ -84,6 +84,11 @@ export interface Client {
   leaveRoom(roomId: bigint): Client;
 }
 
+export enum Platform {
+  WEB= 'web',
+    UniApp= 'uni-app'
+}
+
 /// 事件
 export interface EventHandle {
   /// 房间详情
@@ -195,8 +200,9 @@ export class ClientProvider implements Client {
   private callback: EventHandle;
   private requests: RequestInfo[];
   private showLog: boolean;
+  private platform: Platform;
 
-  constructor(eventHandle: EventHandle, token?: string, showLog: boolean = false) {
+  constructor(eventHandle: EventHandle, token?: string, showLog: boolean = false, platform: Platform = Platform.UniApp) {
     this.url = getBasicWebsocketUrl() + "/ws";
     this.token = token;
     this.lastReqTime = 0;
@@ -207,6 +213,7 @@ export class ClientProvider implements Client {
     this.callback = eventHandle;
     this.requests = [];
     this.showLog = showLog;
+    this.platform = platform;
     // 5秒心跳
     this.registerChannel(
       <RequestMessage>{
@@ -228,7 +235,7 @@ export class ClientProvider implements Client {
     this.lastReqTime = now;
     this.lastRpsTime = now;
 
-    this.socket = new WebFuket(this.url, this.token);
+    this.socket = new WebFuket(this.url, this.token, this.platform);
 
     this.socket.onopen = this.onOpen.bind(this);
     this.socket.onclose = this.onClose.bind(this);
@@ -264,7 +271,7 @@ export class ClientProvider implements Client {
   async enterAggRoom(): Promise<Client> {
     try {
       // 订阅房间聚合消息
-      const roomAggMsgSeq = await getMsgSeqByRank(ChannelType.ROOM_AGG_MSG, 1, {}, this.token);
+      const roomAggMsgSeq = await this.getMsgSeqByRank(ChannelType.ROOM_AGG_MSG, 1, {}, this.token);
       if (this.showLog) {
         console.log(`订阅房间聚合消息: 版本号(${roomAggMsgSeq})`);
       }
@@ -281,7 +288,7 @@ export class ClientProvider implements Client {
       );
       if (this.token) {
         // 订阅用户房间聚合消息
-        const userRoomAggMsgSeq = await getMsgSeqByRank(ChannelType.USER_ROOM_AGG_MSG, 1, {}, this.token);
+        const userRoomAggMsgSeq = await this.getMsgSeqByRank(ChannelType.USER_ROOM_AGG_MSG, 1, {}, this.token);
         if (this.showLog) {
           console.log(`订阅用户房间聚合消息: 版本号(${userRoomAggMsgSeq})`);
         }
@@ -326,7 +333,7 @@ export class ClientProvider implements Client {
         false
       );
       // 订阅团购详情
-      const groupBuyingSeq = await getMsgSeqByRank(ChannelType.GROUPBUYING, 1, { roomId }, this.token);
+      const groupBuyingSeq = await this.getMsgSeqByRank(ChannelType.GROUPBUYING, 1, { roomId }, this.token);
       if (this.showLog) {
         console.log(`订阅团购详情: roomId(${roomId}), 版本号(${groupBuyingSeq})`);
       }
@@ -342,7 +349,7 @@ export class ClientProvider implements Client {
         100
       );
       // 订阅团购投票
-      const groupBuyingVoteSeq = await getMsgSeqByRank(ChannelType.GROUPBUYING_VOTE, 1, { roomId }, this.token);
+      const groupBuyingVoteSeq = await this.getMsgSeqByRank(ChannelType.GROUPBUYING_VOTE, 1, { roomId }, this.token);
       if (this.showLog) {
         console.log(`订阅团购投票: roomId(${roomId}), 版本号(${groupBuyingVoteSeq})`);
       }
@@ -358,7 +365,7 @@ export class ClientProvider implements Client {
         100
       );
       // 订阅房间消息
-      const roomMsgSeq = await getMsgSeqByRank(ChannelType.ROOM_MSG, 1, { roomId }, this.token);
+      const roomMsgSeq = await this.getMsgSeqByRank(ChannelType.ROOM_MSG, 1, { roomId }, this.token);
       if (this.showLog) {
         console.log(`订阅房间消息: roomId(${roomId}), 版本号(${roomMsgSeq})`);
       }
@@ -375,7 +382,7 @@ export class ClientProvider implements Client {
       );
       if (this.token) {
         // 订阅用户房间消息
-        const userRoomMsgSeq = await getMsgSeqByRank(ChannelType.USER_ROOM_MSG, 1, { roomId }, this.token);
+        const userRoomMsgSeq = await this.getMsgSeqByRank(ChannelType.USER_ROOM_MSG, 1, { roomId }, this.token);
         if (this.showLog) {
           console.log(`订阅用户房间消息: roomId(${roomId}), 版本号(${userRoomMsgSeq})`);
         }
@@ -435,7 +442,7 @@ export class ClientProvider implements Client {
     const now = Date.now();
     this.lastRpsTime = now;
     var rpsData;
-    if (process.env['UNI_PLATFORM'] === "app-plus") {
+    if (this.platform === Platform.UniApp) {
       rpsData = new Uint8Array(event.data);
     } else {
       rpsData = new Uint8Array(await event.data.arrayBuffer());
@@ -567,6 +574,42 @@ export class ClientProvider implements Client {
     this.socket?.send(sendData);
     this.lastReqTime = now;
   }
+  async getMsgSeqByRank(
+      channel: ChannelType,
+      rank: number = 1,
+      params: Record<string, any> = {},
+      token?: string
+  ): Promise<string> {
+    const headers: Record<string, any> = {
+      "Content-Type": "application/json"
+    };
+    if (token) headers["token"] = token;
+
+    const url = `${getBasicHttpUrl()}/getMessageVersioinByRank?`;
+    const queryString = objectToQueryString(Object.assign(params, { channel, rank }));
+    if (this.platform === Platform.UniApp) {
+      return new Promise((resolve, reject) => {
+        //@ts-ignore
+        uni.request({
+          url: `${url}${queryString}`,
+          header: headers,
+          success: (res: any) => {
+            resolve(res.data.data);
+          },
+          fail: () => {
+            reject();
+          }
+        });
+      });
+    } else {
+      return fetch(`${url}${queryString}`, {
+        method: "GET",
+        headers
+      })
+          .then((res) => res.json())
+          .then((json) => json.data);
+    }
+  }
 }
 
 export function newClient(eventHandle: EventHandle, token?: string, showLog?: boolean): Client {
@@ -581,43 +624,6 @@ function objectToQueryString(obj: any) {
     }
   }
   return params.join("&");
-}
-
-export async function getMsgSeqByRank(
-  channel: ChannelType,
-  rank: number = 1,
-  params: Record<string, any> = {},
-  token?: string
-): Promise<string> {
-  const headers: Record<string, any> = {
-    "Content-Type": "application/json"
-  };
-  if (token) headers["token"] = token;
-
-  const url = `${getBasicHttpUrl()}/getMessageVersioinByRank?`;
-  const queryString = objectToQueryString(Object.assign(params, { channel, rank }));
-  if (process.env['UNI_PLATFORM'] === "app-plus") {
-    return new Promise((resolve, reject) => {
-      //@ts-ignore
-      uni.request({
-        url: `${url}${queryString}`,
-        header: headers,
-        success: (res: any) => {
-          resolve(res.data.data);
-        },
-        fail: () => {
-          reject();
-        }
-      });
-    });
-  } else {
-    return fetch(`${url}${queryString}`, {
-      method: "GET",
-      headers
-    })
-      .then((res) => res.json())
-      .then((json) => json.data);
-  }
 }
 
 // function uint8ArrayToHex(uint8Array: any) {

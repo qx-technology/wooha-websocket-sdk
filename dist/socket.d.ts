@@ -10,6 +10,10 @@ export interface Client {
     enterRoom(roomId: bigint): Promise<Client>;
     leaveRoom(roomId: bigint): Client;
 }
+export declare enum Platform {
+    WEB = "web",
+    UniApp = "uni-app"
+}
 export interface EventHandle {
     OnRoom(client: Client, param: RoomParam, message: Message<Room>, response: ResponseMessage): void;
     OnGroupBuying(client: Client, param: RoomParam, message: Message<GroupBuying>, response: ResponseMessage): void;
@@ -44,7 +48,8 @@ export declare class ClientProvider implements Client {
     private callback;
     private requests;
     private showLog;
-    constructor(eventHandle: EventHandle, token?: string, showLog?: boolean);
+    private platform;
+    constructor(eventHandle: EventHandle, token?: string, showLog?: boolean, platform?: Platform);
     start(): Client;
     stop(autoConn?: boolean): Client;
     registerChannel(config: RequestMessage, interval: number, isIncrData?: boolean): void;
@@ -58,6 +63,6 @@ export declare class ClientProvider implements Client {
     private onError;
     private isTimeout;
     private handle;
+    getMsgSeqByRank(channel: ChannelType, rank?: number, params?: Record<string, any>, token?: string): Promise<string>;
 }
 export declare function newClient(eventHandle: EventHandle, token?: string, showLog?: boolean): Client;
-export declare function getMsgSeqByRank(channel: ChannelType, rank?: number, params?: Record<string, any>, token?: string): Promise<string>;

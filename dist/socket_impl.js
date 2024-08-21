@@ -6,21 +6,23 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.WebFuket = void 0;
 //@ts-ignore
 const plus_websocket_1 = __importDefault(require("plus-websocket"));
+const socket_1 = require("./socket");
 class WebFuket {
-    constructor(url, token) {
+    constructor(url, token, platform = socket_1.Platform.UniApp) {
         this.url = url;
         this.token = token;
         this.onopen = null;
         this.onmessage = null;
         this.onerror = null;
         this.onclose = null;
+        this.platform = platform;
         const protocols = [];
         if (this.token) {
             protocols.push("token");
             protocols.push(this.token);
         }
-        console.log("process.env['UNI_PLATFORM']", process.env['UNI_PLATFORM']);
-        if (process.env['UNI_PLATFORM'] === "app-plus") {
+        console.log("process.env['UNI_PLATFORM']", this.platform);
+        if (this.platform === socket_1.Platform.UniApp) {
             //@ts-ignore
             Object.assign(uni, plus_websocket_1.default);
             //@ts-ignore
@@ -84,7 +86,7 @@ class WebFuket {
         this.socket.close();
     }
     send(data) {
-        if (process.env['UNI_PLATFORM'] === "app-plus") {
+        if (this.platform === socket_1.Platform.UniApp) {
             this.socket.send({ data });
             return;
         }
