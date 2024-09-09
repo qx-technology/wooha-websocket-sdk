@@ -604,7 +604,7 @@ export interface UserSellerAcceptedOffer {
 }
 
 /**
- * 拒绝卖家还价(私人)
+ * 用户竞拍卖家还价被拒(私人)
  */
 export interface UserSellerRejectedOffer {
   /**
@@ -638,7 +638,7 @@ export interface UserSellerRejectedOffer {
 }
 
 /**
- * 接受买家出价(私人)
+ * 用户竞拍接受卖家出价(私人)
  */
 export interface UserBiddingAcceptedOffer {
   /**

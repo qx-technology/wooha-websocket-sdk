@@ -17,7 +17,11 @@ import {
   UserBiddingInitiateOffer,
   UserBiddingReceivesOffer,
   UserBiddingReceivesCounteroffer,
-  UserBiddingRejectedOffer
+  UserBiddingRejectedOffer,
+  BiddingStart,
+  UserSellerAcceptedOffer,
+  UserSellerRejectedOffer,
+  UserBiddingAcceptedOffer
 } from "./types";
 import { WebFuket } from "./socket_impl";
 import { pack, unpack } from "msgpackr";
@@ -85,8 +89,8 @@ export interface Client {
 }
 
 export enum Platform {
-  WEB= 'web',
-    UniApp= 'uni-app'
+  WEB = "web",
+  UniApp = "uni-app"
 }
 
 /// 事件
@@ -130,6 +134,8 @@ export interface EventHandle {
     message: Message<GroupBuyingWinning>,
     response: ResponseMessage
   ): void;
+  /// 竞拍开始
+  OnBiddingStart(client: Client, param: RoomParam, message: Message<BiddingStart>, response: ResponseMessage): void;
   /// 竞拍还价所有人
   OnBiddingAllCounteroffer(
     client: Client,
@@ -167,6 +173,27 @@ export interface EventHandle {
     message: Message<UserBiddingRejectedOffer>,
     response: ResponseMessage
   ): void;
+  /// 用户竞拍接受卖家还价(私人)
+  OnUserSellerAcceptedOffer(
+    client: Client,
+    param: RoomParam,
+    message: Message<UserSellerAcceptedOffer>,
+    response: ResponseMessage
+  ): void;
+  /// 用户竞拍卖家还价被拒(私人)
+  OnUserSellerRejectedOffer(
+    client: Client,
+    param: RoomParam,
+    message: Message<UserSellerRejectedOffer>,
+    response: ResponseMessage
+  ): void;
+  /// 用户竞拍接受卖家出价(私人)
+  OnUserSellerRejectedOffer(
+    client: Client,
+    param: RoomParam,
+    message: Message<UserBiddingAcceptedOffer>,
+    response: ResponseMessage
+  ): void;
 }
 
 export class RequestInfo {
@@ -202,7 +229,12 @@ export class ClientProvider implements Client {
   private showLog: boolean;
   private platform: Platform;
 
-  constructor(eventHandle: EventHandle, token?: string, showLog: boolean = false, platform: Platform = Platform.UniApp) {
+  constructor(
+    eventHandle: EventHandle,
+    token?: string,
+    showLog: boolean = false,
+    platform: Platform = Platform.UniApp
+  ) {
     this.url = getBasicWebsocketUrl() + "/ws";
     this.token = token;
     this.lastReqTime = 0;
@@ -575,10 +607,10 @@ export class ClientProvider implements Client {
     this.lastReqTime = now;
   }
   async getMsgSeqByRank(
-      channel: ChannelType,
-      rank: number = 1,
-      params: Record<string, any> = {},
-      token?: string
+    channel: ChannelType,
+    rank: number = 1,
+    params: Record<string, any> = {},
+    token?: string
   ): Promise<string> {
     const headers: Record<string, any> = {
       "Content-Type": "application/json"
@@ -606,8 +638,8 @@ export class ClientProvider implements Client {
         method: "GET",
         headers
       })
-          .then((res) => res.json())
-          .then((json) => json.data);
+        .then((res) => res.json())
+        .then((json) => json.data);
     }
   }
 }
