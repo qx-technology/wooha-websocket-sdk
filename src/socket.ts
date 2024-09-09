@@ -188,7 +188,7 @@ export interface EventHandle {
     response: ResponseMessage
   ): void;
   /// 用户竞拍接受卖家出价(私人)
-  OnUserSellerRejectedOffer(
+  OnUserBiddingAcceptedOffer(
     client: Client,
     param: RoomParam,
     message: Message<UserBiddingAcceptedOffer>,
@@ -528,6 +528,9 @@ export class ClientProvider implements Client {
               case MessageType.BIDDING_DEAL:
                 this.callback.OnBiddingDeal(this, request.config.params, message, response);
                 break;
+              case MessageType.BIDDING_START:
+                this.callback.OnBiddingStart(this, request.config.params, message, response);
+                break;
             }
           }
           break;
@@ -551,6 +554,15 @@ export class ClientProvider implements Client {
                 break;
               case MessageType.USER_BIDDING_REJECTED_OFFER:
                 this.callback.OnUserBiddingRejectedOffer(this, request.config.params, message, response);
+                break;
+              case MessageType.USER_BIDDING_ACCEPTED_COUNTEROFFER:
+                this.callback.OnUserSellerAcceptedOffer(this, request.config.params, message, response);
+                break;
+              case MessageType.USER_BIDDING_REJECTED_COUNTEROFFER:
+                this.callback.OnUserSellerRejectedOffer(this, request.config.params, message, response);
+                break;
+              case MessageType.USER_BIDDING_ACCEPTED_OFFER:
+                this.callback.OnUserBiddingAcceptedOffer(this, request.config.params, message, response);
                 break;
             }
           }
