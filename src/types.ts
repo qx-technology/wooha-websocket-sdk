@@ -109,7 +109,7 @@ export enum MessageType {
    */
   USER_BIDDING_REJECTED_OFFER = 12,
   /**
-   * 用户竞拍接受卖家出价(私人)
+   * 用户竞拍接受买家出价(私人)
    */
   USER_BIDDING_ACCEPTED_OFFER = 16
 }
@@ -638,7 +638,7 @@ export interface UserSellerRejectedOffer {
 }
 
 /**
- * 用户竞拍接受卖家出价(私人)
+ * 用户竞拍接受买家出价(私人)
  */
 export interface UserBiddingAcceptedOffer {
   /**

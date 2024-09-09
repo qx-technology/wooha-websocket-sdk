@@ -187,7 +187,7 @@ export interface EventHandle {
     message: Message<UserSellerRejectedOffer>,
     response: ResponseMessage
   ): void;
-  /// 用户竞拍接受卖家出价(私人)
+  /// 用户竞拍接受买家出价(私人)
   OnUserBiddingAcceptedOffer(
     client: Client,
     param: RoomParam,
