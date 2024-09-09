@@ -69,4 +69,4 @@ export declare class ClientProvider implements Client {
     private handle;
     getMsgSeqByRank(channel: ChannelType, rank?: number, params?: Record<string, any>, token?: string): Promise<string>;
 }
-export declare function newClient(eventHandle: EventHandle, token?: string, showLog?: boolean): Client;
+export declare function newClient(eventHandle: EventHandle, token?: string, showLog?: boolean, platform?: Platform): Client;

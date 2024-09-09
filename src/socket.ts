@@ -656,8 +656,13 @@ export class ClientProvider implements Client {
   }
 }
 
-export function newClient(eventHandle: EventHandle, token?: string, showLog?: boolean): Client {
-  return new ClientProvider(eventHandle, token, showLog);
+export function newClient(
+  eventHandle: EventHandle,
+  token?: string,
+  showLog?: boolean,
+  platform: Platform = Platform.UniApp
+): Client {
+  return new ClientProvider(eventHandle, token, showLog, platform);
 }
 
 function objectToQueryString(obj: any) {

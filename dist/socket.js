@@ -447,8 +447,8 @@ class ClientProvider {
     }
 }
 exports.ClientProvider = ClientProvider;
-function newClient(eventHandle, token, showLog) {
-    return new ClientProvider(eventHandle, token, showLog);
+function newClient(eventHandle, token, showLog, platform = Platform.UniApp) {
+    return new ClientProvider(eventHandle, token, showLog, platform);
 }
 function objectToQueryString(obj) {
     const params = [];
