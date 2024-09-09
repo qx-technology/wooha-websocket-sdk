@@ -76,6 +76,10 @@ var MessageType;
      */
     MessageType[MessageType["GROUPBUYING_WINNING"] = 6] = "GROUPBUYING_WINNING";
     /**
+     * 竞拍开始
+     */
+    MessageType[MessageType["BIDDING_START"] = 13] = "BIDDING_START";
+    /**
      * 竞拍还价所有人
      */
     MessageType[MessageType["BIDDING_ALL_COUNTEROFFER"] = 7] = "BIDDING_ALL_COUNTEROFFER";
@@ -96,8 +100,20 @@ var MessageType;
      */
     MessageType[MessageType["USER_BIDDING_RECEIVES_COUNTEROFFER"] = 11] = "USER_BIDDING_RECEIVES_COUNTEROFFER";
     /**
+     * 用户竞拍卖家还价被拒(私人)
+     */
+    MessageType[MessageType["USER_BIDDING_REJECTED_COUNTEROFFER"] = 15] = "USER_BIDDING_REJECTED_COUNTEROFFER";
+    /**
+     * 用户竞拍接受卖家还价(私人)
+     */
+    MessageType[MessageType["USER_BIDDING_ACCEPTED_COUNTEROFFER"] = 14] = "USER_BIDDING_ACCEPTED_COUNTEROFFER";
+    /**
      * 用户竞拍买家报价被拒(私人)
      */
     MessageType[MessageType["USER_BIDDING_REJECTED_OFFER"] = 12] = "USER_BIDDING_REJECTED_OFFER";
+    /**
+     * 用户竞拍接受卖家出价(私人)
+     */
+    MessageType[MessageType["USER_BIDDING_ACCEPTED_OFFER"] = 16] = "USER_BIDDING_ACCEPTED_OFFER";
 })(MessageType || (exports.MessageType = MessageType = {}));
 //# sourceMappingURL=types.js.map

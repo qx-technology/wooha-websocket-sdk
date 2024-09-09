@@ -1,4 +1,4 @@
-import { RequestMessage, RoomParam, ChannelType, ResponseMessage, Message, Room, GroupBuying, GroupBuyingVote, GroupBuyingNextProduct, GroupBuyingStart, GroupBuyingLotteryOpening, GroupBuyingWinning, BiddingAllCounteroffer, BiddingDeal, UserBiddingInitiateOffer, UserBiddingReceivesOffer, UserBiddingReceivesCounteroffer, UserBiddingRejectedOffer } from "./types";
+import { RequestMessage, RoomParam, ChannelType, ResponseMessage, Message, Room, GroupBuying, GroupBuyingVote, GroupBuyingNextProduct, GroupBuyingStart, GroupBuyingLotteryOpening, GroupBuyingWinning, BiddingAllCounteroffer, BiddingDeal, UserBiddingInitiateOffer, UserBiddingReceivesOffer, UserBiddingReceivesCounteroffer, UserBiddingRejectedOffer, BiddingStart, UserSellerAcceptedOffer, UserSellerRejectedOffer, UserBiddingAcceptedOffer } from "./types";
 export declare function configSite(url: string): void;
 export declare function useHttps(): void;
 export declare function useWss(): void;
@@ -22,12 +22,16 @@ export interface EventHandle {
     OnGroupBuyingStart(client: Client, param: RoomParam, message: Message<GroupBuyingStart>, response: ResponseMessage): void;
     OnGroupBuyingLotteryOpening(client: Client, param: RoomParam, message: Message<GroupBuyingLotteryOpening>, response: ResponseMessage): void;
     OnGroupBuyingWinning(client: Client, param: RoomParam, message: Message<GroupBuyingWinning>, response: ResponseMessage): void;
+    OnBiddingStart(client: Client, param: RoomParam, message: Message<BiddingStart>, response: ResponseMessage): void;
     OnBiddingAllCounteroffer(client: Client, param: RoomParam, message: Message<BiddingAllCounteroffer>, response: ResponseMessage): void;
     OnBiddingDeal(client: Client, param: RoomParam, message: Message<BiddingDeal>, response: ResponseMessage): void;
     OnUserBiddingInitiateOffer(client: Client, param: RoomParam, message: Message<UserBiddingInitiateOffer>, response: ResponseMessage): void;
     OnUserBiddingReceivesOffer(client: Client, param: RoomParam, message: Message<UserBiddingReceivesOffer>, response: ResponseMessage): void;
     OnUserBiddingReceivesCounteroffer(client: Client, param: RoomParam, message: Message<UserBiddingReceivesCounteroffer>, response: ResponseMessage): void;
     OnUserBiddingRejectedOffer(client: Client, param: RoomParam, message: Message<UserBiddingRejectedOffer>, response: ResponseMessage): void;
+    OnUserSellerAcceptedOffer(client: Client, param: RoomParam, message: Message<UserSellerAcceptedOffer>, response: ResponseMessage): void;
+    OnUserSellerRejectedOffer(client: Client, param: RoomParam, message: Message<UserSellerRejectedOffer>, response: ResponseMessage): void;
+    OnUserBiddingAcceptedOffer(client: Client, param: RoomParam, message: Message<UserBiddingAcceptedOffer>, response: ResponseMessage): void;
 }
 export declare class RequestInfo {
     config: RequestMessage;

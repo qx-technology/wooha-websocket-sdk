@@ -68,6 +68,10 @@ export declare enum MessageType {
      */
     GROUPBUYING_WINNING = 6,
     /**
+     * 竞拍开始
+     */
+    BIDDING_START = 13,
+    /**
      * 竞拍还价所有人
      */
     BIDDING_ALL_COUNTEROFFER = 7,
@@ -88,9 +92,21 @@ export declare enum MessageType {
      */
     USER_BIDDING_RECEIVES_COUNTEROFFER = 11,
     /**
+     * 用户竞拍卖家还价被拒(私人)
+     */
+    USER_BIDDING_REJECTED_COUNTEROFFER = 15,
+    /**
+     * 用户竞拍接受卖家还价(私人)
+     */
+    USER_BIDDING_ACCEPTED_COUNTEROFFER = 14,
+    /**
      * 用户竞拍买家报价被拒(私人)
      */
-    USER_BIDDING_REJECTED_OFFER = 12
+    USER_BIDDING_REJECTED_OFFER = 12,
+    /**
+     * 用户竞拍接受卖家出价(私人)
+     */
+    USER_BIDDING_ACCEPTED_OFFER = 16
 }
 export interface Message<M = any> {
     /**
@@ -341,6 +357,27 @@ export interface GroupBuyingWinning {
     auctionId: bigint;
 }
 /**
+ * 竞拍开始
+ */
+export interface BiddingStart {
+    /**
+     * 房间ID
+     */
+    roomId: bigint;
+    /**
+     * 竞拍ID
+     */
+    auctionId: bigint;
+    /**
+     * 过期时间
+     */
+    expiresAt?: string;
+    /**
+     * 竞拍过期时间
+     */
+    auctionExpireTime: bigint;
+}
+/**
  * 竞拍还价所有人
  */
 export interface BiddingAllCounteroffer {
@@ -497,4 +534,103 @@ export interface UserBiddingRejectedOffer {
      * 金额
      */
     amount: bigint;
+}
+/**
+ * 用户竞拍接受卖家还价(私人)
+ */
+export interface UserSellerAcceptedOffer {
+    /**
+     * 房间ID
+     */
+    roomId: bigint;
+    /**
+     * 用户ID
+     */
+    userId: bigint;
+    /**
+     * 卖家用户ID
+     */
+    sellerUserId: bigint;
+    /**
+     * 出价用户ID
+     */
+    biddingUserId: bigint;
+    /**
+     * 竞拍ID
+     */
+    auctionId: bigint;
+    /**
+     * 金额
+     */
+    amount: bigint;
+    /**
+     * 竞拍过期时间
+     */
+    auctionExpireTime: bigint;
+}
+/**
+ * 用户竞拍卖家还价被拒(私人)
+ */
+export interface UserSellerRejectedOffer {
+    /**
+     * 房间ID
+     */
+    roomId: bigint;
+    /**
+     * 用户ID
+     */
+    userId: bigint;
+    /**
+     * 卖家用户ID
+     */
+    sellerUserId: bigint;
+    /**
+     * 出价用户ID
+     */
+    biddingUserId: bigint;
+    /**
+     * 竞拍ID
+     */
+    auctionId: bigint;
+    /**
+     * 金额
+     */
+    amount: bigint;
+    /**
+     * 竞拍过期时间
+     */
+    auctionExpireTime: bigint;
+}
+/**
+ * 用户竞拍接受卖家出价(私人)
+ */
+export interface UserBiddingAcceptedOffer {
+    /**
+     * 房间ID
+     */
+    roomId: bigint;
+    /**
+     * 用户ID
+     */
+    userId: bigint;
+    /**
+     * 卖家用户ID
+     */
+    sellerUserId: bigint;
+    /**
+     * 出价用户ID
+     */
+    biddingUserId: bigint;
+    /**
+     * 竞拍ID
+     */
+    auctionId: bigint;
+    /**
+     * 金额
+     */
+    amount: bigint;
+    /**
+     * 竞拍过期时间
+     */
+    auctionExpireTime: bigint;
 }

@@ -5,6 +5,18 @@ const socket_1 = require("./socket");
 const url = "ws://47.57.236.213:8849/ws";
 const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzaG9wIiwiZXhwIjoxNzMwMTA2NDQ1LCJpYXQiOjE3MjIzMzA0NDUsImp0aSI6IjVkMTMwYTkyZGQ0MzE3ZTFiYWE2NTQ5YjNmNzU0NDgzIn0.QdOiSOjNxMv1sP7MzivqcbNi3bh0AtpU2Y0AGyqauNc";
 class MsgCallback {
+    OnBiddingStart(client, param, message, response) {
+        console.log("竞拍开始");
+    }
+    OnUserSellerAcceptedOffer(client, param, message, response) {
+        console.log("用户竞拍接受卖家还价(私人)");
+    }
+    OnUserSellerRejectedOffer(client, param, message, response) {
+        console.log("用户竞拍卖家还价被拒(私人)");
+    }
+    OnUserBiddingAcceptedOffer(client, param, message, response) {
+        console.log("用户竞拍接受卖家出价(私人)");
+    }
     OnRoom(client, param, message) {
         // const content = message.content;
         // console.log(`房间详情: 在线人数(${content.onlinePeople}), 时间(${new Date()})`);

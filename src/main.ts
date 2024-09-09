@@ -14,7 +14,12 @@ import {
   UserBiddingReceivesOffer,
   UserBiddingReceivesCounteroffer,
   UserBiddingRejectedOffer,
-  Room
+  Room,
+  BiddingStart,
+  ResponseMessage,
+  UserBiddingAcceptedOffer,
+  UserSellerAcceptedOffer,
+  UserSellerRejectedOffer
 } from "./types";
 
 const url = "ws://47.57.236.213:8849/ws";
@@ -22,6 +27,33 @@ const token =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzaG9wIiwiZXhwIjoxNzMwMTA2NDQ1LCJpYXQiOjE3MjIzMzA0NDUsImp0aSI6IjVkMTMwYTkyZGQ0MzE3ZTFiYWE2NTQ5YjNmNzU0NDgzIn0.QdOiSOjNxMv1sP7MzivqcbNi3bh0AtpU2Y0AGyqauNc";
 
 class MsgCallback implements EventHandle {
+  OnBiddingStart(client: Client, param: RoomParam, message: Message<BiddingStart>, response: ResponseMessage): void {
+    console.log("竞拍开始");
+  }
+  OnUserSellerAcceptedOffer(
+    client: Client,
+    param: RoomParam,
+    message: Message<UserSellerAcceptedOffer>,
+    response: ResponseMessage
+  ): void {
+    console.log("用户竞拍接受卖家还价(私人)");
+  }
+  OnUserSellerRejectedOffer(
+    client: Client,
+    param: RoomParam,
+    message: Message<UserSellerRejectedOffer>,
+    response: ResponseMessage
+  ): void {
+    console.log("用户竞拍卖家还价被拒(私人)");
+  }
+  OnUserBiddingAcceptedOffer(
+    client: Client,
+    param: RoomParam,
+    message: Message<UserBiddingAcceptedOffer>,
+    response: ResponseMessage
+  ): void {
+    console.log("用户竞拍接受卖家出价(私人)");
+  }
   OnRoom(client: Client, param: RoomParam, message: Message<Room>): void {
     // const content = message.content;
     // console.log(`房间详情: 在线人数(${content.onlinePeople}), 时间(${new Date()})`);
