@@ -608,13 +608,13 @@ export class ClientProvider implements Client {
     if (requests.length == 0) return;
 
     const sendData = pack(requests);
-    if (this.showLog)
-      console.log(
-        "⏫发送消息:",
-        requests.map((itme) => ChannelType[itme.channel]).join(", "),
-        sendData.length,
-        "Bytes"
-      );
+    // if (this.showLog)
+    //   console.log(
+    //     "⏫发送消息:",
+    //     requests.map((itme) => ChannelType[itme.channel]).join(", "),
+    //     sendData.length,
+    //     "Bytes"
+    //   );
     this.socket?.send(sendData);
     this.lastReqTime = now;
   }

@@ -406,8 +406,13 @@ class ClientProvider {
         if (requests.length == 0)
             return;
         const sendData = (0, msgpackr_1.pack)(requests);
-        if (this.showLog)
-            console.log("⏫发送消息:", requests.map((itme) => types_1.ChannelType[itme.channel]).join(", "), sendData.length, "Bytes");
+        // if (this.showLog)
+        //   console.log(
+        //     "⏫发送消息:",
+        //     requests.map((itme) => ChannelType[itme.channel]).join(", "),
+        //     sendData.length,
+        //     "Bytes"
+        //   );
         (_a = this.socket) === null || _a === void 0 ? void 0 : _a.send(sendData);
         this.lastReqTime = now;
     }
