@@ -838,3 +838,91 @@ export interface UserChickenGameBlobsExchange {
    */
   orderId: bigint;
 }
+
+// ============================================================ //
+// 用户订单消息
+// ============================================================ //
+
+/**
+ * 支付成功
+ */
+export interface UserOrderPaymented {
+  /**
+   * 用户ID
+   */
+  userId: bigint;
+  /**
+   * 订单ID
+   */
+  orderId: bigint;
+}
+
+/**
+ * 已发货
+ */
+export interface UserOrderShipped {
+  /**
+   * 用户ID
+   */
+  userId: bigint;
+  /**
+   * 订单ID
+   */
+  orderId: bigint;
+}
+
+/**
+ * 已完成
+ */
+export interface UserOrderCompleted {
+  /**
+   * 用户ID
+   */
+  userId: bigint;
+  /**
+   * 订单ID
+   */
+  orderId: bigint;
+}
+
+/**
+ * 申请售后已通过
+ */
+export interface UserOrderAfterSalesApproved {
+  /**
+   * 用户ID
+   */
+  userId: bigint;
+  /**
+   * 订单ID
+   */
+  orderId: bigint;
+}
+
+/**
+ * 申请售后被拒
+ */
+export interface UserOrderAfterSalesRejected {
+  /**
+   * 用户ID
+   */
+  userId: bigint;
+  /**
+   * 订单ID
+   */
+  orderId: bigint;
+}
+
+/**
+ * 售后退款
+ */
+export interface UserOrderAfterSalesRefund {
+  /**
+   * 用户ID
+   */
+  userId: bigint;
+  /**
+   * 订单ID
+   */
+  orderId: bigint;
+}
