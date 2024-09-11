@@ -744,3 +744,97 @@ export interface UserBiddingAcceptedOffer {
    */
   auctionExpireTime: bigint;
 }
+
+// ============================================================ //
+// 小鸡游戏
+// ============================================================ //
+
+/**
+ * 购买小鸡
+ */
+export interface UserChickenGameBuyChicken {
+  /**
+   * 用户ID
+   */
+  userId: bigint;
+  /**
+   * 订单ID
+   */
+  orderId: bigint;
+}
+
+/**
+ * 延长小鸡时长
+ */
+export interface UserChickenGameIncreaseLife {
+  /**
+   * 用户ID
+   */
+  userId: bigint;
+  /**
+   * 订单ID
+   */
+  orderId: bigint;
+}
+
+/**
+ * 购买饲料
+ */
+export interface UserChickenGameBuyFeed {
+  /**
+   * 用户ID
+   */
+  userId: bigint;
+  /**
+   * 订单ID
+   */
+  orderId: bigint;
+}
+
+/**
+ * 小鸡即将死亡
+ */
+export interface UserChickenGameImpendingDeath {
+  /**
+   * 用户ID
+   */
+  userId: bigint;
+  /**
+   * 小鸡死亡时间
+   */
+  deathTime: bigint;
+}
+
+/**
+ * 小鸡死亡
+ */
+export interface UserChickenGameChickenDeath {
+  /**
+   * 用户ID
+   */
+  userId: bigint;
+}
+
+/**
+ * 小鸡死透了
+ */
+export interface UserChickenGameChickenEnterHeaven {
+  /**
+   * 用户ID
+   */
+  userId: bigint;
+}
+
+/**
+ * Blobs兑换
+ */
+export interface UserChickenGameBlobsExchange {
+  /**
+   * 用户ID
+   */
+  userId: bigint;
+  /**
+   * 订单ID
+   */
+  orderId: bigint;
+}
