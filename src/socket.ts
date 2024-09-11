@@ -21,7 +21,20 @@ import {
   BiddingStart,
   UserSellerAcceptedOffer,
   UserSellerRejectedOffer,
-  UserBiddingAcceptedOffer
+  UserBiddingAcceptedOffer,
+  UserChickenGameBuyChicken,
+  UserChickenGameIncreaseLife,
+  UserChickenGameBuyFeed,
+  UserChickenGameImpendingDeath,
+  UserChickenGameChickenDeath,
+  UserChickenGameChickenEnterHeaven,
+  UserChickenGameBlobsExchange,
+  UserOrderPaymented,
+  UserOrderShipped,
+  UserOrderCompleted,
+  UserOrderAfterSalesApproved,
+  UserOrderAfterSalesRejected,
+  UserOrderAfterSalesRefund
 } from "./types";
 import { WebFuket } from "./socket_impl";
 import { pack, unpack } from "msgpackr";
@@ -192,6 +205,78 @@ export interface EventHandle {
     client: Client,
     param: RoomParam,
     message: Message<UserBiddingAcceptedOffer>,
+    response: ResponseMessage
+  ): void;
+
+  // ============================================================ //
+  // 小鸡游戏
+  // ============================================================ //
+
+  /// 购买小鸡
+  OnUserChickenGameBuyChicken(
+    client: Client,
+    message: Message<UserChickenGameBuyChicken>,
+    response: ResponseMessage
+  ): void;
+  /// 延长小鸡时长
+  OnUserChickenGameIncreaseLife(
+    client: Client,
+    message: Message<UserChickenGameIncreaseLife>,
+    response: ResponseMessage
+  ): void;
+  /// 购买饲料
+  OnUserChickenGameBuyFeed(client: Client, message: Message<UserChickenGameBuyFeed>, response: ResponseMessage): void;
+  /// 小鸡即将死亡
+  OnUserChickenGameImpendingDeath(
+    client: Client,
+    message: Message<UserChickenGameImpendingDeath>,
+    response: ResponseMessage
+  ): void;
+  /// 小鸡死亡
+  OnUserChickenGameChickenDeath(
+    client: Client,
+    message: Message<UserChickenGameChickenDeath>,
+    response: ResponseMessage
+  ): void;
+  /// 小鸡死透了
+  OnUserChickenGameChickenEnterHeaven(
+    client: Client,
+    message: Message<UserChickenGameChickenEnterHeaven>,
+    response: ResponseMessage
+  ): void;
+  /// Blobs兑换
+  OnUserChickenGameBlobsExchange(
+    client: Client,
+    message: Message<UserChickenGameBlobsExchange>,
+    response: ResponseMessage
+  ): void;
+
+  // ============================================================ //
+  // 用户订单消息
+  // ============================================================ //
+
+  /// 支付成功
+  OnUserOrderPaymented(client: Client, message: Message<UserOrderPaymented>, response: ResponseMessage): void;
+  /// 已发货
+  OnUserOrderShipped(client: Client, message: Message<UserOrderShipped>, response: ResponseMessage): void;
+  /// 已完成
+  OnUserOrderCompleted(client: Client, message: Message<UserOrderCompleted>, response: ResponseMessage): void;
+  /// 售后申请通过
+  OnUserOrderAftersalesApproved(
+    client: Client,
+    message: Message<UserOrderAfterSalesApproved>,
+    response: ResponseMessage
+  ): void;
+  /// 申请售后被拒
+  OnUserOrderAftersalesRejected(
+    client: Client,
+    message: Message<UserOrderAfterSalesRejected>,
+    response: ResponseMessage
+  ): void;
+  /// 售后退款
+  OnUserOrderAfterSalesRefund(
+    client: Client,
+    message: Message<UserOrderAfterSalesRefund>,
     response: ResponseMessage
   ): void;
 }
