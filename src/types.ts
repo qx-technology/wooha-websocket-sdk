@@ -514,7 +514,7 @@ export interface BiddingAllCounteroffer {
   /**
    * 过期时间
    */
-  expiresAt: string;
+  expiresAt?: string;
   /**
    * 竞拍过期时间
    */
