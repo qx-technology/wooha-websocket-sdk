@@ -19,7 +19,20 @@ import {
   ResponseMessage,
   UserBiddingAcceptedOffer,
   UserSellerAcceptedOffer,
-  UserSellerRejectedOffer
+  UserSellerRejectedOffer,
+  UserChickenGameBlobsExchange,
+  UserChickenGameBuyChicken,
+  UserChickenGameBuyFeed,
+  UserChickenGameChickenDeath,
+  UserChickenGameChickenEnterHeaven,
+  UserChickenGameImpendingDeath,
+  UserChickenGameIncreaseLife,
+  UserOrderAfterSalesApproved,
+  UserOrderAfterSalesRefund,
+  UserOrderAfterSalesRejected,
+  UserOrderCompleted,
+  UserOrderPaymented,
+  UserOrderShipped
 } from "./types";
 
 const url = "ws://47.57.236.213:8849/ws";
@@ -119,6 +132,91 @@ class MsgCallback implements EventHandle {
   }
   OnUserBiddingRejectedOffer(client: Client, param: RoomParam, message: Message<UserBiddingRejectedOffer>): void {
     console.log("房间团购竞拍买家报价被拒");
+  }
+
+  // ============================================================ //
+  // 小鸡游戏
+  // ============================================================ //
+
+  OnUserChickenGameBuyChicken(
+    client: Client,
+    message: Message<UserChickenGameBuyChicken>,
+    response: ResponseMessage
+  ): void {
+    console.log("小鸡游戏 : 购买小鸡");
+  }
+  OnUserChickenGameIncreaseLife(
+    client: Client,
+    message: Message<UserChickenGameIncreaseLife>,
+    response: ResponseMessage
+  ): void {
+    console.log("小鸡游戏 : 延长小鸡时长");
+  }
+  OnUserChickenGameBuyFeed(client: Client, message: Message<UserChickenGameBuyFeed>, response: ResponseMessage): void {
+    console.log("小鸡游戏 : 购买饲料");
+  }
+  OnUserChickenGameImpendingDeath(
+    client: Client,
+    message: Message<UserChickenGameImpendingDeath>,
+    response: ResponseMessage
+  ): void {
+    console.log("小鸡游戏 : 小鸡即将死亡");
+  }
+  OnUserChickenGameChickenDeath(
+    client: Client,
+    message: Message<UserChickenGameChickenDeath>,
+    response: ResponseMessage
+  ): void {
+    console.log("小鸡游戏 : 小鸡死亡");
+  }
+  OnUserChickenGameChickenEnterHeaven(
+    client: Client,
+    message: Message<UserChickenGameChickenEnterHeaven>,
+    response: ResponseMessage
+  ): void {
+    console.log("小鸡游戏 : 小鸡死透了");
+  }
+  OnUserChickenGameBlobsExchange(
+    client: Client,
+    message: Message<UserChickenGameBlobsExchange>,
+    response: ResponseMessage
+  ): void {
+    console.log("小鸡游戏 : Blobs兑换");
+  }
+
+  // ============================================================ //
+  // 用户订单消息
+  // ============================================================ //
+
+  OnUserOrderPaymented(client: Client, message: Message<UserOrderPaymented>, response: ResponseMessage): void {
+    console.log("用户订单 : 支付成功");
+  }
+  OnUserOrderShipped(client: Client, message: Message<UserOrderShipped>, response: ResponseMessage): void {
+    console.log("用户订单 : 已发货");
+  }
+  OnUserOrderCompleted(client: Client, message: Message<UserOrderCompleted>, response: ResponseMessage): void {
+    console.log("用户订单 : 已完成");
+  }
+  OnUserOrderAftersalesApproved(
+    client: Client,
+    message: Message<UserOrderAfterSalesApproved>,
+    response: ResponseMessage
+  ): void {
+    console.log("用户订单 : 申请售后已通过");
+  }
+  OnUserOrderAftersalesRejected(
+    client: Client,
+    message: Message<UserOrderAfterSalesRejected>,
+    response: ResponseMessage
+  ): void {
+    console.log("用户订单 : 申请售后被拒");
+  }
+  OnUserOrderAfterSalesRefund(
+    client: Client,
+    message: Message<UserOrderAfterSalesRefund>,
+    response: ResponseMessage
+  ): void {
+    console.log("用户订单 : 售后退款");
   }
 }
 
