@@ -236,6 +236,7 @@ export function demo() {
   client.start();
   // client.enterRoom(BigInt(1));
   client.subscribeUserChickenGame(BigInt(0));
+  client.subscribeUserOrder(BigInt(0));
 }
 
 if (require.main === module) {

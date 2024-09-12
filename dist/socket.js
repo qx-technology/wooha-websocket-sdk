@@ -407,6 +407,57 @@ class ClientProvider {
                             }
                         }
                         break;
+                    case types_1.ChannelType.USER_CHICKEN_GAME_MSG:
+                        for (const message of response.contents) {
+                            switch (message.type) {
+                                case types_1.MessageType.USER_CHICKEN_GAME_MSG_BUY_CHICKEN:
+                                    this.callback.OnUserChickenGameBuyChicken(this, message, response);
+                                    break;
+                                case types_1.MessageType.USER_CHICKEN_GAME_MSG_INCREASE_LIFE:
+                                    this.callback.OnUserChickenGameIncreaseLife(this, message, response);
+                                    break;
+                                case types_1.MessageType.USER_CHICKEN_GAME_MSG_BUY_FEED:
+                                    this.callback.OnUserChickenGameBuyFeed(this, message, response);
+                                    break;
+                                case types_1.MessageType.USER_CHICKEN_GAME_MSG_IMPENDING_DEATH:
+                                    this.callback.OnUserChickenGameImpendingDeath(this, message, response);
+                                    break;
+                                case types_1.MessageType.USER_CHICKEN_GAME_MSG_CHICKEN_DEATH:
+                                    this.callback.OnUserChickenGameChickenDeath(this, message, response);
+                                    break;
+                                case types_1.MessageType.USER_CHICKEN_GAME_MSG_CHICKEN_ENTER_HEAVEN:
+                                    this.callback.OnUserChickenGameChickenEnterHeaven(this, message, response);
+                                    break;
+                                case types_1.MessageType.USER_CHICKEN_GAME_MSG_BLOBS_EXCHANGE:
+                                    this.callback.OnUserChickenGameBlobsExchange(this, message, response);
+                                    break;
+                            }
+                        }
+                        break;
+                    case types_1.ChannelType.USER_ORDER_MSG:
+                        for (const message of response.contents) {
+                            switch (message.type) {
+                                case types_1.MessageType.USER_ORDER_MSG_PAYMENTED:
+                                    this.callback.OnUserOrderPaymented(this, message, response);
+                                    break;
+                                case types_1.MessageType.USER_ORDER_MSG_SHIPPED:
+                                    this.callback.OnUserOrderShipped(this, message, response);
+                                    break;
+                                case types_1.MessageType.USER_ORDER_MSG_COMPLETED:
+                                    this.callback.OnUserOrderCompleted(this, message, response);
+                                    break;
+                                case types_1.MessageType.USER_ORDER_MSG_AFTERSALES_APPROVED:
+                                    this.callback.OnUserOrderAftersalesApproved(this, message, response);
+                                    break;
+                                case types_1.MessageType.USER_ORDER_MSG_AFTERSALES_REJECTED:
+                                    this.callback.OnUserOrderAftersalesRejected(this, message, response);
+                                    break;
+                                case types_1.MessageType.USER_ORDER_MSG_AFTERSALES_REFUND:
+                                    this.callback.OnUserOrderAfterSalesRefund(this, message, response);
+                                    break;
+                            }
+                        }
+                        break;
                     case types_1.ChannelType.HEARTBEAT:
                         // console.log("收到服务器心跳:", now);
                         break;
