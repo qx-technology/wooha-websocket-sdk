@@ -126,6 +126,14 @@ var MessageType;
      * 用户竞拍接受买家出价(私人)
      */
     MessageType[MessageType["USER_BIDDING_ACCEPTED_OFFER"] = 16] = "USER_BIDDING_ACCEPTED_OFFER";
+    /**
+     * 用户竞拍买家再次出价(私人)
+     */
+    MessageType[MessageType["USER_BIDDING_RE_OFFER"] = 17] = "USER_BIDDING_RE_OFFER";
+    /**
+     * 用户竞拍买家再次出价被接受(私人)
+     */
+    MessageType[MessageType["USER_BIDDING_ACCEPTED_RE_OFFER"] = 18] = "USER_BIDDING_ACCEPTED_RE_OFFER";
     // ============================================================ //
     // 小鸡游戏
     // ============================================================ //

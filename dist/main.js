@@ -78,6 +78,12 @@ class MsgCallback {
     OnUserBiddingRejectedOffer(client, param, message) {
         console.log("房间团购竞拍买家报价被拒");
     }
+    OnUserBiddingReOffer(client, param, message, response) {
+        console.log("买家再次出价(私人)");
+    }
+    OnUserBiddingAcceptedReOffer(client, param, message, response) {
+        console.log("买家再次出价被接受(私人)");
+    }
     // ============================================================ //
     // 小鸡游戏
     // ============================================================ //

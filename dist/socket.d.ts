@@ -1,4 +1,4 @@
-import { RequestMessage, RoomParam, ChannelType, ResponseMessage, Message, Room, GroupBuying, GroupBuyingVote, GroupBuyingNextProduct, GroupBuyingStart, GroupBuyingLotteryOpening, GroupBuyingWinning, BiddingAllCounteroffer, BiddingDeal, UserBiddingInitiateOffer, UserBiddingReceivesOffer, UserBiddingReceivesCounteroffer, UserBiddingRejectedOffer, BiddingStart, UserSellerAcceptedOffer, UserSellerRejectedOffer, UserBiddingAcceptedOffer, UserChickenGameBuyChicken, UserChickenGameIncreaseLife, UserChickenGameBuyFeed, UserChickenGameImpendingDeath, UserChickenGameChickenDeath, UserChickenGameChickenEnterHeaven, UserChickenGameBlobsExchange, UserOrderPaymented, UserOrderShipped, UserOrderCompleted, UserOrderAfterSalesApproved, UserOrderAfterSalesRejected, UserOrderAfterSalesRefund } from "./types";
+import { RequestMessage, RoomParam, ChannelType, ResponseMessage, Message, Room, GroupBuying, GroupBuyingVote, GroupBuyingNextProduct, GroupBuyingStart, GroupBuyingLotteryOpening, GroupBuyingWinning, BiddingAllCounteroffer, BiddingDeal, UserBiddingInitiateOffer, UserBiddingReceivesOffer, UserBiddingReceivesCounteroffer, UserBiddingRejectedOffer, BiddingStart, UserSellerAcceptedOffer, UserSellerRejectedOffer, UserBiddingAcceptedOffer, UserChickenGameBuyChicken, UserChickenGameIncreaseLife, UserChickenGameBuyFeed, UserChickenGameImpendingDeath, UserChickenGameChickenDeath, UserChickenGameChickenEnterHeaven, UserChickenGameBlobsExchange, UserOrderPaymented, UserOrderShipped, UserOrderCompleted, UserOrderAfterSalesApproved, UserOrderAfterSalesRejected, UserOrderAfterSalesRefund, UserBiddingReOffer, UserBiddingAcceptedReOffer } from "./types";
 export declare function configSite(url: string): void;
 export declare function useHttps(): void;
 export declare function useWss(): void;
@@ -71,6 +71,8 @@ export interface EventHandle {
     OnUserSellerAcceptedOffer(client: Client, param: RoomParam, message: Message<UserSellerAcceptedOffer>, response: ResponseMessage): void;
     OnUserSellerRejectedOffer(client: Client, param: RoomParam, message: Message<UserSellerRejectedOffer>, response: ResponseMessage): void;
     OnUserBiddingAcceptedOffer(client: Client, param: RoomParam, message: Message<UserBiddingAcceptedOffer>, response: ResponseMessage): void;
+    OnUserBiddingReOffer(client: Client, param: RoomParam, message: Message<UserBiddingReOffer>, response: ResponseMessage): void;
+    OnUserBiddingAcceptedReOffer(client: Client, param: RoomParam, message: Message<UserBiddingAcceptedReOffer>, response: ResponseMessage): void;
     OnUserChickenGameBuyChicken(client: Client, message: Message<UserChickenGameBuyChicken>, response: ResponseMessage): void;
     OnUserChickenGameIncreaseLife(client: Client, message: Message<UserChickenGameIncreaseLife>, response: ResponseMessage): void;
     OnUserChickenGameBuyFeed(client: Client, message: Message<UserChickenGameBuyFeed>, response: ResponseMessage): void;

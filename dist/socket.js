@@ -404,6 +404,12 @@ class ClientProvider {
                                 case types_1.MessageType.USER_BIDDING_ACCEPTED_OFFER:
                                     this.callback.OnUserBiddingAcceptedOffer(this, request.config.params, message, response);
                                     break;
+                                case types_1.MessageType.USER_BIDDING_RE_OFFER:
+                                    this.callback.OnUserBiddingReOffer(this, request.config.params, message, response);
+                                    break;
+                                case types_1.MessageType.USER_BIDDING_ACCEPTED_RE_OFFER:
+                                    this.callback.OnUserBiddingAcceptedReOffer(this, request.config.params, message, response);
+                                    break;
                             }
                         }
                         break;
