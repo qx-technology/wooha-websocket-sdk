@@ -124,6 +124,14 @@ export enum MessageType {
    * 用户竞拍接受买家出价(私人)
    */
   USER_BIDDING_ACCEPTED_OFFER = 16,
+  /**
+   * 用户竞拍买家再次出价(私人)
+   */
+  USER_BIDDING_RE_OFFER = 17,
+  /**
+   * 用户竞拍买家再次出价被接受(私人)
+   */
+  USER_BIDDING_ACCEPTED_RE_OFFER = 18,
 
   // ============================================================ //
   // 小鸡游戏
@@ -495,6 +503,22 @@ export interface BiddingAllCounteroffer {
    * 金额
    */
   amount: bigint;
+  /**
+   * 卖家用户ID
+   */
+  sellerUserId: bigint;
+  /**
+   * 买家用户ID
+   */
+  biddingUserId: bigint;
+  /**
+   * 过期时间
+   */
+  expiresAt: string;
+  /**
+   * 竞拍过期时间
+   */
+  auctionExpireTime: bigint;
 }
 
 /**
@@ -541,6 +565,18 @@ export interface BiddingDeal {
    * 商品图片
    */
   productImage: string;
+  /**
+   * 竞拍过期时间
+   */
+  auctionExpireTime: bigint;
+  /**
+   * 出价用户ID
+   */
+  biddingUserId: bigint;
+  /**
+   * 是否还价
+   */
+  isCounter: boolean;
 }
 
 /**
@@ -567,6 +603,18 @@ export interface UserBiddingInitiateOffer {
    * 金额
    */
   amount: bigint;
+  /**
+   * 卖家用户ID
+   */
+  sellerUserId: bigint;
+  /**
+   * 过期时间
+   */
+  expiresAt?: string;
+  /**
+   * 竞拍过期时间
+   */
+  auctionExpireTime: bigint;
 }
 
 /**
@@ -593,6 +641,18 @@ export interface UserBiddingReceivesOffer {
    * 金额
    */
   amount: bigint;
+  /**
+   * 卖家用户ID
+   */
+  sellerUserId: bigint;
+  /**
+   * 过期时间
+   */
+  expiresAt?: string;
+  /**
+   * 竞拍过期时间
+   */
+  auctionExpireTime: bigint;
 }
 
 /**
@@ -615,6 +675,22 @@ export interface UserBiddingReceivesCounteroffer {
    * 金额
    */
   amount: bigint;
+  /**
+   * 卖家用户ID
+   */
+  sellerUserId: bigint;
+  /**
+   * 买家用户ID
+   */
+  biddingUserId: bigint;
+  /**
+   * 过期时间
+   */
+  expiresAt?: string;
+  /**
+   * 竞拍过期时间
+   */
+  auctionExpireTime: bigint;
 }
 
 /**
@@ -641,6 +717,10 @@ export interface UserBiddingRejectedOffer {
    * 金额
    */
   amount: bigint;
+  /**
+   * 竞拍过期时间
+   */
+  auctionExpireTime: bigint;
 }
 
 /**
@@ -715,6 +795,74 @@ export interface UserSellerRejectedOffer {
  * 用户竞拍接受买家出价(私人)
  */
 export interface UserBiddingAcceptedOffer {
+  /**
+   * 房间ID
+   */
+  roomId: bigint;
+  /**
+   * 用户ID
+   */
+  userId: bigint;
+  /**
+   * 卖家用户ID
+   */
+  sellerUserId: bigint;
+  /**
+   * 出价用户ID
+   */
+  biddingUserId: bigint;
+  /**
+   * 竞拍ID
+   */
+  auctionId: bigint;
+  /**
+   * 金额
+   */
+  amount: bigint;
+  /**
+   * 竞拍过期时间
+   */
+  auctionExpireTime: bigint;
+}
+
+/**
+ * 买家再次出价(私人)
+ */
+export interface UserBiddingReOffer {
+  /**
+   * 房间ID
+   */
+  roomId: bigint;
+  /**
+   * 用户ID
+   */
+  userId: bigint;
+  /**
+   * 卖家用户ID
+   */
+  sellerUserId: bigint;
+  /**
+   * 出价用户ID
+   */
+  biddingUserId: bigint;
+  /**
+   * 竞拍ID
+   */
+  auctionId: bigint;
+  /**
+   * 金额
+   */
+  amount: bigint;
+  /**
+   * 竞拍过期时间
+   */
+  auctionExpireTime: bigint;
+}
+
+/**
+ * 买家再次出价被接受(私人)
+ */
+export interface UserBiddingAcceptedReOffer {
   /**
    * 房间ID
    */
