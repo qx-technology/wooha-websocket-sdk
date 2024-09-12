@@ -87,18 +87,51 @@ function getBasicHttpUrl(): string {
 
 /// 客户端
 export interface Client {
-  /// 启动
+  /**
+   * 启动
+   */
   start(): Client;
-  /// 停止
+  /**
+   * 停止当前websocket连接
+   * @param autoConn 是否自动重连, 默认是
+   */
   stop(autoConn?: boolean): Client;
-  /// 进入聚合房间
+  /**
+   * 进入聚合房间
+   */
   enterAggRoom(): Promise<Client>;
-  /// 离开聚合房间
+  /**
+   * 离开聚合房间
+   */
   leaveAggRoom(): Client;
-  /// 进入房间
+  /**
+   * 进入房间
+   * @param roomId 房间ID
+   */
   enterRoom(roomId: bigint): Promise<Client>;
-  /// 离开房间
+  /**
+   * 离开房间
+   * @param roomId 房间ID
+   */
   leaveRoom(roomId: bigint): Client;
+  /**
+   * 订阅用户小鸡游戏消息
+   * @param version 版本号
+   */
+  subscribeUserChickenGame(version: bigint): Client;
+  /**
+   * 取消订阅用户小鸡游戏消息
+   */
+  unsubscribeUserChickenGame(): Client;
+  /**
+   * 订阅用户订单消息
+   * @param version 版本号
+   */
+  subscribeUserOrder(version: bigint): Client;
+  /**
+   * 取消订阅用户订单消息
+   */
+  unsubscribeUserOrder(): Client;
 }
 
 export enum Platform {
@@ -534,6 +567,60 @@ export class ClientProvider implements Client {
           ].includes(request.config.channel) && (<RoomParam>request.config.params).roomId === roomId
         )
     );
+    return this;
+  }
+
+  subscribeUserChickenGame(version: bigint): Client {
+    try {
+      if (this.token) {
+        this.registerChannel(
+          <RequestMessage<unknown>>{
+            channel: ChannelType.USER_CHICKEN_GAME_MSG,
+            version: "1.0",
+            seq: version,
+            ts: BigInt(Date.now()),
+            uid: uuid(),
+            params: {}
+          },
+          1000
+        );
+      }
+    } catch (e) {
+      console.error(e);
+    }
+    return this;
+  }
+
+  unsubscribeUserChickenGame(): Client {
+    this.requests = this.requests.filter(
+      (request) => ![ChannelType.USER_CHICKEN_GAME_MSG].includes(request.config.channel)
+    );
+    return this;
+  }
+
+  subscribeUserOrder(version: bigint): Client {
+    try {
+      if (this.token) {
+        this.registerChannel(
+          <RequestMessage<unknown>>{
+            channel: ChannelType.USER_ORDER_MSG,
+            version: "1.0",
+            seq: version,
+            ts: BigInt(Date.now()),
+            uid: uuid(),
+            params: {}
+          },
+          1000
+        );
+      }
+    } catch (e) {
+      console.error(e);
+    }
+    return this;
+  }
+
+  unsubscribeUserOrder(): Client {
+    this.requests = this.requests.filter((request) => ![ChannelType.USER_ORDER_MSG].includes(request.config.channel));
     return this;
   }
 
