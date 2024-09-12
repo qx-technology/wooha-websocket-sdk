@@ -34,7 +34,9 @@ import {
   UserOrderCompleted,
   UserOrderAfterSalesApproved,
   UserOrderAfterSalesRejected,
-  UserOrderAfterSalesRefund
+  UserOrderAfterSalesRefund,
+  UserBiddingReOffer,
+  UserBiddingAcceptedReOffer
 } from "./types";
 import { WebFuket } from "./socket_impl";
 import { pack, unpack } from "msgpackr";
@@ -238,6 +240,20 @@ export interface EventHandle {
     client: Client,
     param: RoomParam,
     message: Message<UserBiddingAcceptedOffer>,
+    response: ResponseMessage
+  ): void;
+  /// 买家再次出价(私人)
+  OnUserBiddingReOffer(
+    client: Client,
+    param: RoomParam,
+    message: Message<UserBiddingReOffer>,
+    response: ResponseMessage
+  ): void;
+  /// 买家再次出价被接受(私人)
+  OnUserBiddingAcceptedReOffer(
+    client: Client,
+    param: RoomParam,
+    message: Message<UserBiddingAcceptedReOffer>,
     response: ResponseMessage
   ): void;
 
@@ -735,6 +751,12 @@ export class ClientProvider implements Client {
                 break;
               case MessageType.USER_BIDDING_ACCEPTED_OFFER:
                 this.callback.OnUserBiddingAcceptedOffer(this, request.config.params, message, response);
+                break;
+              case MessageType.USER_BIDDING_RE_OFFER:
+                this.callback.OnUserBiddingReOffer(this, request.config.params, message, response);
+                break;
+              case MessageType.USER_BIDDING_ACCEPTED_RE_OFFER:
+                this.callback.OnUserBiddingAcceptedReOffer(this, request.config.params, message, response);
                 break;
             }
           }
