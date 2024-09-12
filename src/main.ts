@@ -32,7 +32,9 @@ import {
   UserOrderAfterSalesRejected,
   UserOrderCompleted,
   UserOrderPaymented,
-  UserOrderShipped
+  UserOrderShipped,
+  UserBiddingAcceptedReOffer,
+  UserBiddingReOffer
 } from "./types";
 
 const url = "ws://47.57.236.213:8849/ws";
@@ -137,6 +139,23 @@ class MsgCallback implements EventHandle {
   }
   OnUserBiddingRejectedOffer(client: Client, param: RoomParam, message: Message<UserBiddingRejectedOffer>): void {
     console.log("房间团购竞拍买家报价被拒");
+  }
+
+  OnUserBiddingReOffer(
+    client: Client,
+    param: RoomParam,
+    message: Message<UserBiddingReOffer>,
+    response: ResponseMessage
+  ): void {
+    console.log("买家再次出价(私人)");
+  }
+  OnUserBiddingAcceptedReOffer(
+    client: Client,
+    param: RoomParam,
+    message: Message<UserBiddingAcceptedReOffer>,
+    response: ResponseMessage
+  ): void {
+    console.log("买家再次出价被接受(私人)");
   }
 
   // ============================================================ //
