@@ -21,7 +21,22 @@ import {
   BiddingStart,
   UserSellerAcceptedOffer,
   UserSellerRejectedOffer,
-  UserBiddingAcceptedOffer
+  UserBiddingAcceptedOffer,
+  UserChickenGameBuyChicken,
+  UserChickenGameIncreaseLife,
+  UserChickenGameBuyFeed,
+  UserChickenGameImpendingDeath,
+  UserChickenGameChickenDeath,
+  UserChickenGameChickenEnterHeaven,
+  UserChickenGameBlobsExchange,
+  UserOrderPaymented,
+  UserOrderShipped,
+  UserOrderCompleted,
+  UserOrderAfterSalesApproved,
+  UserOrderAfterSalesRejected,
+  UserOrderAfterSalesRefund,
+  UserBiddingReOffer,
+  UserBiddingAcceptedReOffer
 } from "./types";
 import { WebFuket } from "./socket_impl";
 import { pack, unpack } from "msgpackr";
@@ -74,18 +89,51 @@ function getBasicHttpUrl(): string {
 
 /// 客户端
 export interface Client {
-  /// 启动
+  /**
+   * 启动
+   */
   start(): Client;
-  /// 停止
+  /**
+   * 停止当前websocket连接
+   * @param autoConn 是否自动重连, 默认是
+   */
   stop(autoConn?: boolean): Client;
-  /// 进入聚合房间
+  /**
+   * 进入聚合房间
+   */
   enterAggRoom(): Promise<Client>;
-  /// 离开聚合房间
+  /**
+   * 离开聚合房间
+   */
   leaveAggRoom(): Client;
-  /// 进入房间
+  /**
+   * 进入房间
+   * @param roomId 房间ID
+   */
   enterRoom(roomId: bigint): Promise<Client>;
-  /// 离开房间
+  /**
+   * 离开房间
+   * @param roomId 房间ID
+   */
   leaveRoom(roomId: bigint): Client;
+  /**
+   * 订阅用户小鸡游戏消息
+   * @param version 版本号
+   */
+  subscribeUserChickenGame(version: bigint): Client;
+  /**
+   * 取消订阅用户小鸡游戏消息
+   */
+  unsubscribeUserChickenGame(): Client;
+  /**
+   * 订阅用户订单消息
+   * @param version 版本号
+   */
+  subscribeUserOrder(version: bigint): Client;
+  /**
+   * 取消订阅用户订单消息
+   */
+  unsubscribeUserOrder(): Client;
 }
 
 export enum Platform {
@@ -192,6 +240,92 @@ export interface EventHandle {
     client: Client,
     param: RoomParam,
     message: Message<UserBiddingAcceptedOffer>,
+    response: ResponseMessage
+  ): void;
+  /// 买家再次出价(私人)
+  OnUserBiddingReOffer(
+    client: Client,
+    param: RoomParam,
+    message: Message<UserBiddingReOffer>,
+    response: ResponseMessage
+  ): void;
+  /// 买家再次出价被接受(私人)
+  OnUserBiddingAcceptedReOffer(
+    client: Client,
+    param: RoomParam,
+    message: Message<UserBiddingAcceptedReOffer>,
+    response: ResponseMessage
+  ): void;
+
+  // ============================================================ //
+  // 小鸡游戏
+  // ============================================================ //
+
+  /// 购买小鸡
+  OnUserChickenGameBuyChicken(
+    client: Client,
+    message: Message<UserChickenGameBuyChicken>,
+    response: ResponseMessage
+  ): void;
+  /// 延长小鸡时长
+  OnUserChickenGameIncreaseLife(
+    client: Client,
+    message: Message<UserChickenGameIncreaseLife>,
+    response: ResponseMessage
+  ): void;
+  /// 购买饲料
+  OnUserChickenGameBuyFeed(client: Client, message: Message<UserChickenGameBuyFeed>, response: ResponseMessage): void;
+  /// 小鸡即将死亡
+  OnUserChickenGameImpendingDeath(
+    client: Client,
+    message: Message<UserChickenGameImpendingDeath>,
+    response: ResponseMessage
+  ): void;
+  /// 小鸡死亡
+  OnUserChickenGameChickenDeath(
+    client: Client,
+    message: Message<UserChickenGameChickenDeath>,
+    response: ResponseMessage
+  ): void;
+  /// 小鸡死透了
+  OnUserChickenGameChickenEnterHeaven(
+    client: Client,
+    message: Message<UserChickenGameChickenEnterHeaven>,
+    response: ResponseMessage
+  ): void;
+  /// Blobs兑换
+  OnUserChickenGameBlobsExchange(
+    client: Client,
+    message: Message<UserChickenGameBlobsExchange>,
+    response: ResponseMessage
+  ): void;
+
+  // ============================================================ //
+  // 用户订单消息
+  // ============================================================ //
+
+  /// 支付成功
+  OnUserOrderPaymented(client: Client, message: Message<UserOrderPaymented>, response: ResponseMessage): void;
+  /// 已发货
+  OnUserOrderShipped(client: Client, message: Message<UserOrderShipped>, response: ResponseMessage): void;
+  /// 已完成
+  OnUserOrderCompleted(client: Client, message: Message<UserOrderCompleted>, response: ResponseMessage): void;
+  /// 售后申请通过
+  OnUserOrderAftersalesApproved(
+    client: Client,
+    message: Message<UserOrderAfterSalesApproved>,
+    response: ResponseMessage
+  ): void;
+  /// 申请售后被拒
+  OnUserOrderAftersalesRejected(
+    client: Client,
+    message: Message<UserOrderAfterSalesRejected>,
+    response: ResponseMessage
+  ): void;
+  /// 售后退款
+  OnUserOrderAfterSalesRefund(
+    client: Client,
+    message: Message<UserOrderAfterSalesRefund>,
     response: ResponseMessage
   ): void;
 }
@@ -452,6 +586,60 @@ export class ClientProvider implements Client {
     return this;
   }
 
+  subscribeUserChickenGame(version: bigint): Client {
+    try {
+      if (this.token) {
+        this.registerChannel(
+          <RequestMessage<unknown>>{
+            channel: ChannelType.USER_CHICKEN_GAME_MSG,
+            version: "1.0",
+            seq: version,
+            ts: BigInt(Date.now()),
+            uid: uuid(),
+            params: {}
+          },
+          1000
+        );
+      }
+    } catch (e) {
+      console.error(e);
+    }
+    return this;
+  }
+
+  unsubscribeUserChickenGame(): Client {
+    this.requests = this.requests.filter(
+      (request) => ![ChannelType.USER_CHICKEN_GAME_MSG].includes(request.config.channel)
+    );
+    return this;
+  }
+
+  subscribeUserOrder(version: bigint): Client {
+    try {
+      if (this.token) {
+        this.registerChannel(
+          <RequestMessage<unknown>>{
+            channel: ChannelType.USER_ORDER_MSG,
+            version: "1.0",
+            seq: version,
+            ts: BigInt(Date.now()),
+            uid: uuid(),
+            params: {}
+          },
+          1000
+        );
+      }
+    } catch (e) {
+      console.error(e);
+    }
+    return this;
+  }
+
+  unsubscribeUserOrder(): Client {
+    this.requests = this.requests.filter((request) => ![ChannelType.USER_ORDER_MSG].includes(request.config.channel));
+    return this;
+  }
+
   private onOpen(): void {
     if (this.showLog) console.log("Websocket已连接");
     this.isRunning = true;
@@ -563,6 +751,63 @@ export class ClientProvider implements Client {
                 break;
               case MessageType.USER_BIDDING_ACCEPTED_OFFER:
                 this.callback.OnUserBiddingAcceptedOffer(this, request.config.params, message, response);
+                break;
+              case MessageType.USER_BIDDING_RE_OFFER:
+                this.callback.OnUserBiddingReOffer(this, request.config.params, message, response);
+                break;
+              case MessageType.USER_BIDDING_ACCEPTED_RE_OFFER:
+                this.callback.OnUserBiddingAcceptedReOffer(this, request.config.params, message, response);
+                break;
+            }
+          }
+          break;
+        case ChannelType.USER_CHICKEN_GAME_MSG:
+          for (const message of response.contents) {
+            switch (message.type) {
+              case MessageType.USER_CHICKEN_GAME_MSG_BUY_CHICKEN:
+                this.callback.OnUserChickenGameBuyChicken(this, message, response);
+                break;
+              case MessageType.USER_CHICKEN_GAME_MSG_INCREASE_LIFE:
+                this.callback.OnUserChickenGameIncreaseLife(this, message, response);
+                break;
+              case MessageType.USER_CHICKEN_GAME_MSG_BUY_FEED:
+                this.callback.OnUserChickenGameBuyFeed(this, message, response);
+                break;
+              case MessageType.USER_CHICKEN_GAME_MSG_IMPENDING_DEATH:
+                this.callback.OnUserChickenGameImpendingDeath(this, message, response);
+                break;
+              case MessageType.USER_CHICKEN_GAME_MSG_CHICKEN_DEATH:
+                this.callback.OnUserChickenGameChickenDeath(this, message, response);
+                break;
+              case MessageType.USER_CHICKEN_GAME_MSG_CHICKEN_ENTER_HEAVEN:
+                this.callback.OnUserChickenGameChickenEnterHeaven(this, message, response);
+                break;
+              case MessageType.USER_CHICKEN_GAME_MSG_BLOBS_EXCHANGE:
+                this.callback.OnUserChickenGameBlobsExchange(this, message, response);
+                break;
+            }
+          }
+          break;
+        case ChannelType.USER_ORDER_MSG:
+          for (const message of response.contents) {
+            switch (message.type) {
+              case MessageType.USER_ORDER_MSG_PAYMENTED:
+                this.callback.OnUserOrderPaymented(this, message, response);
+                break;
+              case MessageType.USER_ORDER_MSG_SHIPPED:
+                this.callback.OnUserOrderShipped(this, message, response);
+                break;
+              case MessageType.USER_ORDER_MSG_COMPLETED:
+                this.callback.OnUserOrderCompleted(this, message, response);
+                break;
+              case MessageType.USER_ORDER_MSG_AFTERSALES_APPROVED:
+                this.callback.OnUserOrderAftersalesApproved(this, message, response);
+                break;
+              case MessageType.USER_ORDER_MSG_AFTERSALES_REJECTED:
+                this.callback.OnUserOrderAftersalesRejected(this, message, response);
+                break;
+              case MessageType.USER_ORDER_MSG_AFTERSALES_REFUND:
+                this.callback.OnUserOrderAfterSalesRefund(this, message, response);
                 break;
             }
           }

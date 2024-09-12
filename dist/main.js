@@ -3,6 +3,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.demo = demo;
 const socket_1 = require("./socket");
 const url = "ws://47.57.236.213:8849/ws";
+/**
+ * Jwt Token
+ * 用户ID : 29324656
+ */
 const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzaG9wIiwiZXhwIjoxNzMwMTA2NDQ1LCJpYXQiOjE3MjIzMzA0NDUsImp0aSI6IjVkMTMwYTkyZGQ0MzE3ZTFiYWE2NTQ5YjNmNzU0NDgzIn0.QdOiSOjNxMv1sP7MzivqcbNi3bh0AtpU2Y0AGyqauNc";
 class MsgCallback {
     OnBiddingStart(client, param, message, response) {
@@ -74,6 +78,57 @@ class MsgCallback {
     OnUserBiddingRejectedOffer(client, param, message) {
         console.log("房间团购竞拍买家报价被拒");
     }
+    OnUserBiddingReOffer(client, param, message, response) {
+        console.log("买家再次出价(私人)");
+    }
+    OnUserBiddingAcceptedReOffer(client, param, message, response) {
+        console.log("买家再次出价被接受(私人)");
+    }
+    // ============================================================ //
+    // 小鸡游戏
+    // ============================================================ //
+    OnUserChickenGameBuyChicken(client, message, response) {
+        console.log("小鸡游戏 : 购买小鸡");
+    }
+    OnUserChickenGameIncreaseLife(client, message, response) {
+        console.log("小鸡游戏 : 延长小鸡时长");
+    }
+    OnUserChickenGameBuyFeed(client, message, response) {
+        console.log("小鸡游戏 : 购买饲料");
+    }
+    OnUserChickenGameImpendingDeath(client, message, response) {
+        console.log("小鸡游戏 : 小鸡即将死亡");
+    }
+    OnUserChickenGameChickenDeath(client, message, response) {
+        console.log("小鸡游戏 : 小鸡死亡");
+    }
+    OnUserChickenGameChickenEnterHeaven(client, message, response) {
+        console.log("小鸡游戏 : 小鸡死透了");
+    }
+    OnUserChickenGameBlobsExchange(client, message, response) {
+        console.log("小鸡游戏 : Blobs兑换");
+    }
+    // ============================================================ //
+    // 用户订单消息
+    // ============================================================ //
+    OnUserOrderPaymented(client, message, response) {
+        console.log("用户订单 : 支付成功");
+    }
+    OnUserOrderShipped(client, message, response) {
+        console.log("用户订单 : 已发货");
+    }
+    OnUserOrderCompleted(client, message, response) {
+        console.log("用户订单 : 已完成");
+    }
+    OnUserOrderAftersalesApproved(client, message, response) {
+        console.log("用户订单 : 申请售后已通过");
+    }
+    OnUserOrderAftersalesRejected(client, message, response) {
+        console.log("用户订单 : 申请售后被拒");
+    }
+    OnUserOrderAfterSalesRefund(client, message, response) {
+        console.log("用户订单 : 售后退款");
+    }
 }
 function main() {
     process.title = "WoohaSocketSDK";
@@ -83,7 +138,9 @@ function demo() {
     // configSite("127.0.0.1:8849");
     const client = (0, socket_1.newClient)(new MsgCallback(), token, true, socket_1.Platform.WEB);
     client.start();
-    client.enterRoom(BigInt(1));
+    // client.enterRoom(BigInt(1));
+    client.subscribeUserChickenGame(BigInt(0));
+    client.subscribeUserOrder(BigInt(0));
 }
 if (require.main === module) {
     main();

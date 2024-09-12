@@ -19,10 +19,30 @@ import {
   ResponseMessage,
   UserBiddingAcceptedOffer,
   UserSellerAcceptedOffer,
-  UserSellerRejectedOffer
+  UserSellerRejectedOffer,
+  UserChickenGameBlobsExchange,
+  UserChickenGameBuyChicken,
+  UserChickenGameBuyFeed,
+  UserChickenGameChickenDeath,
+  UserChickenGameChickenEnterHeaven,
+  UserChickenGameImpendingDeath,
+  UserChickenGameIncreaseLife,
+  UserOrderAfterSalesApproved,
+  UserOrderAfterSalesRefund,
+  UserOrderAfterSalesRejected,
+  UserOrderCompleted,
+  UserOrderPaymented,
+  UserOrderShipped,
+  UserBiddingAcceptedReOffer,
+  UserBiddingReOffer
 } from "./types";
 
 const url = "ws://47.57.236.213:8849/ws";
+
+/**
+ * Jwt Token
+ * 用户ID : 29324656
+ */
 const token =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzaG9wIiwiZXhwIjoxNzMwMTA2NDQ1LCJpYXQiOjE3MjIzMzA0NDUsImp0aSI6IjVkMTMwYTkyZGQ0MzE3ZTFiYWE2NTQ5YjNmNzU0NDgzIn0.QdOiSOjNxMv1sP7MzivqcbNi3bh0AtpU2Y0AGyqauNc";
 
@@ -120,6 +140,108 @@ class MsgCallback implements EventHandle {
   OnUserBiddingRejectedOffer(client: Client, param: RoomParam, message: Message<UserBiddingRejectedOffer>): void {
     console.log("房间团购竞拍买家报价被拒");
   }
+
+  OnUserBiddingReOffer(
+    client: Client,
+    param: RoomParam,
+    message: Message<UserBiddingReOffer>,
+    response: ResponseMessage
+  ): void {
+    console.log("买家再次出价(私人)");
+  }
+  OnUserBiddingAcceptedReOffer(
+    client: Client,
+    param: RoomParam,
+    message: Message<UserBiddingAcceptedReOffer>,
+    response: ResponseMessage
+  ): void {
+    console.log("买家再次出价被接受(私人)");
+  }
+
+  // ============================================================ //
+  // 小鸡游戏
+  // ============================================================ //
+
+  OnUserChickenGameBuyChicken(
+    client: Client,
+    message: Message<UserChickenGameBuyChicken>,
+    response: ResponseMessage
+  ): void {
+    console.log("小鸡游戏 : 购买小鸡");
+  }
+  OnUserChickenGameIncreaseLife(
+    client: Client,
+    message: Message<UserChickenGameIncreaseLife>,
+    response: ResponseMessage
+  ): void {
+    console.log("小鸡游戏 : 延长小鸡时长");
+  }
+  OnUserChickenGameBuyFeed(client: Client, message: Message<UserChickenGameBuyFeed>, response: ResponseMessage): void {
+    console.log("小鸡游戏 : 购买饲料");
+  }
+  OnUserChickenGameImpendingDeath(
+    client: Client,
+    message: Message<UserChickenGameImpendingDeath>,
+    response: ResponseMessage
+  ): void {
+    console.log("小鸡游戏 : 小鸡即将死亡");
+  }
+  OnUserChickenGameChickenDeath(
+    client: Client,
+    message: Message<UserChickenGameChickenDeath>,
+    response: ResponseMessage
+  ): void {
+    console.log("小鸡游戏 : 小鸡死亡");
+  }
+  OnUserChickenGameChickenEnterHeaven(
+    client: Client,
+    message: Message<UserChickenGameChickenEnterHeaven>,
+    response: ResponseMessage
+  ): void {
+    console.log("小鸡游戏 : 小鸡死透了");
+  }
+  OnUserChickenGameBlobsExchange(
+    client: Client,
+    message: Message<UserChickenGameBlobsExchange>,
+    response: ResponseMessage
+  ): void {
+    console.log("小鸡游戏 : Blobs兑换");
+  }
+
+  // ============================================================ //
+  // 用户订单消息
+  // ============================================================ //
+
+  OnUserOrderPaymented(client: Client, message: Message<UserOrderPaymented>, response: ResponseMessage): void {
+    console.log("用户订单 : 支付成功");
+  }
+  OnUserOrderShipped(client: Client, message: Message<UserOrderShipped>, response: ResponseMessage): void {
+    console.log("用户订单 : 已发货");
+  }
+  OnUserOrderCompleted(client: Client, message: Message<UserOrderCompleted>, response: ResponseMessage): void {
+    console.log("用户订单 : 已完成");
+  }
+  OnUserOrderAftersalesApproved(
+    client: Client,
+    message: Message<UserOrderAfterSalesApproved>,
+    response: ResponseMessage
+  ): void {
+    console.log("用户订单 : 申请售后已通过");
+  }
+  OnUserOrderAftersalesRejected(
+    client: Client,
+    message: Message<UserOrderAfterSalesRejected>,
+    response: ResponseMessage
+  ): void {
+    console.log("用户订单 : 申请售后被拒");
+  }
+  OnUserOrderAfterSalesRefund(
+    client: Client,
+    message: Message<UserOrderAfterSalesRefund>,
+    response: ResponseMessage
+  ): void {
+    console.log("用户订单 : 售后退款");
+  }
 }
 
 function main() {
@@ -131,7 +253,9 @@ export function demo() {
   // configSite("127.0.0.1:8849");
   const client = newClient(new MsgCallback(), token, true, Platform.WEB);
   client.start();
-  client.enterRoom(BigInt(1));
+  // client.enterRoom(BigInt(1));
+  client.subscribeUserChickenGame(BigInt(0));
+  client.subscribeUserOrder(BigInt(0));
 }
 
 if (require.main === module) {
