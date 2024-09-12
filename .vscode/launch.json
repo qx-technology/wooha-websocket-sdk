@@ -16,7 +16,7 @@
       "request": "launch",
       "name": "Launch Program",
       "program": "${workspaceFolder}/src/main.ts",
-      "preLaunchTask": "tsc: build - tsconfig.json",
+      "preLaunchTask": "build",
       "cwd": "${workspaceFolder}",
       "console": "integratedTerminal"
     }
