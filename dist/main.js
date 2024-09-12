@@ -128,7 +128,8 @@ function demo() {
     // configSite("127.0.0.1:8849");
     const client = (0, socket_1.newClient)(new MsgCallback(), token, true, socket_1.Platform.WEB);
     client.start();
-    client.enterRoom(BigInt(1));
+    // client.enterRoom(BigInt(1));
+    client.subscribeUserChickenGame(BigInt(0));
 }
 if (require.main === module) {
     main();
