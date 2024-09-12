@@ -252,6 +252,50 @@ class ClientProvider {
         ].includes(request.config.channel) && request.config.params.roomId === roomId));
         return this;
     }
+    subscribeUserChickenGame(version) {
+        try {
+            if (this.token) {
+                this.registerChannel({
+                    channel: types_1.ChannelType.USER_CHICKEN_GAME_MSG,
+                    version: "1.0",
+                    seq: version,
+                    ts: BigInt(Date.now()),
+                    uid: uuid(),
+                    params: {}
+                }, 1000);
+            }
+        }
+        catch (e) {
+            console.error(e);
+        }
+        return this;
+    }
+    unsubscribeUserChickenGame() {
+        this.requests = this.requests.filter((request) => ![types_1.ChannelType.USER_CHICKEN_GAME_MSG].includes(request.config.channel));
+        return this;
+    }
+    subscribeUserOrder(version) {
+        try {
+            if (this.token) {
+                this.registerChannel({
+                    channel: types_1.ChannelType.USER_ORDER_MSG,
+                    version: "1.0",
+                    seq: version,
+                    ts: BigInt(Date.now()),
+                    uid: uuid(),
+                    params: {}
+                }, 1000);
+            }
+        }
+        catch (e) {
+            console.error(e);
+        }
+        return this;
+    }
+    unsubscribeUserOrder() {
+        this.requests = this.requests.filter((request) => ![types_1.ChannelType.USER_ORDER_MSG].includes(request.config.channel));
+        return this;
+    }
     onOpen() {
         if (this.showLog)
             console.log("Websocket已连接");

@@ -33,7 +33,15 @@ export declare enum ChannelType {
     /**
      * 用户房间聚合消息
      */
-    USER_ROOM_AGG_MSG = 7
+    USER_ROOM_AGG_MSG = 7,
+    /**
+     * 用户养鸡游戏消息
+     */
+    USER_CHICKEN_GAME_MSG = 8,
+    /**
+     * 用户订单消息
+     */
+    USER_ORDER_MSG = 9
 }
 /**
  * 消息类型
@@ -106,7 +114,59 @@ export declare enum MessageType {
     /**
      * 用户竞拍接受买家出价(私人)
      */
-    USER_BIDDING_ACCEPTED_OFFER = 16
+    USER_BIDDING_ACCEPTED_OFFER = 16,
+    /**
+     * 购买小鸡
+     */
+    USER_CHICKEN_GAME_MSG_BUY_CHICKEN = 1,
+    /**
+     * 延长小鸡时长
+     */
+    USER_CHICKEN_GAME_MSG_INCREASE_LIFE = 2,
+    /**
+     * 购买饲料
+     */
+    USER_CHICKEN_GAME_MSG_BUY_FEED = 3,
+    /**
+     * 小鸡即将死亡
+     */
+    USER_CHICKEN_GAME_MSG_IMPENDING_DEATH = 4,
+    /**
+     * 小鸡死亡
+     */
+    USER_CHICKEN_GAME_MSG_CHICKEN_DEATH = 5,
+    /**
+     * 小鸡死透了
+     */
+    USER_CHICKEN_GAME_MSG_CHICKEN_ENTER_HEAVEN = 6,
+    /**
+     * Blobs兑换
+     */
+    USER_CHICKEN_GAME_MSG_BLOBS_EXCHANGE = 7,
+    /**
+     * 支付成功
+     */
+    USER_ORDER_MSG_PAYMENTED = 1,
+    /**
+     * 已发货
+     */
+    USER_ORDER_MSG_SHIPPED = 2,
+    /**
+     * 已完成
+     */
+    USER_ORDER_MSG_COMPLETED = 3,
+    /**
+     * 申请售后已通过
+     */
+    USER_ORDER_MSG_AFTERSALES_APPROVED = 4,
+    /**
+     * 申请售后被拒
+     */
+    USER_ORDER_MSG_AFTERSALES_REJECTED = 5,
+    /**
+     * 售后退款
+     */
+    USER_ORDER_MSG_AFTERSALES_REFUND = 6
 }
 export interface Message<M = any> {
     /**
@@ -633,4 +693,165 @@ export interface UserBiddingAcceptedOffer {
      * 竞拍过期时间
      */
     auctionExpireTime: bigint;
+}
+/**
+ * 购买小鸡
+ */
+export interface UserChickenGameBuyChicken {
+    /**
+     * 用户ID
+     */
+    userId: bigint;
+    /**
+     * 订单ID
+     */
+    orderId: bigint;
+}
+/**
+ * 延长小鸡时长
+ */
+export interface UserChickenGameIncreaseLife {
+    /**
+     * 用户ID
+     */
+    userId: bigint;
+    /**
+     * 订单ID
+     */
+    orderId: bigint;
+}
+/**
+ * 购买饲料
+ */
+export interface UserChickenGameBuyFeed {
+    /**
+     * 用户ID
+     */
+    userId: bigint;
+    /**
+     * 订单ID
+     */
+    orderId: bigint;
+}
+/**
+ * 小鸡即将死亡
+ */
+export interface UserChickenGameImpendingDeath {
+    /**
+     * 用户ID
+     */
+    userId: bigint;
+    /**
+     * 小鸡死亡时间
+     */
+    deathTime: bigint;
+}
+/**
+ * 小鸡死亡
+ */
+export interface UserChickenGameChickenDeath {
+    /**
+     * 用户ID
+     */
+    userId: bigint;
+}
+/**
+ * 小鸡死透了
+ */
+export interface UserChickenGameChickenEnterHeaven {
+    /**
+     * 用户ID
+     */
+    userId: bigint;
+}
+/**
+ * Blobs兑换
+ */
+export interface UserChickenGameBlobsExchange {
+    /**
+     * 用户ID
+     */
+    userId: bigint;
+    /**
+     * 订单ID
+     */
+    orderId: bigint;
+}
+/**
+ * 支付成功
+ */
+export interface UserOrderPaymented {
+    /**
+     * 用户ID
+     */
+    userId: bigint;
+    /**
+     * 订单ID
+     */
+    orderId: bigint;
+}
+/**
+ * 已发货
+ */
+export interface UserOrderShipped {
+    /**
+     * 用户ID
+     */
+    userId: bigint;
+    /**
+     * 订单ID
+     */
+    orderId: bigint;
+}
+/**
+ * 已完成
+ */
+export interface UserOrderCompleted {
+    /**
+     * 用户ID
+     */
+    userId: bigint;
+    /**
+     * 订单ID
+     */
+    orderId: bigint;
+}
+/**
+ * 申请售后已通过
+ */
+export interface UserOrderAfterSalesApproved {
+    /**
+     * 用户ID
+     */
+    userId: bigint;
+    /**
+     * 订单ID
+     */
+    orderId: bigint;
+}
+/**
+ * 申请售后被拒
+ */
+export interface UserOrderAfterSalesRejected {
+    /**
+     * 用户ID
+     */
+    userId: bigint;
+    /**
+     * 订单ID
+     */
+    orderId: bigint;
+}
+/**
+ * 售后退款
+ */
+export interface UserOrderAfterSalesRefund {
+    /**
+     * 用户ID
+     */
+    userId: bigint;
+    /**
+     * 订单ID
+     */
+    orderId: bigint;
 }

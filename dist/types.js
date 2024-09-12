@@ -41,12 +41,23 @@ var ChannelType;
      * 用户房间聚合消息
      */
     ChannelType[ChannelType["USER_ROOM_AGG_MSG"] = 7] = "USER_ROOM_AGG_MSG";
+    /**
+     * 用户养鸡游戏消息
+     */
+    ChannelType[ChannelType["USER_CHICKEN_GAME_MSG"] = 8] = "USER_CHICKEN_GAME_MSG";
+    /**
+     * 用户订单消息
+     */
+    ChannelType[ChannelType["USER_ORDER_MSG"] = 9] = "USER_ORDER_MSG";
 })(ChannelType || (exports.ChannelType = ChannelType = {}));
 /**
  * 消息类型
  */
 var MessageType;
 (function (MessageType) {
+    // ============================================================ //
+    // 房间
+    // ============================================================ //
     /**
      * 房间详情
      */
@@ -115,5 +126,63 @@ var MessageType;
      * 用户竞拍接受买家出价(私人)
      */
     MessageType[MessageType["USER_BIDDING_ACCEPTED_OFFER"] = 16] = "USER_BIDDING_ACCEPTED_OFFER";
+    // ============================================================ //
+    // 小鸡游戏
+    // ============================================================ //
+    /**
+     * 购买小鸡
+     */
+    MessageType[MessageType["USER_CHICKEN_GAME_MSG_BUY_CHICKEN"] = 1] = "USER_CHICKEN_GAME_MSG_BUY_CHICKEN";
+    /**
+     * 延长小鸡时长
+     */
+    MessageType[MessageType["USER_CHICKEN_GAME_MSG_INCREASE_LIFE"] = 2] = "USER_CHICKEN_GAME_MSG_INCREASE_LIFE";
+    /**
+     * 购买饲料
+     */
+    MessageType[MessageType["USER_CHICKEN_GAME_MSG_BUY_FEED"] = 3] = "USER_CHICKEN_GAME_MSG_BUY_FEED";
+    /**
+     * 小鸡即将死亡
+     */
+    MessageType[MessageType["USER_CHICKEN_GAME_MSG_IMPENDING_DEATH"] = 4] = "USER_CHICKEN_GAME_MSG_IMPENDING_DEATH";
+    /**
+     * 小鸡死亡
+     */
+    MessageType[MessageType["USER_CHICKEN_GAME_MSG_CHICKEN_DEATH"] = 5] = "USER_CHICKEN_GAME_MSG_CHICKEN_DEATH";
+    /**
+     * 小鸡死透了
+     */
+    MessageType[MessageType["USER_CHICKEN_GAME_MSG_CHICKEN_ENTER_HEAVEN"] = 6] = "USER_CHICKEN_GAME_MSG_CHICKEN_ENTER_HEAVEN";
+    /**
+     * Blobs兑换
+     */
+    MessageType[MessageType["USER_CHICKEN_GAME_MSG_BLOBS_EXCHANGE"] = 7] = "USER_CHICKEN_GAME_MSG_BLOBS_EXCHANGE";
+    // ============================================================ //
+    // 订单
+    // ============================================================ //
+    /**
+     * 支付成功
+     */
+    MessageType[MessageType["USER_ORDER_MSG_PAYMENTED"] = 1] = "USER_ORDER_MSG_PAYMENTED";
+    /**
+     * 已发货
+     */
+    MessageType[MessageType["USER_ORDER_MSG_SHIPPED"] = 2] = "USER_ORDER_MSG_SHIPPED";
+    /**
+     * 已完成
+     */
+    MessageType[MessageType["USER_ORDER_MSG_COMPLETED"] = 3] = "USER_ORDER_MSG_COMPLETED";
+    /**
+     * 申请售后已通过
+     */
+    MessageType[MessageType["USER_ORDER_MSG_AFTERSALES_APPROVED"] = 4] = "USER_ORDER_MSG_AFTERSALES_APPROVED";
+    /**
+     * 申请售后被拒
+     */
+    MessageType[MessageType["USER_ORDER_MSG_AFTERSALES_REJECTED"] = 5] = "USER_ORDER_MSG_AFTERSALES_REJECTED";
+    /**
+     * 售后退款
+     */
+    MessageType[MessageType["USER_ORDER_MSG_AFTERSALES_REFUND"] = 6] = "USER_ORDER_MSG_AFTERSALES_REFUND";
 })(MessageType || (exports.MessageType = MessageType = {}));
 //# sourceMappingURL=types.js.map

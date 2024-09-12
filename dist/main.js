@@ -74,6 +74,51 @@ class MsgCallback {
     OnUserBiddingRejectedOffer(client, param, message) {
         console.log("房间团购竞拍买家报价被拒");
     }
+    // ============================================================ //
+    // 小鸡游戏
+    // ============================================================ //
+    OnUserChickenGameBuyChicken(client, message, response) {
+        console.log("小鸡游戏 : 购买小鸡");
+    }
+    OnUserChickenGameIncreaseLife(client, message, response) {
+        console.log("小鸡游戏 : 延长小鸡时长");
+    }
+    OnUserChickenGameBuyFeed(client, message, response) {
+        console.log("小鸡游戏 : 购买饲料");
+    }
+    OnUserChickenGameImpendingDeath(client, message, response) {
+        console.log("小鸡游戏 : 小鸡即将死亡");
+    }
+    OnUserChickenGameChickenDeath(client, message, response) {
+        console.log("小鸡游戏 : 小鸡死亡");
+    }
+    OnUserChickenGameChickenEnterHeaven(client, message, response) {
+        console.log("小鸡游戏 : 小鸡死透了");
+    }
+    OnUserChickenGameBlobsExchange(client, message, response) {
+        console.log("小鸡游戏 : Blobs兑换");
+    }
+    // ============================================================ //
+    // 用户订单消息
+    // ============================================================ //
+    OnUserOrderPaymented(client, message, response) {
+        console.log("用户订单 : 支付成功");
+    }
+    OnUserOrderShipped(client, message, response) {
+        console.log("用户订单 : 已发货");
+    }
+    OnUserOrderCompleted(client, message, response) {
+        console.log("用户订单 : 已完成");
+    }
+    OnUserOrderAftersalesApproved(client, message, response) {
+        console.log("用户订单 : 申请售后已通过");
+    }
+    OnUserOrderAftersalesRejected(client, message, response) {
+        console.log("用户订单 : 申请售后被拒");
+    }
+    OnUserOrderAfterSalesRefund(client, message, response) {
+        console.log("用户订单 : 售后退款");
+    }
 }
 function main() {
     process.title = "WoohaSocketSDK";
