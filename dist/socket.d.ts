@@ -107,6 +107,7 @@ export declare class ClientProvider implements Client {
     private requests;
     private showLog;
     private platform;
+    private uid;
     constructor(eventHandle: EventHandle, token?: string, showLog?: boolean, platform?: Platform);
     start(): Client;
     stop(autoConn?: boolean): Client;
