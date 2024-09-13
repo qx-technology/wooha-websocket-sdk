@@ -969,7 +969,13 @@ export function getMessageHistory(
       method: "GET",
       headers
     })
-      .then((res) => res.json())
-      .then((json) => json.data);
+      .then((res) => {
+        if ((res.headers.get("Content-Type") || "").includes("msgpack")) {
+          return res.arrayBuffer().then((buffer) => new Uint8Array(buffer));
+        } else {
+          return Promise.reject(res.json());
+        }
+      })
+      .then((bytes) => unpack(bytes) as Message[]);
   }
 }

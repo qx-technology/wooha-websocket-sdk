@@ -259,7 +259,13 @@ export function demo() {
 
 function test_http() {
   configSite("127.0.0.1:8849");
-  getMessageHistory(token, ChannelType.ROOM_MSG, BigInt(1300));
+  getMessageHistory(token, ChannelType.ROOM_MSG, BigInt(1300), { roomId: 1 })
+    .then((res) => {
+      console.info(res);
+    })
+    .catch((err) => {
+      console.error(err);
+    });
 }
 
 if (require.main === module) {
