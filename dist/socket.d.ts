@@ -138,3 +138,4 @@ export declare function newClient(eventHandle: EventHandle, token?: string, show
  * @returns 如果调用成功，返回消息数组。失败返回JSON格式错误
  */
 export declare function getMessageHistory(token: string, channel: ChannelType, seq: bigint, params?: {}, platform?: Platform): Promise<Message[]>;
+export declare function getMsgSeqByRank(channel: ChannelType, rank?: number, params?: Record<string, any>, platform?: Platform, token?: string): Promise<string>;

@@ -15,6 +15,7 @@ exports.useHttps = useHttps;
 exports.useWss = useWss;
 exports.newClient = newClient;
 exports.getMessageHistory = getMessageHistory;
+exports.getMsgSeqByRank = getMsgSeqByRank;
 const types_1 = require("./types");
 const socket_impl_1 = require("./socket_impl");
 const msgpackr_1 = require("msgpackr");
@@ -616,5 +617,39 @@ function getMessageHistory(token, channel, seq, params = {}, platform = Platform
         })
             .then((bytes) => (0, msgpackr_1.unpack)(bytes));
     }
+}
+function getMsgSeqByRank(channel_1) {
+    return __awaiter(this, arguments, void 0, function* (channel, rank = 1, params = {}, platform = Platform.WEB, token) {
+        const headers = {
+            "Content-Type": "application/json"
+        };
+        if (token)
+            headers["token"] = token;
+        const url = `${getBasicHttpUrl()}/getMessageVersioinByRank?`;
+        const queryString = objectToQueryString(Object.assign(params, { channel, rank }));
+        if (platform === Platform.UniApp) {
+            return new Promise((resolve, reject) => {
+                //@ts-ignore
+                uni.request({
+                    url: `${url}${queryString}`,
+                    header: headers,
+                    success: (res) => {
+                        resolve(res.data.data);
+                    },
+                    fail: () => {
+                        reject();
+                    }
+                });
+            });
+        }
+        else {
+            return fetch(`${url}${queryString}`, {
+                method: "GET",
+                headers
+            })
+                .then((res) => res.json())
+                .then((json) => json.data);
+        }
+    });
 }
 //# sourceMappingURL=socket.js.map

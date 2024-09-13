@@ -979,3 +979,41 @@ export function getMessageHistory(
       .then((bytes) => unpack(bytes) as Message[]);
   }
 }
+
+export async function getMsgSeqByRank(
+  channel: ChannelType,
+  rank: number = 1,
+  params: Record<string, any> = {},
+  platform = Platform.WEB,
+  token?: string
+): Promise<string> {
+  const headers: Record<string, any> = {
+    "Content-Type": "application/json"
+  };
+  if (token) headers["token"] = token;
+
+  const url = `${getBasicHttpUrl()}/getMessageVersioinByRank?`;
+  const queryString = objectToQueryString(Object.assign(params, { channel, rank }));
+  if (platform === Platform.UniApp) {
+    return new Promise((resolve, reject) => {
+      //@ts-ignore
+      uni.request({
+        url: `${url}${queryString}`,
+        header: headers,
+        success: (res: any) => {
+          resolve(res.data.data);
+        },
+        fail: () => {
+          reject();
+        }
+      });
+    });
+  } else {
+    return fetch(`${url}${queryString}`, {
+      method: "GET",
+      headers
+    })
+      .then((res) => res.json())
+      .then((json) => json.data);
+  }
+}
