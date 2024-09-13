@@ -973,7 +973,7 @@ export function getMessageHistory(
         if ((res.headers.get("Content-Type") || "").includes("msgpack")) {
           return res.arrayBuffer().then((buffer) => new Uint8Array(buffer));
         } else {
-          return Promise.reject(res.json());
+          throw new Error("Response Error");
         }
       })
       .then((bytes) => unpack(bytes) as Message[]);

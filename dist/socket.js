@@ -611,7 +611,7 @@ function getMessageHistory(token, channel, seq, params = {}, platform = Platform
                 return res.arrayBuffer().then((buffer) => new Uint8Array(buffer));
             }
             else {
-                return Promise.reject(res.json());
+                throw new Error("Response Error");
             }
         })
             .then((bytes) => (0, msgpackr_1.unpack)(bytes));
