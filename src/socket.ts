@@ -923,3 +923,53 @@ function objectToQueryString(obj: any) {
 // function uint8ArrayToHex(uint8Array: any) {
 //   return Array.from(uint8Array, (byte: any) => byte.toString(16).padStart(2, "0")).join("");
 // }
+
+/**
+ * 获取历史消息
+ * @param token 用户登录令牌
+ * @param channel 消息通道
+ * @param seq 消息版本号
+ * @param params 参数
+ * @param platform 平台
+ * @returns 如果调用成功，返回消息数组。失败返回JSON格式错误
+ */
+export function getMessageHistory(
+  token: string,
+  channel: ChannelType,
+  seq: bigint,
+  params: {} = {},
+  platform = Platform.WEB
+): Promise<Message[]> {
+  const headers: Record<string, any> = {
+    "Content-Type": "application/json",
+    token: token
+  };
+  const url = `${getBasicHttpUrl()}/getMessageHistory?`;
+  const queryString = objectToQueryString({
+    channel,
+    seq,
+    ...params
+  });
+  if (platform === Platform.UniApp) {
+    return new Promise((resolve, reject) => {
+      //@ts-ignore
+      uni.request({
+        url: `${url}${queryString}`,
+        header: headers,
+        success: (res: any) => {
+          resolve(res.data.data);
+        },
+        fail: () => {
+          reject();
+        }
+      });
+    });
+  } else {
+    return fetch(`${url}${queryString}`, {
+      method: "GET",
+      headers
+    })
+      .then((res) => res.json())
+      .then((json) => json.data);
+  }
+}
