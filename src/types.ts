@@ -211,6 +211,10 @@ export interface Message<M = any> {
    */
   type: MessageType;
   /**
+   * 消息时间戳
+   */
+  ts: bigint;
+  /**
    * 消息内容
    */
   content: M;

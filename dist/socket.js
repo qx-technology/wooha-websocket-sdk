@@ -14,6 +14,7 @@ exports.configSite = configSite;
 exports.useHttps = useHttps;
 exports.useWss = useWss;
 exports.newClient = newClient;
+exports.getMessageHistory = getMessageHistory;
 const types_1 = require("./types");
 const socket_impl_1 = require("./socket_impl");
 const msgpackr_1 = require("msgpackr");
@@ -568,4 +569,52 @@ function objectToQueryString(obj) {
 // function uint8ArrayToHex(uint8Array: any) {
 //   return Array.from(uint8Array, (byte: any) => byte.toString(16).padStart(2, "0")).join("");
 // }
+/**
+ * 获取历史消息
+ * @param token 用户登录令牌
+ * @param channel 消息通道
+ * @param seq 消息版本号
+ * @param params 参数
+ * @param platform 平台
+ * @returns 如果调用成功，返回消息数组。失败返回JSON格式错误
+ */
+function getMessageHistory(token, channel, seq, params = {}, platform = Platform.WEB) {
+    const headers = {
+        "Content-Type": "application/json",
+        token: token
+    };
+    const url = `${getBasicHttpUrl()}/getMessageHistory?`;
+    const queryString = objectToQueryString(Object.assign({ channel,
+        seq }, params));
+    if (platform === Platform.UniApp) {
+        return new Promise((resolve, reject) => {
+            //@ts-ignore
+            uni.request({
+                url: `${url}${queryString}`,
+                header: headers,
+                success: (res) => {
+                    resolve(res.data.data);
+                },
+                fail: () => {
+                    reject();
+                }
+            });
+        });
+    }
+    else {
+        return fetch(`${url}${queryString}`, {
+            method: "GET",
+            headers
+        })
+            .then((res) => {
+            if ((res.headers.get("Content-Type") || "").includes("msgpack")) {
+                return res.arrayBuffer().then((buffer) => new Uint8Array(buffer));
+            }
+            else {
+                throw new Error("Response Error");
+            }
+        })
+            .then((bytes) => (0, msgpackr_1.unpack)(bytes));
+    }
+}
 //# sourceMappingURL=socket.js.map

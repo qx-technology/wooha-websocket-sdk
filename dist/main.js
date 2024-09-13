@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.demo = demo;
 const socket_1 = require("./socket");
-const url = "ws://47.57.236.213:8849/ws";
+const types_1 = require("./types");
 /**
  * Jwt Token
  * 用户ID : 29324656
@@ -142,7 +142,18 @@ function demo() {
     client.subscribeUserChickenGame(BigInt(0));
     client.subscribeUserOrder(BigInt(0));
 }
+function test_http() {
+    (0, socket_1.configSite)("127.0.0.1:8849");
+    (0, socket_1.getMessageHistory)(token, types_1.ChannelType.ROOM_MSG, BigInt(1300), { roomId: 1 })
+        .then((res) => {
+        console.info(res);
+    })
+        .catch((err) => {
+        console.error(err);
+    });
+}
 if (require.main === module) {
-    main();
+    // main();
+    test_http();
 }
 //# sourceMappingURL=main.js.map

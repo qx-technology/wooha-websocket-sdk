@@ -128,3 +128,13 @@ export declare class ClientProvider implements Client {
     getMsgSeqByRank(channel: ChannelType, rank?: number, params?: Record<string, any>, token?: string): Promise<string>;
 }
 export declare function newClient(eventHandle: EventHandle, token?: string, showLog?: boolean, platform?: Platform): Client;
+/**
+ * 获取历史消息
+ * @param token 用户登录令牌
+ * @param channel 消息通道
+ * @param seq 消息版本号
+ * @param params 参数
+ * @param platform 平台
+ * @returns 如果调用成功，返回消息数组。失败返回JSON格式错误
+ */
+export declare function getMessageHistory(token: string, channel: ChannelType, seq: bigint, params?: {}, platform?: Platform): Promise<Message[]>;
