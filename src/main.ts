@@ -1,4 +1,4 @@
-import { newClient, EventHandle, Client, configSite, Platform } from "./socket";
+import { newClient, EventHandle, Client, configSite, Platform, getMessageHistory } from "./socket";
 import {
   RoomParam,
   Message,
@@ -34,10 +34,9 @@ import {
   UserOrderPaymented,
   UserOrderShipped,
   UserBiddingAcceptedReOffer,
-  UserBiddingReOffer
+  UserBiddingReOffer,
+  ChannelType
 } from "./types";
-
-const url = "ws://47.57.236.213:8849/ws";
 
 /**
  * Jwt Token
@@ -258,6 +257,12 @@ export function demo() {
   client.subscribeUserOrder(BigInt(0));
 }
 
+function test_http() {
+  configSite("127.0.0.1:8849");
+  getMessageHistory(token, ChannelType.ROOM_MSG, BigInt(1300));
+}
+
 if (require.main === module) {
-  main();
+  // main();
+  test_http();
 }
