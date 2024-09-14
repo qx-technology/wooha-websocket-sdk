@@ -88,13 +88,14 @@ class ClientProvider {
         this.requests = [];
         this.showLog = showLog;
         this.platform = platform;
+        this.uid = uuid();
         // 5秒心跳
         this.registerChannel({
             channel: types_1.ChannelType.HEARTBEAT,
             version: "1.0",
             seq: BigInt(0),
             ts: BigInt(Date.now()),
-            uid: uuid()
+            uid: this.uid
         }, 5000, false);
     }
     start() {
@@ -142,7 +143,7 @@ class ClientProvider {
                     version: "1.0",
                     seq: BigInt(roomAggMsgSeq),
                     ts: BigInt(Date.now()),
-                    uid: uuid(),
+                    uid: this.uid,
                     params: {}
                 }, 100);
                 if (this.token) {
@@ -156,7 +157,7 @@ class ClientProvider {
                         version: "1.0",
                         seq: BigInt(userRoomAggMsgSeq),
                         ts: BigInt(Date.now()),
-                        uid: uuid(),
+                        uid: this.uid,
                         params: {}
                     }, 100);
                 }
@@ -180,7 +181,7 @@ class ClientProvider {
                     version: "1.0",
                     seq: BigInt(0),
                     ts: BigInt(Date.now()),
-                    uid: uuid(),
+                    uid: this.uid,
                     params: { roomId }
                 }, 3000, false);
                 // 订阅团购详情
@@ -193,7 +194,7 @@ class ClientProvider {
                     version: "1.0",
                     seq: BigInt(groupBuyingSeq),
                     ts: BigInt(Date.now()),
-                    uid: uuid(),
+                    uid: this.uid,
                     params: { roomId }
                 }, 100);
                 // 订阅团购投票
@@ -206,7 +207,7 @@ class ClientProvider {
                     version: "1.0",
                     seq: BigInt(groupBuyingVoteSeq),
                     ts: BigInt(Date.now()),
-                    uid: uuid(),
+                    uid: this.uid,
                     params: { roomId }
                 }, 100);
                 // 订阅房间消息
@@ -219,7 +220,7 @@ class ClientProvider {
                     version: "1.0",
                     seq: BigInt(roomMsgSeq),
                     ts: BigInt(Date.now()),
-                    uid: uuid(),
+                    uid: this.uid,
                     params: { roomId }
                 }, 100);
                 if (this.token) {
@@ -233,7 +234,7 @@ class ClientProvider {
                         version: "1.0",
                         seq: BigInt(userRoomMsgSeq),
                         ts: BigInt(Date.now()),
-                        uid: uuid(),
+                        uid: this.uid,
                         params: { roomId }
                     }, 100);
                 }
@@ -262,7 +263,7 @@ class ClientProvider {
                     version: "1.0",
                     seq: version,
                     ts: BigInt(Date.now()),
-                    uid: uuid(),
+                    uid: this.uid,
                     params: {}
                 }, 1000);
             }
@@ -284,7 +285,7 @@ class ClientProvider {
                     version: "1.0",
                     seq: version,
                     ts: BigInt(Date.now()),
-                    uid: uuid(),
+                    uid: this.uid,
                     params: {}
                 }, 1000);
             }

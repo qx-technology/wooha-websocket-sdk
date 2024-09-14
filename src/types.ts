@@ -913,6 +913,14 @@ export interface UserChickenGameBuyChicken {
    * 订单ID
    */
   orderId: bigint;
+  /**
+   * 小时
+   */
+  hour: bigint;
+  /**
+   * 鸡蛋
+   */
+  egg: bigint;
 }
 
 /**
@@ -927,6 +935,14 @@ export interface UserChickenGameIncreaseLife {
    * 订单ID
    */
   orderId: bigint;
+  /**
+   * 小时
+   */
+  hour: bigint;
+  /**
+   * 鸡蛋
+   */
+  egg: bigint;
 }
 
 /**
@@ -941,6 +957,10 @@ export interface UserChickenGameBuyFeed {
    * 订单ID
    */
   orderId: bigint;
+  /**
+   * 鸡蛋
+   */
+  egg: bigint;
 }
 
 /**
@@ -965,6 +985,10 @@ export interface UserChickenGameChickenDeath {
    * 用户ID
    */
   userId: bigint;
+  /**
+   * 小鸡复活时间
+   */
+  endTime: bigint;
 }
 
 /**
@@ -989,6 +1013,10 @@ export interface UserChickenGameBlobsExchange {
    * 订单ID
    */
   orderId: bigint;
+  /**
+   * 数量
+   */
+  amount: number;
 }
 
 // ============================================================ //
@@ -1007,6 +1035,10 @@ export interface UserOrderPaymented {
    * 订单ID
    */
   orderId: bigint;
+  /**
+   * 商品信息
+   */
+  productInfo: string;
 }
 
 /**
@@ -1021,6 +1053,10 @@ export interface UserOrderShipped {
    * 订单ID
    */
   orderId: bigint;
+  /**
+   * 商品信息
+   */
+  productInfo: string;
 }
 
 /**
@@ -1035,6 +1071,10 @@ export interface UserOrderCompleted {
    * 订单ID
    */
   orderId: bigint;
+  /**
+   * 商品信息
+   */
+  productInfo: string;
 }
 
 /**
@@ -1049,6 +1089,14 @@ export interface UserOrderAfterSalesApproved {
    * 订单ID
    */
   orderId: bigint;
+  /**
+   * 商品信息
+   */
+  productInfo: string;
+  /**
+   * 售后ID
+   */
+  afterSaleId: bigint;
 }
 
 /**
@@ -1063,6 +1111,14 @@ export interface UserOrderAfterSalesRejected {
    * 订单ID
    */
   orderId: bigint;
+  /**
+   * 商品信息
+   */
+  productInfo: string;
+  /**
+   * 售后ID
+   */
+  afterSaleId: bigint;
 }
 
 /**
@@ -1077,4 +1133,12 @@ export interface UserOrderAfterSalesRefund {
    * 订单ID
    */
   orderId: bigint;
+  /**
+   * 商品信息
+   */
+  productInfo: string;
+  /**
+   * 售后ID
+   */
+  afterSaleId: bigint;
 }

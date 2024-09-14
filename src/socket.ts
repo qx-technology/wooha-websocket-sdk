@@ -362,6 +362,7 @@ export class ClientProvider implements Client {
   private requests: RequestInfo[];
   private showLog: boolean;
   private platform: Platform;
+  private uid: string;
 
   constructor(
     eventHandle: EventHandle,
@@ -380,6 +381,7 @@ export class ClientProvider implements Client {
     this.requests = [];
     this.showLog = showLog;
     this.platform = platform;
+    this.uid = uuid();
     // 5秒心跳
     this.registerChannel(
       <RequestMessage>{
@@ -387,7 +389,7 @@ export class ClientProvider implements Client {
         version: "1.0",
         seq: BigInt(0),
         ts: BigInt(Date.now()),
-        uid: uuid()
+        uid: this.uid
       },
       5000,
       false
@@ -447,7 +449,7 @@ export class ClientProvider implements Client {
           version: "1.0",
           seq: BigInt(roomAggMsgSeq),
           ts: BigInt(Date.now()),
-          uid: uuid(),
+          uid: this.uid,
           params: {}
         },
         100
@@ -464,7 +466,7 @@ export class ClientProvider implements Client {
             version: "1.0",
             seq: BigInt(userRoomAggMsgSeq),
             ts: BigInt(Date.now()),
-            uid: uuid(),
+            uid: this.uid,
             params: {}
           },
           100
@@ -492,7 +494,7 @@ export class ClientProvider implements Client {
           version: "1.0",
           seq: BigInt(0),
           ts: BigInt(Date.now()),
-          uid: uuid(),
+          uid: this.uid,
           params: { roomId }
         },
         3000,
@@ -509,7 +511,7 @@ export class ClientProvider implements Client {
           version: "1.0",
           seq: BigInt(groupBuyingSeq),
           ts: BigInt(Date.now()),
-          uid: uuid(),
+          uid: this.uid,
           params: { roomId }
         },
         100
@@ -525,7 +527,7 @@ export class ClientProvider implements Client {
           version: "1.0",
           seq: BigInt(groupBuyingVoteSeq),
           ts: BigInt(Date.now()),
-          uid: uuid(),
+          uid: this.uid,
           params: { roomId }
         },
         100
@@ -541,7 +543,7 @@ export class ClientProvider implements Client {
           version: "1.0",
           seq: BigInt(roomMsgSeq),
           ts: BigInt(Date.now()),
-          uid: uuid(),
+          uid: this.uid,
           params: { roomId }
         },
         100
@@ -558,7 +560,7 @@ export class ClientProvider implements Client {
             version: "1.0",
             seq: BigInt(userRoomMsgSeq),
             ts: BigInt(Date.now()),
-            uid: uuid(),
+            uid: this.uid,
             params: { roomId }
           },
           100
@@ -595,7 +597,7 @@ export class ClientProvider implements Client {
             version: "1.0",
             seq: version,
             ts: BigInt(Date.now()),
-            uid: uuid(),
+            uid: this.uid,
             params: {}
           },
           1000
@@ -623,7 +625,7 @@ export class ClientProvider implements Client {
             version: "1.0",
             seq: version,
             ts: BigInt(Date.now()),
-            uid: uuid(),
+            uid: this.uid,
             params: {}
           },
           1000

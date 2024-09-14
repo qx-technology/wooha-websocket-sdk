@@ -856,6 +856,14 @@ export interface UserChickenGameBuyChicken {
      * 订单ID
      */
     orderId: bigint;
+    /**
+     * 小时
+     */
+    hour: bigint;
+    /**
+     * 鸡蛋
+     */
+    egg: bigint;
 }
 /**
  * 延长小鸡时长
@@ -869,6 +877,14 @@ export interface UserChickenGameIncreaseLife {
      * 订单ID
      */
     orderId: bigint;
+    /**
+     * 小时
+     */
+    hour: bigint;
+    /**
+     * 鸡蛋
+     */
+    egg: bigint;
 }
 /**
  * 购买饲料
@@ -882,6 +898,10 @@ export interface UserChickenGameBuyFeed {
      * 订单ID
      */
     orderId: bigint;
+    /**
+     * 鸡蛋
+     */
+    egg: bigint;
 }
 /**
  * 小鸡即将死亡
@@ -904,6 +924,10 @@ export interface UserChickenGameChickenDeath {
      * 用户ID
      */
     userId: bigint;
+    /**
+     * 小鸡复活时间
+     */
+    endTime: bigint;
 }
 /**
  * 小鸡死透了
@@ -926,6 +950,10 @@ export interface UserChickenGameBlobsExchange {
      * 订单ID
      */
     orderId: bigint;
+    /**
+     * 数量
+     */
+    amount: number;
 }
 /**
  * 支付成功
@@ -939,6 +967,10 @@ export interface UserOrderPaymented {
      * 订单ID
      */
     orderId: bigint;
+    /**
+     * 商品信息
+     */
+    productInfo: string;
 }
 /**
  * 已发货
@@ -952,6 +984,10 @@ export interface UserOrderShipped {
      * 订单ID
      */
     orderId: bigint;
+    /**
+     * 商品信息
+     */
+    productInfo: string;
 }
 /**
  * 已完成
@@ -965,6 +1001,10 @@ export interface UserOrderCompleted {
      * 订单ID
      */
     orderId: bigint;
+    /**
+     * 商品信息
+     */
+    productInfo: string;
 }
 /**
  * 申请售后已通过
@@ -978,6 +1018,14 @@ export interface UserOrderAfterSalesApproved {
      * 订单ID
      */
     orderId: bigint;
+    /**
+     * 商品信息
+     */
+    productInfo: string;
+    /**
+     * 售后ID
+     */
+    afterSaleId: bigint;
 }
 /**
  * 申请售后被拒
@@ -991,6 +1039,14 @@ export interface UserOrderAfterSalesRejected {
      * 订单ID
      */
     orderId: bigint;
+    /**
+     * 商品信息
+     */
+    productInfo: string;
+    /**
+     * 售后ID
+     */
+    afterSaleId: bigint;
 }
 /**
  * 售后退款
@@ -1004,4 +1060,12 @@ export interface UserOrderAfterSalesRefund {
      * 订单ID
      */
     orderId: bigint;
+    /**
+     * 商品信息
+     */
+    productInfo: string;
+    /**
+     * 售后ID
+     */
+    afterSaleId: bigint;
 }
