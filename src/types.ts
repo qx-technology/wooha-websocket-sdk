@@ -132,6 +132,14 @@ export enum MessageType {
    * 用户竞拍买家再次出价被接受(私人)
    */
   USER_BIDDING_ACCEPTED_RE_OFFER = 18,
+  /**
+   * 用户竞拍买家再次出价被拒绝(私人)
+   */
+  USER_BIDDING_REJECTED_RE_OFFER = 19,
+  /**
+   * 用户竞拍卖家发起报还价(私人)
+   */
+  USER_BIDDING_INITIATE_COUNTEROFFER = 20,
 
   // ============================================================ //
   // 小鸡游戏
@@ -867,6 +875,74 @@ export interface UserBiddingReOffer {
  * 买家再次出价被接受(私人)
  */
 export interface UserBiddingAcceptedReOffer {
+  /**
+   * 房间ID
+   */
+  roomId: bigint;
+  /**
+   * 用户ID
+   */
+  userId: bigint;
+  /**
+   * 卖家用户ID
+   */
+  sellerUserId: bigint;
+  /**
+   * 出价用户ID
+   */
+  biddingUserId: bigint;
+  /**
+   * 竞拍ID
+   */
+  auctionId: bigint;
+  /**
+   * 金额
+   */
+  amount: bigint;
+  /**
+   * 竞拍过期时间
+   */
+  auctionExpireTime: bigint;
+}
+
+/**
+ * 买家再次出价被拒绝(私人)
+ */
+export interface UserBiddingRejectedReOffer {
+  /**
+   * 房间ID
+   */
+  roomId: bigint;
+  /**
+   * 用户ID
+   */
+  userId: bigint;
+  /**
+   * 卖家用户ID
+   */
+  sellerUserId: bigint;
+  /**
+   * 出价用户ID
+   */
+  biddingUserId: bigint;
+  /**
+   * 竞拍ID
+   */
+  auctionId: bigint;
+  /**
+   * 金额
+   */
+  amount: bigint;
+  /**
+   * 竞拍过期时间
+   */
+  auctionExpireTime: bigint;
+}
+
+/**
+ * 卖家发起还价(私人)
+ */
+export interface UserBiddingInitiateCounteroffer {
   /**
    * 房间ID
    */

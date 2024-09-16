@@ -36,7 +36,9 @@ import {
   UserOrderAfterSalesRejected,
   UserOrderAfterSalesRefund,
   UserBiddingReOffer,
-  UserBiddingAcceptedReOffer
+  UserBiddingAcceptedReOffer,
+  UserBiddingRejectedReOffer,
+  UserBiddingInitiateCounteroffer
 } from "./types";
 import { WebFuket } from "./socket_impl";
 import { pack, unpack } from "msgpackr";
@@ -256,7 +258,20 @@ export interface EventHandle {
     message: Message<UserBiddingAcceptedReOffer>,
     response: ResponseMessage
   ): void;
-
+  /// 用户竞拍买家再次出价被拒绝(私人)
+  OnUserBiddingRejectedReOffer(
+    client: Client,
+    param: RoomParam,
+    message: Message<UserBiddingRejectedReOffer>,
+    response: ResponseMessage
+  ): void;
+  /// 用户竞拍卖家发起报还价(私人)
+  OnUserBiddingInitiateCounteroffer(
+    client: Client,
+    param: RoomParam,
+    message: Message<UserBiddingInitiateCounteroffer>,
+    response: ResponseMessage
+  ): void;
   // ============================================================ //
   // 小鸡游戏
   // ============================================================ //
@@ -759,6 +774,12 @@ export class ClientProvider implements Client {
                 break;
               case MessageType.USER_BIDDING_ACCEPTED_RE_OFFER:
                 this.callback.OnUserBiddingAcceptedReOffer(this, request.config.params, message, response);
+                break;
+              case MessageType.USER_BIDDING_REJECTED_RE_OFFER:
+                this.callback.OnUserBiddingRejectedReOffer(this, request.config.params, message, response);
+                break;
+              case MessageType.USER_BIDDING_INITIATE_COUNTEROFFER:
+                this.callback.OnUserBiddingInitiateCounteroffer(this, request.config.params, message, response);
                 break;
             }
           }
