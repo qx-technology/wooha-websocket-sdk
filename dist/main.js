@@ -9,6 +9,12 @@ const types_1 = require("./types");
  */
 const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzaG9wIiwiZXhwIjoxNzMwMTA2NDQ1LCJpYXQiOjE3MjIzMzA0NDUsImp0aSI6IjVkMTMwYTkyZGQ0MzE3ZTFiYWE2NTQ5YjNmNzU0NDgzIn0.QdOiSOjNxMv1sP7MzivqcbNi3bh0AtpU2Y0AGyqauNc";
 class MsgCallback {
+    OnUserBiddingRejectedReOffer(client, param, message, response) {
+        throw new Error("Method not implemented.");
+    }
+    OnUserBiddingInitiateCounteroffer(client, param, message, response) {
+        throw new Error("Method not implemented.");
+    }
     OnBiddingStart(client, param, message, response) {
         console.log("竞拍开始");
     }

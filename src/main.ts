@@ -35,7 +35,9 @@ import {
   UserOrderShipped,
   UserBiddingAcceptedReOffer,
   UserBiddingReOffer,
-  ChannelType
+  ChannelType,
+  UserBiddingInitiateCounteroffer,
+  UserBiddingRejectedReOffer
 } from "./types";
 
 /**
@@ -46,6 +48,22 @@ const token =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzaG9wIiwiZXhwIjoxNzMwMTA2NDQ1LCJpYXQiOjE3MjIzMzA0NDUsImp0aSI6IjVkMTMwYTkyZGQ0MzE3ZTFiYWE2NTQ5YjNmNzU0NDgzIn0.QdOiSOjNxMv1sP7MzivqcbNi3bh0AtpU2Y0AGyqauNc";
 
 class MsgCallback implements EventHandle {
+  OnUserBiddingRejectedReOffer(
+    client: Client,
+    param: RoomParam,
+    message: Message<UserBiddingRejectedReOffer>,
+    response: ResponseMessage
+  ): void {
+    throw new Error("Method not implemented.");
+  }
+  OnUserBiddingInitiateCounteroffer(
+    client: Client,
+    param: RoomParam,
+    message: Message<UserBiddingInitiateCounteroffer>,
+    response: ResponseMessage
+  ): void {
+    throw new Error("Method not implemented.");
+  }
   OnBiddingStart(client: Client, param: RoomParam, message: Message<BiddingStart>, response: ResponseMessage): void {
     console.log("竞拍开始");
   }

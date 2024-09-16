@@ -134,6 +134,14 @@ var MessageType;
      * 用户竞拍买家再次出价被接受(私人)
      */
     MessageType[MessageType["USER_BIDDING_ACCEPTED_RE_OFFER"] = 18] = "USER_BIDDING_ACCEPTED_RE_OFFER";
+    /**
+     * 用户竞拍买家再次出价被拒绝(私人)
+     */
+    MessageType[MessageType["USER_BIDDING_REJECTED_RE_OFFER"] = 19] = "USER_BIDDING_REJECTED_RE_OFFER";
+    /**
+     * 用户竞拍卖家发起报还价(私人)
+     */
+    MessageType[MessageType["USER_BIDDING_INITIATE_COUNTEROFFER"] = 20] = "USER_BIDDING_INITIATE_COUNTEROFFER";
     // ============================================================ //
     // 小鸡游戏
     // ============================================================ //
