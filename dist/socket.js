@@ -586,7 +586,7 @@ function objectToQueryString(obj) {
  * @param platform 平台
  * @returns 如果调用成功，返回消息数组。失败返回JSON格式错误
  */
-function getMessageHistory(token, channel, seq, params = {}, platform = Platform.WEB) {
+function getMessageHistory(token, channel, seq, params = {}, platform = Platform.UniApp) {
     const headers = {
         "Content-Type": "application/json",
         token: token
@@ -626,7 +626,7 @@ function getMessageHistory(token, channel, seq, params = {}, platform = Platform
     }
 }
 function getMsgSeqByRank(channel_1) {
-    return __awaiter(this, arguments, void 0, function* (channel, rank = 1, params = {}, platform = Platform.WEB, token) {
+    return __awaiter(this, arguments, void 0, function* (channel, rank = 1, params = {}, platform = Platform.UniApp, token) {
         const headers = {
             "Content-Type": "application/json"
         };

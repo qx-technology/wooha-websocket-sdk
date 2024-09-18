@@ -5,7 +5,8 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "test": "npm run build && node dist/main.js",
-    "build": "rm -rf ./dist && ./node_modules/typescript/bin/tsc"
+    "build": "rm -rf ./dist && ./node_modules/typescript/bin/tsc",
+    "build1": "tsc"
   },
   "keywords": [],
   "author": "",
