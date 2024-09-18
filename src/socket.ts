@@ -142,6 +142,10 @@ export interface Client {
 
 /// 事件
 export interface EventHandle {
+  // ============================================================ //
+  // 房间消息
+  // ============================================================
+
   /// 房间详情
   OnRoom(client: Client, param: RoomParam, message: Message<Room>, response: ResponseMessage): void;
   /// 团购详情
@@ -269,6 +273,7 @@ export interface EventHandle {
     message: Message<UserBiddingInitiateCounteroffer>,
     response: ResponseMessage
   ): void;
+
   // ============================================================ //
   // 小鸡游戏
   // ============================================================ //
