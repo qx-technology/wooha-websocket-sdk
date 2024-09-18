@@ -599,10 +599,10 @@ function getMessageHistory(token, channel, seq, params = {}, platform = constant
             uni.request({
                 url: `${url}${queryString}`,
                 header: headers,
+                responseType: "arraybuffer",
                 success: (res) => {
-                    if ((res.header.get("Content-Type") || "").includes("msgpack")) {
-                        const bytes = new TextEncoder().encode(res.data);
-                        const data = (0, msgpackr_1.unpack)(bytes);
+                    if ((res.header["content-type"] || "").includes("msgpack")) {
+                        const data = (0, msgpackr_1.unpack)(res.data);
                         resolve(data);
                     }
                     else {
