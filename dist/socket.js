@@ -475,7 +475,6 @@ class ClientProvider {
                         // console.log("收到服务器心跳:", now);
                         break;
                 }
-                console.info(request.config.channel, response.rpsSeq);
                 request.config.seq = response.rpsSeq;
             }
         });
@@ -510,7 +509,7 @@ class ClientProvider {
             if (request.nextRequestTime > now)
                 continue;
             request.nextRequestTime = now + request.interval;
-            console.log("发送消息", types_1.ChannelType[request.config.channel], request.config.seq);
+            // console.log("发送消息", ChannelType[request.config.channel], request.config.seq);
             requests.push(request.config);
         }
         if (requests.length == 0)
