@@ -975,10 +975,10 @@ export function getMessageHistory(
       uni.request({
         url: `${url}${queryString}`,
         header: headers,
+        responseType: "arraybuffer",
         success: (res: any) => {
-          if ((res.header.get("Content-Type") || "").includes("msgpack")) {
-            const bytes = new TextEncoder().encode(res.data);
-            const data = unpack(bytes) as Message[];
+          if ((res.header["content-type"] || "").includes("msgpack")) {
+            const data = unpack(res.data) as Message[];
             resolve(data);
           } else {
             reject();
