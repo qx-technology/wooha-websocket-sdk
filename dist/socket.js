@@ -87,14 +87,13 @@ class ClientProvider {
         this.requests = [];
         this.showLog = showLog;
         this.platform = platform;
-        this.uid = uuid();
         // 5秒心跳
         this.registerChannel({
             channel: types_1.ChannelType.HEARTBEAT,
             version: "1.0",
             seq: BigInt(0),
             ts: BigInt(Date.now()),
-            uid: this.uid
+            uid: uuid()
         }, 5000, false);
     }
     start() {
@@ -142,7 +141,7 @@ class ClientProvider {
                     version: "1.0",
                     seq: BigInt(roomAggMsgSeq),
                     ts: BigInt(Date.now()),
-                    uid: this.uid,
+                    uid: uuid(),
                     params: {}
                 }, 100);
                 if (this.token) {
@@ -156,7 +155,7 @@ class ClientProvider {
                         version: "1.0",
                         seq: BigInt(userRoomAggMsgSeq),
                         ts: BigInt(Date.now()),
-                        uid: this.uid,
+                        uid: uuid(),
                         params: {}
                     }, 100);
                 }
@@ -180,7 +179,7 @@ class ClientProvider {
                     version: "1.0",
                     seq: BigInt(0),
                     ts: BigInt(Date.now()),
-                    uid: this.uid,
+                    uid: uuid(),
                     params: { roomId }
                 }, 3000, false);
                 // 订阅团购详情
@@ -193,7 +192,7 @@ class ClientProvider {
                     version: "1.0",
                     seq: BigInt(groupBuyingSeq),
                     ts: BigInt(Date.now()),
-                    uid: this.uid,
+                    uid: uuid(),
                     params: { roomId }
                 }, 100);
                 // 订阅团购投票
@@ -206,7 +205,7 @@ class ClientProvider {
                     version: "1.0",
                     seq: BigInt(groupBuyingVoteSeq),
                     ts: BigInt(Date.now()),
-                    uid: this.uid,
+                    uid: uuid(),
                     params: { roomId }
                 }, 100);
                 // 订阅房间消息
@@ -219,7 +218,7 @@ class ClientProvider {
                     version: "1.0",
                     seq: BigInt(roomMsgSeq),
                     ts: BigInt(Date.now()),
-                    uid: this.uid,
+                    uid: uuid(),
                     params: { roomId }
                 }, 100);
                 if (this.token) {
@@ -233,7 +232,7 @@ class ClientProvider {
                         version: "1.0",
                         seq: BigInt(userRoomMsgSeq),
                         ts: BigInt(Date.now()),
-                        uid: this.uid,
+                        uid: uuid(),
                         params: { roomId }
                     }, 100);
                 }
@@ -262,7 +261,7 @@ class ClientProvider {
                     version: "1.0",
                     seq: version,
                     ts: BigInt(Date.now()),
-                    uid: this.uid,
+                    uid: uuid(),
                     params: {}
                 }, 1000);
             }
@@ -284,7 +283,7 @@ class ClientProvider {
                     version: "1.0",
                     seq: version,
                     ts: BigInt(Date.now()),
-                    uid: this.uid,
+                    uid: uuid(),
                     params: {}
                 }, 1000);
             }
@@ -476,6 +475,7 @@ class ClientProvider {
                         // console.log("收到服务器心跳:", now);
                         break;
                 }
+                console.info(request.config.channel, response.rpsSeq);
                 request.config.seq = response.rpsSeq;
             }
         });
@@ -510,6 +510,7 @@ class ClientProvider {
             if (request.nextRequestTime > now)
                 continue;
             request.nextRequestTime = now + request.interval;
+            console.log("发送消息", types_1.ChannelType[request.config.channel], request.config.seq);
             requests.push(request.config);
         }
         if (requests.length == 0)

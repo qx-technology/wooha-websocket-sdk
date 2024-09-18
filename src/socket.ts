@@ -374,7 +374,6 @@ export class ClientProvider implements Client {
   private requests: RequestInfo[];
   private showLog: boolean;
   private platform: PlatformType;
-  private uid: string;
 
   constructor(
     eventHandle: EventHandle,
@@ -393,7 +392,6 @@ export class ClientProvider implements Client {
     this.requests = [];
     this.showLog = showLog;
     this.platform = platform;
-    this.uid = uuid();
     // 5秒心跳
     this.registerChannel(
       <RequestMessage>{
@@ -401,7 +399,7 @@ export class ClientProvider implements Client {
         version: "1.0",
         seq: BigInt(0),
         ts: BigInt(Date.now()),
-        uid: this.uid
+        uid: uuid()
       },
       5000,
       false
@@ -461,7 +459,7 @@ export class ClientProvider implements Client {
           version: "1.0",
           seq: BigInt(roomAggMsgSeq),
           ts: BigInt(Date.now()),
-          uid: this.uid,
+          uid: uuid(),
           params: {}
         },
         100
@@ -478,7 +476,7 @@ export class ClientProvider implements Client {
             version: "1.0",
             seq: BigInt(userRoomAggMsgSeq),
             ts: BigInt(Date.now()),
-            uid: this.uid,
+            uid: uuid(),
             params: {}
           },
           100
@@ -506,7 +504,7 @@ export class ClientProvider implements Client {
           version: "1.0",
           seq: BigInt(0),
           ts: BigInt(Date.now()),
-          uid: this.uid,
+          uid: uuid(),
           params: { roomId }
         },
         3000,
@@ -523,7 +521,7 @@ export class ClientProvider implements Client {
           version: "1.0",
           seq: BigInt(groupBuyingSeq),
           ts: BigInt(Date.now()),
-          uid: this.uid,
+          uid: uuid(),
           params: { roomId }
         },
         100
@@ -539,7 +537,7 @@ export class ClientProvider implements Client {
           version: "1.0",
           seq: BigInt(groupBuyingVoteSeq),
           ts: BigInt(Date.now()),
-          uid: this.uid,
+          uid: uuid(),
           params: { roomId }
         },
         100
@@ -555,7 +553,7 @@ export class ClientProvider implements Client {
           version: "1.0",
           seq: BigInt(roomMsgSeq),
           ts: BigInt(Date.now()),
-          uid: this.uid,
+          uid: uuid(),
           params: { roomId }
         },
         100
@@ -572,7 +570,7 @@ export class ClientProvider implements Client {
             version: "1.0",
             seq: BigInt(userRoomMsgSeq),
             ts: BigInt(Date.now()),
-            uid: this.uid,
+            uid: uuid(),
             params: { roomId }
           },
           100
@@ -609,7 +607,7 @@ export class ClientProvider implements Client {
             version: "1.0",
             seq: version,
             ts: BigInt(Date.now()),
-            uid: this.uid,
+            uid: uuid(),
             params: {}
           },
           1000
@@ -637,7 +635,7 @@ export class ClientProvider implements Client {
             version: "1.0",
             seq: version,
             ts: BigInt(Date.now()),
-            uid: this.uid,
+            uid: uuid(),
             params: {}
           },
           1000
@@ -836,6 +834,7 @@ export class ClientProvider implements Client {
           // console.log("收到服务器心跳:", now);
           break;
       }
+      console.info(request.config.channel, response.rpsSeq);
       request.config.seq = response.rpsSeq;
     }
   }
@@ -867,6 +866,7 @@ export class ClientProvider implements Client {
     for (const request of this.requests) {
       if (request.nextRequestTime > now) continue;
       request.nextRequestTime = now + request.interval;
+      console.log("发送消息", ChannelType[request.config.channel], request.config.seq);
       requests.push(request.config);
     }
 
