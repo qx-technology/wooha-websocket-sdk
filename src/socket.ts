@@ -685,7 +685,7 @@ export class ClientProvider implements Client {
     if (this.showLog)
       console.log(
         "🌟接收消息:",
-        responses.map((itme) => ChannelType[itme.channel]).join(", "),
+        responses.map((item) => `${ChannelType[item.channel]}(${item.seq}, ${item.rpsSeq})`).join(", "),
         rpsData.length,
         "Bytes"
       );
