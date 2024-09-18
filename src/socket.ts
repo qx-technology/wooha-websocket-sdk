@@ -976,7 +976,13 @@ export function getMessageHistory(
         url: `${url}${queryString}`,
         header: headers,
         success: (res: any) => {
-          resolve(res.data.data);
+          if ((res.header.get("Content-Type") || "").includes("msgpack")) {
+            const bytes = new TextEncoder().encode(res.data);
+            const data = unpack(bytes) as Message[];
+            resolve(data);
+          } else {
+            reject();
+          }
         },
         fail: () => {
           reject();
