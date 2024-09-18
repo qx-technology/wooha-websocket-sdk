@@ -961,7 +961,7 @@ export function getMessageHistory(
   channel: ChannelType,
   seq: bigint,
   params: {} = {},
-  platform = Platform.WEB
+  platform = Platform.UniApp
 ): Promise<Message[]> {
   const headers: Record<string, any> = {
     "Content-Type": "application/json",
@@ -1007,7 +1007,7 @@ export async function getMsgSeqByRank(
   channel: ChannelType,
   rank: number = 1,
   params: Record<string, any> = {},
-  platform = Platform.WEB,
+  platform = Platform.UniApp,
   token?: string
 ): Promise<string> {
   const headers: Record<string, any> = {
