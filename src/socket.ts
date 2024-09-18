@@ -38,10 +38,12 @@ import {
   UserBiddingReOffer,
   UserBiddingAcceptedReOffer,
   UserBiddingRejectedReOffer,
-  UserBiddingInitiateCounteroffer
+  UserBiddingInitiateCounteroffer,
+  PlatformType
 } from "./types";
 import { WebFuket } from "./socket_impl";
 import { pack, unpack } from "msgpackr";
+import constants from "./constants";
 
 function uuid(): string {
   return `${Date.now()}${Math.random()}`;
@@ -136,11 +138,6 @@ export interface Client {
    * 取消订阅用户订单消息
    */
   unsubscribeUserOrder(): Client;
-}
-
-export enum Platform {
-  WEB = "web",
-  UniApp = "uni-app"
 }
 
 /// 事件
@@ -376,14 +373,14 @@ export class ClientProvider implements Client {
   private callback: EventHandle;
   private requests: RequestInfo[];
   private showLog: boolean;
-  private platform: Platform;
+  private platform: PlatformType;
   private uid: string;
 
   constructor(
     eventHandle: EventHandle,
     token?: string,
     showLog: boolean = false,
-    platform: Platform = Platform.UniApp
+    platform: PlatformType = constants.Platform
   ) {
     this.url = getBasicWebsocketUrl() + "/ws";
     this.token = token;
@@ -679,7 +676,7 @@ export class ClientProvider implements Client {
     const now = Date.now();
     this.lastRpsTime = now;
     var rpsData;
-    if (this.platform === Platform.UniApp) {
+    if (this.platform === PlatformType.UniApp) {
       rpsData = new Uint8Array(event.data);
     } else {
       rpsData = new Uint8Array(await event.data.arrayBuffer());
@@ -899,7 +896,7 @@ export class ClientProvider implements Client {
 
     const url = `${getBasicHttpUrl()}/getMessageVersioinByRank?`;
     const queryString = objectToQueryString(Object.assign(params, { channel, rank }));
-    if (this.platform === Platform.UniApp) {
+    if (this.platform === PlatformType.UniApp) {
       return new Promise((resolve, reject) => {
         //@ts-ignore
         uni.request({
@@ -928,7 +925,7 @@ export function newClient(
   eventHandle: EventHandle,
   token?: string,
   showLog?: boolean,
-  platform: Platform = Platform.UniApp
+  platform: PlatformType = constants.Platform
 ): Client {
   return new ClientProvider(eventHandle, token, showLog, platform);
 }
@@ -961,7 +958,7 @@ export function getMessageHistory(
   channel: ChannelType,
   seq: bigint,
   params: {} = {},
-  platform = Platform.UniApp
+  platform = constants.Platform
 ): Promise<Message[]> {
   const headers: Record<string, any> = {
     "Content-Type": "application/json",
@@ -973,7 +970,7 @@ export function getMessageHistory(
     seq,
     ...params
   });
-  if (platform === Platform.UniApp) {
+  if (platform === PlatformType.UniApp) {
     return new Promise((resolve, reject) => {
       //@ts-ignore
       uni.request({
@@ -1007,7 +1004,7 @@ export async function getMsgSeqByRank(
   channel: ChannelType,
   rank: number = 1,
   params: Record<string, any> = {},
-  platform = Platform.UniApp,
+  platform = PlatformType.UniApp,
   token?: string
 ): Promise<string> {
   const headers: Record<string, any> = {
@@ -1017,7 +1014,7 @@ export async function getMsgSeqByRank(
 
   const url = `${getBasicHttpUrl()}/getMessageVersioinByRank?`;
   const queryString = objectToQueryString(Object.assign(params, { channel, rank }));
-  if (platform === Platform.UniApp) {
+  if (platform === PlatformType.UniApp) {
     return new Promise((resolve, reject) => {
       //@ts-ignore
       uni.request({
