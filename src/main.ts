@@ -288,6 +288,6 @@ function test_http() {
 }
 
 if (require.main === module) {
-  // main();
-  test_http();
+  main();
+  // test_http();
 }
