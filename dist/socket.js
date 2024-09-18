@@ -600,7 +600,14 @@ function getMessageHistory(token, channel, seq, params = {}, platform = constant
                 url: `${url}${queryString}`,
                 header: headers,
                 success: (res) => {
-                    resolve(res.data.data);
+                    if ((res.header.get("Content-Type") || "").includes("msgpack")) {
+                        const bytes = new TextEncoder().encode(res.data);
+                        const data = (0, msgpackr_1.unpack)(bytes);
+                        resolve(data);
+                    }
+                    else {
+                        reject();
+                    }
                 },
                 fail: () => {
                     reject();
