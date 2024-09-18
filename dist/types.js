@@ -1,9 +1,17 @@
 "use strict";
 // ============================================================ //
-// 枚举
+// 配置
 // ============================================================ //
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.MessageType = exports.ChannelType = void 0;
+exports.MessageType = exports.ChannelType = exports.PlatformType = void 0;
+var PlatformType;
+(function (PlatformType) {
+    PlatformType["WEB"] = "web";
+    PlatformType["UniApp"] = "uni-app";
+})(PlatformType || (exports.PlatformType = PlatformType = {}));
+// ============================================================ //
+// 枚举
+// ============================================================ //
 /**
  * 通道类型
  */

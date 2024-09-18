@@ -8,8 +8,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ClientProvider = exports.RequestInfo = exports.Platform = void 0;
+exports.ClientProvider = exports.RequestInfo = void 0;
 exports.configSite = configSite;
 exports.useHttps = useHttps;
 exports.useWss = useWss;
@@ -19,6 +22,7 @@ exports.getMsgSeqByRank = getMsgSeqByRank;
 const types_1 = require("./types");
 const socket_impl_1 = require("./socket_impl");
 const msgpackr_1 = require("msgpackr");
+const constants_1 = __importDefault(require("./constants"));
 function uuid() {
     return `${Date.now()}${Math.random()}`;
 }
@@ -59,11 +63,6 @@ function getBasicHttpUrl() {
         return `http://${site}`;
     }
 }
-var Platform;
-(function (Platform) {
-    Platform["WEB"] = "web";
-    Platform["UniApp"] = "uni-app";
-})(Platform || (exports.Platform = Platform = {}));
 class RequestInfo {
     constructor(config, interval, isIncrData = true) {
         const now = Date.now();
@@ -75,7 +74,7 @@ class RequestInfo {
 }
 exports.RequestInfo = RequestInfo;
 class ClientProvider {
-    constructor(eventHandle, token, showLog = false, platform = Platform.UniApp) {
+    constructor(eventHandle, token, showLog = false, platform = constants_1.default.Platform) {
         this.socket = null;
         this.url = getBasicWebsocketUrl() + "/ws";
         this.token = token;
@@ -321,7 +320,7 @@ class ClientProvider {
             const now = Date.now();
             this.lastRpsTime = now;
             var rpsData;
-            if (this.platform === Platform.UniApp) {
+            if (this.platform === types_1.PlatformType.UniApp) {
                 rpsData = new Uint8Array(event.data);
             }
             else {
@@ -535,7 +534,7 @@ class ClientProvider {
                 headers["token"] = token;
             const url = `${getBasicHttpUrl()}/getMessageVersioinByRank?`;
             const queryString = objectToQueryString(Object.assign(params, { channel, rank }));
-            if (this.platform === Platform.UniApp) {
+            if (this.platform === types_1.PlatformType.UniApp) {
                 return new Promise((resolve, reject) => {
                     //@ts-ignore
                     uni.request({
@@ -562,7 +561,7 @@ class ClientProvider {
     }
 }
 exports.ClientProvider = ClientProvider;
-function newClient(eventHandle, token, showLog, platform = Platform.UniApp) {
+function newClient(eventHandle, token, showLog, platform = constants_1.default.Platform) {
     return new ClientProvider(eventHandle, token, showLog, platform);
 }
 function objectToQueryString(obj) {
@@ -586,7 +585,7 @@ function objectToQueryString(obj) {
  * @param platform 平台
  * @returns 如果调用成功，返回消息数组。失败返回JSON格式错误
  */
-function getMessageHistory(token, channel, seq, params = {}, platform = Platform.WEB) {
+function getMessageHistory(token, channel, seq, params = {}, platform = constants_1.default.Platform) {
     const headers = {
         "Content-Type": "application/json",
         token: token
@@ -594,7 +593,7 @@ function getMessageHistory(token, channel, seq, params = {}, platform = Platform
     const url = `${getBasicHttpUrl()}/getMessageHistory?`;
     const queryString = objectToQueryString(Object.assign({ channel,
         seq }, params));
-    if (platform === Platform.UniApp) {
+    if (platform === types_1.PlatformType.UniApp) {
         return new Promise((resolve, reject) => {
             //@ts-ignore
             uni.request({
@@ -626,7 +625,7 @@ function getMessageHistory(token, channel, seq, params = {}, platform = Platform
     }
 }
 function getMsgSeqByRank(channel_1) {
-    return __awaiter(this, arguments, void 0, function* (channel, rank = 1, params = {}, platform = Platform.WEB, token) {
+    return __awaiter(this, arguments, void 0, function* (channel, rank = 1, params = {}, platform = types_1.PlatformType.UniApp, token) {
         const headers = {
             "Content-Type": "application/json"
         };
@@ -634,7 +633,7 @@ function getMsgSeqByRank(channel_1) {
             headers["token"] = token;
         const url = `${getBasicHttpUrl()}/getMessageVersioinByRank?`;
         const queryString = objectToQueryString(Object.assign(params, { channel, rank }));
-        if (platform === Platform.UniApp) {
+        if (platform === types_1.PlatformType.UniApp) {
             return new Promise((resolve, reject) => {
                 //@ts-ignore
                 uni.request({

@@ -142,7 +142,7 @@ function main() {
 }
 function demo() {
     // configSite("127.0.0.1:8849");
-    const client = (0, socket_1.newClient)(new MsgCallback(), token, true, socket_1.Platform.WEB);
+    const client = (0, socket_1.newClient)(new MsgCallback(), token, true, types_1.PlatformType.WEB);
     client.start();
     // client.enterRoom(BigInt(1));
     client.subscribeUserChickenGame(BigInt(0));

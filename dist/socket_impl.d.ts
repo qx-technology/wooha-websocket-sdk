@@ -1,4 +1,4 @@
-import { Platform } from "./socket";
+import { PlatformType } from "./types";
 export interface WebFuketInterface {
     onopen: ((this: WebFuketInterface, ev: Event) => any) | null;
     onmessage: ((this: WebFuketInterface, ev: MessageEvent) => any) | null;
@@ -11,8 +11,8 @@ export declare class WebFuket implements WebFuketInterface {
     url: string;
     token?: string;
     socket: any;
-    platform: Platform;
-    constructor(url: string, token?: string, platform?: Platform);
+    platform: PlatformType;
+    constructor(url: string, token?: string, platform?: PlatformType);
     onopen: ((this: WebFuketInterface, ev: Event) => any) | null;
     onmessage: ((this: WebFuketInterface, ev: MessageEvent) => any) | null;
     onerror: ((this: WebFuketInterface, ev: Event) => any) | null;

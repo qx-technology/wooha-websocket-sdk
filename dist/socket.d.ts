@@ -1,4 +1,4 @@
-import { RequestMessage, RoomParam, ChannelType, ResponseMessage, Message, Room, GroupBuying, GroupBuyingVote, GroupBuyingNextProduct, GroupBuyingStart, GroupBuyingLotteryOpening, GroupBuyingWinning, BiddingAllCounteroffer, BiddingDeal, UserBiddingInitiateOffer, UserBiddingReceivesOffer, UserBiddingReceivesCounteroffer, UserBiddingRejectedOffer, BiddingStart, UserSellerAcceptedOffer, UserSellerRejectedOffer, UserBiddingAcceptedOffer, UserChickenGameBuyChicken, UserChickenGameIncreaseLife, UserChickenGameBuyFeed, UserChickenGameImpendingDeath, UserChickenGameChickenDeath, UserChickenGameChickenEnterHeaven, UserChickenGameBlobsExchange, UserOrderPaymented, UserOrderShipped, UserOrderCompleted, UserOrderAfterSalesApproved, UserOrderAfterSalesRejected, UserOrderAfterSalesRefund, UserBiddingReOffer, UserBiddingAcceptedReOffer, UserBiddingRejectedReOffer, UserBiddingInitiateCounteroffer } from "./types";
+import { RequestMessage, RoomParam, ChannelType, ResponseMessage, Message, Room, GroupBuying, GroupBuyingVote, GroupBuyingNextProduct, GroupBuyingStart, GroupBuyingLotteryOpening, GroupBuyingWinning, BiddingAllCounteroffer, BiddingDeal, UserBiddingInitiateOffer, UserBiddingReceivesOffer, UserBiddingReceivesCounteroffer, UserBiddingRejectedOffer, BiddingStart, UserSellerAcceptedOffer, UserSellerRejectedOffer, UserBiddingAcceptedOffer, UserChickenGameBuyChicken, UserChickenGameIncreaseLife, UserChickenGameBuyFeed, UserChickenGameImpendingDeath, UserChickenGameChickenDeath, UserChickenGameChickenEnterHeaven, UserChickenGameBlobsExchange, UserOrderPaymented, UserOrderShipped, UserOrderCompleted, UserOrderAfterSalesApproved, UserOrderAfterSalesRejected, UserOrderAfterSalesRefund, UserBiddingReOffer, UserBiddingAcceptedReOffer, UserBiddingRejectedReOffer, UserBiddingInitiateCounteroffer, PlatformType } from "./types";
 export declare function configSite(url: string): void;
 export declare function useHttps(): void;
 export declare function useWss(): void;
@@ -48,10 +48,6 @@ export interface Client {
      * 取消订阅用户订单消息
      */
     unsubscribeUserOrder(): Client;
-}
-export declare enum Platform {
-    WEB = "web",
-    UniApp = "uni-app"
 }
 export interface EventHandle {
     OnRoom(client: Client, param: RoomParam, message: Message<Room>, response: ResponseMessage): void;
@@ -110,7 +106,7 @@ export declare class ClientProvider implements Client {
     private showLog;
     private platform;
     private uid;
-    constructor(eventHandle: EventHandle, token?: string, showLog?: boolean, platform?: Platform);
+    constructor(eventHandle: EventHandle, token?: string, showLog?: boolean, platform?: PlatformType);
     start(): Client;
     stop(autoConn?: boolean): Client;
     registerChannel(config: RequestMessage, interval: number, isIncrData?: boolean): void;
@@ -130,7 +126,7 @@ export declare class ClientProvider implements Client {
     private handle;
     getMsgSeqByRank(channel: ChannelType, rank?: number, params?: Record<string, any>, token?: string): Promise<string>;
 }
-export declare function newClient(eventHandle: EventHandle, token?: string, showLog?: boolean, platform?: Platform): Client;
+export declare function newClient(eventHandle: EventHandle, token?: string, showLog?: boolean, platform?: PlatformType): Client;
 /**
  * 获取历史消息
  * @param token 用户登录令牌
@@ -140,5 +136,5 @@ export declare function newClient(eventHandle: EventHandle, token?: string, show
  * @param platform 平台
  * @returns 如果调用成功，返回消息数组。失败返回JSON格式错误
  */
-export declare function getMessageHistory(token: string, channel: ChannelType, seq: bigint, params?: {}, platform?: Platform): Promise<Message[]>;
-export declare function getMsgSeqByRank(channel: ChannelType, rank?: number, params?: Record<string, any>, platform?: Platform, token?: string): Promise<string>;
+export declare function getMessageHistory(token: string, channel: ChannelType, seq: bigint, params?: {}, platform?: PlatformType): Promise<Message[]>;
+export declare function getMsgSeqByRank(channel: ChannelType, rank?: number, params?: Record<string, any>, platform?: PlatformType, token?: string): Promise<string>;
