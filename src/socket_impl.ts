@@ -1,6 +1,7 @@
 //@ts-ignore
 import socket from "plus-websocket";
-import {Platform} from "./socket";
+import { PlatformType } from "./types";
+import constants from "./constants";
 
 export interface WebFuketInterface {
   onopen: ((this: WebFuketInterface, ev: Event) => any) | null;
@@ -15,8 +16,8 @@ export class WebFuket implements WebFuketInterface {
   url: string;
   token?: string;
   socket: any;
-  platform: Platform;
-  constructor(url: string, token?: string, platform: Platform = Platform.UniApp) {
+  platform: PlatformType;
+  constructor(url: string, token?: string, platform: PlatformType = constants.Platform) {
     this.url = url;
     this.token = token;
     this.onopen = null;
@@ -32,7 +33,7 @@ export class WebFuket implements WebFuketInterface {
     }
 
     console.log("process.env['UNI_PLATFORM']", this.platform);
-    if (this.platform === Platform.UniApp) {
+    if (this.platform === PlatformType.UniApp) {
       //@ts-ignore
       Object.assign(uni, socket);
       //@ts-ignore
@@ -91,7 +92,7 @@ export class WebFuket implements WebFuketInterface {
     this.socket.close();
   }
   send(data: string | ArrayBufferLike | Blob | ArrayBufferView): void {
-    if (this.platform === Platform.UniApp) {
+    if (this.platform === PlatformType.UniApp) {
       this.socket.send({ data });
       return;
     }

@@ -1,4 +1,4 @@
-import { newClient, EventHandle, Client, configSite, Platform, getMessageHistory } from "./socket";
+import { newClient, EventHandle, Client, configSite, getMessageHistory } from "./socket";
 import {
   RoomParam,
   Message,
@@ -37,7 +37,8 @@ import {
   UserBiddingReOffer,
   ChannelType,
   UserBiddingInitiateCounteroffer,
-  UserBiddingRejectedReOffer
+  UserBiddingRejectedReOffer,
+  PlatformType
 } from "./types";
 
 /**
@@ -268,7 +269,7 @@ function main() {
 
 export function demo() {
   // configSite("127.0.0.1:8849");
-  const client = newClient(new MsgCallback(), token, true, Platform.WEB);
+  const client = newClient(new MsgCallback(), token, true, PlatformType.WEB);
   client.start();
   // client.enterRoom(BigInt(1));
   client.subscribeUserChickenGame(BigInt(0));
@@ -287,6 +288,6 @@ function test_http() {
 }
 
 if (require.main === module) {
-  // main();
-  test_http();
+  main();
+  // test_http();
 }

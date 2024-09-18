@@ -1,3 +1,7 @@
+export declare enum PlatformType {
+    WEB = "web",
+    UniApp = "uni-app"
+}
 /**
  * 通道类型
  */
