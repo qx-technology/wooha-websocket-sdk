@@ -328,7 +328,7 @@ class ClientProvider {
             }
             const responses = (0, msgpackr_1.unpack)(rpsData);
             if (this.showLog)
-                console.log("🌟接收消息:", responses.map((itme) => types_1.ChannelType[itme.channel]).join(", "), rpsData.length, "Bytes");
+                console.log("🌟接收消息:", responses.map((item) => `${types_1.ChannelType[item.channel]}(${item.seq}, ${item.rpsSeq})`).join(", "), rpsData.length, "Bytes");
             for (const response of responses) {
                 const request = this.requests.find((request) => request.config.uid === response.uid);
                 if (!request)
