@@ -501,7 +501,7 @@ export interface BiddingStart {
   /**
    * 过期时间
    */
-  expiresAt?: string;
+  expiresAt?: Date;
   /**
    * 竞拍过期时间
    */
@@ -535,7 +535,7 @@ export interface BiddingAllCounteroffer {
   /**
    * 过期时间
    */
-  expiresAt?: string;
+  expiresAt?: Date;
   /**
    * 竞拍过期时间
    */
@@ -631,7 +631,7 @@ export interface UserBiddingInitiateOffer {
   /**
    * 过期时间
    */
-  expiresAt?: string;
+  expiresAt?: Date;
   /**
    * 竞拍过期时间
    */
@@ -669,7 +669,7 @@ export interface UserBiddingReceivesOffer {
   /**
    * 过期时间
    */
-  expiresAt?: string;
+  expiresAt?: Date;
   /**
    * 竞拍过期时间
    */
@@ -707,7 +707,7 @@ export interface UserBiddingReceivesCounteroffer {
   /**
    * 过期时间
    */
-  expiresAt?: string;
+  expiresAt?: Date;
   /**
    * 竞拍过期时间
    */
@@ -738,6 +738,10 @@ export interface UserBiddingRejectedOffer {
    * 金额
    */
   amount: bigint;
+  /**
+   * 过期时间
+   */
+  expiresAt?: Date;
   /**
    * 竞拍过期时间
    */
@@ -773,6 +777,10 @@ export interface UserSellerAcceptedOffer {
    */
   amount: bigint;
   /**
+   * 过期时间
+   */
+  expiresAt?: Date;
+  /**
    * 竞拍过期时间
    */
   auctionExpireTime: bigint;
@@ -806,6 +814,10 @@ export interface UserSellerRejectedOffer {
    * 金额
    */
   amount: bigint;
+  /**
+   * 过期时间
+   */
+  expiresAt?: Date;
   /**
    * 竞拍过期时间
    */
@@ -841,6 +853,10 @@ export interface UserBiddingAcceptedOffer {
    */
   amount: bigint;
   /**
+   * 过期时间
+   */
+  expiresAt?: Date;
+  /**
    * 竞拍过期时间
    */
   auctionExpireTime: bigint;
@@ -874,6 +890,10 @@ export interface UserBiddingReOffer {
    * 金额
    */
   amount: bigint;
+  /**
+   * 过期时间
+   */
+  expiresAt?: Date;
   /**
    * 竞拍过期时间
    */
@@ -909,6 +929,10 @@ export interface UserBiddingAcceptedReOffer {
    */
   amount: bigint;
   /**
+   * 过期时间
+   */
+  expiresAt?: Date;
+  /**
    * 竞拍过期时间
    */
   auctionExpireTime: bigint;
@@ -943,6 +967,10 @@ export interface UserBiddingRejectedReOffer {
    */
   amount: bigint;
   /**
+   * 过期时间
+   */
+  expiresAt?: Date;
+  /**
    * 竞拍过期时间
    */
   auctionExpireTime: bigint;
@@ -976,6 +1004,10 @@ export interface UserBiddingInitiateCounteroffer {
    * 金额
    */
   amount: bigint;
+  /**
+   * 过期时间
+   */
+  expiresAt?: Date;
   /**
    * 竞拍过期时间
    */
