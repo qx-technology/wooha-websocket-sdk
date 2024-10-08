@@ -173,6 +173,29 @@ class ClientProvider {
     enterRoom(roomId) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
+                // 团购详情版本号
+                const groupBuyingSeq = yield this.getMsgSeqByRank(types_1.ChannelType.GROUPBUYING, 1, { roomId }, this.token);
+                if (this.showLog) {
+                    console.log(`订阅团购详情: roomId(${roomId}), 版本号(${groupBuyingSeq})`);
+                }
+                // 团购投票版本号
+                const groupBuyingVoteSeq = yield this.getMsgSeqByRank(types_1.ChannelType.GROUPBUYING_VOTE, 1, { roomId }, this.token);
+                if (this.showLog) {
+                    console.log(`订阅团购投票: roomId(${roomId}), 版本号(${groupBuyingVoteSeq})`);
+                }
+                // 房间消息版本号
+                const roomMsgSeq = yield this.getMsgSeqByRank(types_1.ChannelType.ROOM_MSG, 1, { roomId }, this.token);
+                if (this.showLog) {
+                    console.log(`订阅房间消息: roomId(${roomId}), 版本号(${roomMsgSeq})`);
+                }
+                // 用户房间消息版本号
+                let userRoomMsgSeq;
+                if (this.token) {
+                    userRoomMsgSeq = yield this.getMsgSeqByRank(types_1.ChannelType.USER_ROOM_MSG, 1, { roomId }, this.token);
+                    if (this.showLog) {
+                        console.log(`订阅用户房间消息: roomId(${roomId}), 版本号(${userRoomMsgSeq})`);
+                    }
+                }
                 // 订阅房间详情
                 this.registerChannel({
                     channel: types_1.ChannelType.ROOM,
@@ -183,10 +206,6 @@ class ClientProvider {
                     params: { roomId }
                 }, 3000, false);
                 // 订阅团购详情
-                const groupBuyingSeq = yield this.getMsgSeqByRank(types_1.ChannelType.GROUPBUYING, 1, { roomId }, this.token);
-                if (this.showLog) {
-                    console.log(`订阅团购详情: roomId(${roomId}), 版本号(${groupBuyingSeq})`);
-                }
                 this.registerChannel({
                     channel: types_1.ChannelType.GROUPBUYING,
                     version: "1.0",
@@ -196,10 +215,6 @@ class ClientProvider {
                     params: { roomId }
                 }, 100);
                 // 订阅团购投票
-                const groupBuyingVoteSeq = yield this.getMsgSeqByRank(types_1.ChannelType.GROUPBUYING_VOTE, 1, { roomId }, this.token);
-                if (this.showLog) {
-                    console.log(`订阅团购投票: roomId(${roomId}), 版本号(${groupBuyingVoteSeq})`);
-                }
                 this.registerChannel({
                     channel: types_1.ChannelType.GROUPBUYING_VOTE,
                     version: "1.0",
@@ -209,10 +224,6 @@ class ClientProvider {
                     params: { roomId }
                 }, 100);
                 // 订阅房间消息
-                const roomMsgSeq = yield this.getMsgSeqByRank(types_1.ChannelType.ROOM_MSG, 1, { roomId }, this.token);
-                if (this.showLog) {
-                    console.log(`订阅房间消息: roomId(${roomId}), 版本号(${roomMsgSeq})`);
-                }
                 this.registerChannel({
                     channel: types_1.ChannelType.ROOM_MSG,
                     version: "1.0",
@@ -223,10 +234,6 @@ class ClientProvider {
                 }, 100);
                 if (this.token) {
                     // 订阅用户房间消息
-                    const userRoomMsgSeq = yield this.getMsgSeqByRank(types_1.ChannelType.USER_ROOM_MSG, 1, { roomId }, this.token);
-                    if (this.showLog) {
-                        console.log(`订阅用户房间消息: roomId(${roomId}), 版本号(${userRoomMsgSeq})`);
-                    }
                     this.registerChannel({
                         channel: types_1.ChannelType.USER_ROOM_MSG,
                         version: "1.0",
@@ -239,8 +246,9 @@ class ClientProvider {
             }
             catch (e) {
                 console.error(e);
+                return Promise.reject(e);
             }
-            return this;
+            return Promise.resolve(this);
         });
     }
     leaveRoom(roomId) {
