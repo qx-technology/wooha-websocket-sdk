@@ -502,6 +502,29 @@ export class ClientProvider implements Client {
 
   async enterRoom(roomId: bigint): Promise<Client> {
     try {
+      // 团购详情版本号
+      const groupBuyingSeq = await this.getMsgSeqByRank(ChannelType.GROUPBUYING, 1, { roomId }, this.token);
+      if (this.showLog) {
+        console.log(`订阅团购详情: roomId(${roomId}), 版本号(${groupBuyingSeq})`);
+      }
+      // 团购投票版本号
+      const groupBuyingVoteSeq = await this.getMsgSeqByRank(ChannelType.GROUPBUYING_VOTE, 1, { roomId }, this.token);
+      if (this.showLog) {
+        console.log(`订阅团购投票: roomId(${roomId}), 版本号(${groupBuyingVoteSeq})`);
+      }
+      // 房间消息版本号
+      const roomMsgSeq = await this.getMsgSeqByRank(ChannelType.ROOM_MSG, 1, { roomId }, this.token);
+      if (this.showLog) {
+        console.log(`订阅房间消息: roomId(${roomId}), 版本号(${roomMsgSeq})`);
+      }
+      // 用户房间消息版本号
+      let userRoomMsgSeq;
+      if (this.token) {
+        userRoomMsgSeq = await this.getMsgSeqByRank(ChannelType.USER_ROOM_MSG, 1, { roomId }, this.token);
+        if (this.showLog) {
+          console.log(`订阅用户房间消息: roomId(${roomId}), 版本号(${userRoomMsgSeq})`);
+        }
+      }
       // 订阅房间详情
       this.registerChannel(
         <RequestMessage<RoomParam>>{
@@ -516,10 +539,6 @@ export class ClientProvider implements Client {
         false
       );
       // 订阅团购详情
-      const groupBuyingSeq = await this.getMsgSeqByRank(ChannelType.GROUPBUYING, 1, { roomId }, this.token);
-      if (this.showLog) {
-        console.log(`订阅团购详情: roomId(${roomId}), 版本号(${groupBuyingSeq})`);
-      }
       this.registerChannel(
         <RequestMessage<RoomParam>>{
           channel: ChannelType.GROUPBUYING,
@@ -532,10 +551,6 @@ export class ClientProvider implements Client {
         100
       );
       // 订阅团购投票
-      const groupBuyingVoteSeq = await this.getMsgSeqByRank(ChannelType.GROUPBUYING_VOTE, 1, { roomId }, this.token);
-      if (this.showLog) {
-        console.log(`订阅团购投票: roomId(${roomId}), 版本号(${groupBuyingVoteSeq})`);
-      }
       this.registerChannel(
         <RequestMessage<RoomParam>>{
           channel: ChannelType.GROUPBUYING_VOTE,
@@ -548,10 +563,6 @@ export class ClientProvider implements Client {
         100
       );
       // 订阅房间消息
-      const roomMsgSeq = await this.getMsgSeqByRank(ChannelType.ROOM_MSG, 1, { roomId }, this.token);
-      if (this.showLog) {
-        console.log(`订阅房间消息: roomId(${roomId}), 版本号(${roomMsgSeq})`);
-      }
       this.registerChannel(
         <RequestMessage<RoomParam>>{
           channel: ChannelType.ROOM_MSG,
@@ -565,15 +576,11 @@ export class ClientProvider implements Client {
       );
       if (this.token) {
         // 订阅用户房间消息
-        const userRoomMsgSeq = await this.getMsgSeqByRank(ChannelType.USER_ROOM_MSG, 1, { roomId }, this.token);
-        if (this.showLog) {
-          console.log(`订阅用户房间消息: roomId(${roomId}), 版本号(${userRoomMsgSeq})`);
-        }
         this.registerChannel(
           <RequestMessage<RoomParam>>{
             channel: ChannelType.USER_ROOM_MSG,
             version: "1.0",
-            seq: BigInt(userRoomMsgSeq),
+            seq: BigInt(userRoomMsgSeq!),
             ts: BigInt(Date.now()),
             uid: uuid(),
             params: { roomId }
@@ -583,8 +590,9 @@ export class ClientProvider implements Client {
       }
     } catch (e) {
       console.error(e);
+      return Promise.reject(e);
     }
-    return this;
+    return Promise.resolve(this);
   }
 
   leaveRoom(roomId: bigint): Client {
