@@ -2,6 +2,11 @@ export declare enum PlatformType {
     WEB = "web",
     UniApp = "uni-app"
 }
+export declare class ServiceError extends Error {
+    private _tokenInvalid;
+    constructor(data: any);
+    tokenInvalid(): boolean;
+}
 /**
  * 通道类型
  */

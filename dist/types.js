@@ -3,12 +3,25 @@
 // 配置
 // ============================================================ //
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.MessageType = exports.ChannelType = exports.PlatformType = void 0;
+exports.MessageType = exports.ChannelType = exports.ServiceError = exports.PlatformType = void 0;
 var PlatformType;
 (function (PlatformType) {
     PlatformType["WEB"] = "web";
     PlatformType["UniApp"] = "uni-app";
 })(PlatformType || (exports.PlatformType = PlatformType = {}));
+// ============================================================ //
+// 配置
+// ============================================================ //
+class ServiceError extends Error {
+    constructor(data) {
+        super(data.message);
+        this._tokenInvalid = data.code >= 2 && data.code <= 6;
+    }
+    tokenInvalid() {
+        return this._tokenInvalid;
+    }
+}
+exports.ServiceError = ServiceError;
 // ============================================================ //
 // 枚举
 // ============================================================ //

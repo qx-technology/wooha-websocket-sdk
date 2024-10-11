@@ -549,7 +549,13 @@ class ClientProvider {
                         url: `${url}${queryString}`,
                         header: headers,
                         success: (res) => {
-                            resolve(res.data.data);
+                            const json = res.data;
+                            if (json.code == 0) {
+                                resolve(json.data);
+                            }
+                            else {
+                                reject(new types_1.ServiceError(json));
+                            }
                         },
                         fail: () => {
                             reject();
@@ -558,12 +564,24 @@ class ClientProvider {
                 });
             }
             else {
-                return fetch(`${url}${queryString}`, {
-                    method: "GET",
-                    headers
-                })
-                    .then((res) => res.json())
-                    .then((json) => json.data);
+                return new Promise((resolve, reject) => {
+                    fetch(`${url}${queryString}`, {
+                        method: "GET",
+                        headers
+                    })
+                        .then((res) => res.json())
+                        .then((json) => {
+                        if (json.code == 0) {
+                            resolve(json.data);
+                        }
+                        else {
+                            reject(new types_1.ServiceError(json));
+                        }
+                    })
+                        .catch((err) => {
+                        reject(err);
+                    });
+                });
             }
         });
     }
@@ -655,7 +673,13 @@ function getMsgSeqByRank(channel_1) {
                     url: `${url}${queryString}`,
                     header: headers,
                     success: (res) => {
-                        resolve(res.data.data);
+                        const json = res.data;
+                        if (json.code == 0) {
+                            resolve(json.data);
+                        }
+                        else {
+                            reject(new types_1.ServiceError(json));
+                        }
                     },
                     fail: () => {
                         reject();
@@ -664,12 +688,24 @@ function getMsgSeqByRank(channel_1) {
             });
         }
         else {
-            return fetch(`${url}${queryString}`, {
-                method: "GET",
-                headers
-            })
-                .then((res) => res.json())
-                .then((json) => json.data);
+            return new Promise((resolve, reject) => {
+                fetch(`${url}${queryString}`, {
+                    method: "GET",
+                    headers
+                })
+                    .then((res) => res.json())
+                    .then((json) => {
+                    if (json.code == 0) {
+                        resolve(json.data);
+                    }
+                    else {
+                        reject(new types_1.ServiceError(json));
+                    }
+                })
+                    .catch((err) => {
+                    reject(err);
+                });
+            });
         }
     });
 }
