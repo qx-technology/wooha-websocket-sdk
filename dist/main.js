@@ -5,9 +5,9 @@ const socket_1 = require("./socket");
 const types_1 = require("./types");
 /**
  * Jwt Token
- * 用户ID : 29324656
+ * 用户ID : 34353063
  */
-const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzaG9wIiwiZXhwIjoxNzMwMTA2NDQ1LCJpYXQiOjE3MjIzMzA0NDUsImp0aSI6IjVkMTMwYTkyZGQ0MzE3ZTFiYWE2NTQ5YjNmNzU0NDgzIn0.QdOiSOjNxMv1sP7MzivqcbNi3bh0AtpU2Y0AGyqauNc";
+const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ3b29oYS11c2VyIiwiZXhwIjoxNzM2MzM1MjMzLCJpYXQiOjE3Mjg1NTkyMzMsImp0aSI6IjBjYjNkNWViZTk0NGI5NzU2OWRiNWRiMjNiZjcyMzY1In0.IaqHTpv3VFADEMYnHn8Eep-0uyCn9yRaFg5lEBt3yEw";
 class MsgCallback {
     OnUserBiddingRejectedReOffer(client, param, message, response) {
         throw new Error("Method not implemented.");
@@ -142,14 +142,19 @@ function main() {
 }
 function demo() {
     // configSite("127.0.0.1:8849");
+    (0, socket_1.configSite)("ws.wooha.me");
+    (0, socket_1.useHttps)();
+    (0, socket_1.useWss)();
     const client = (0, socket_1.newClient)(new MsgCallback(), token, true, types_1.PlatformType.WEB);
     client.start();
-    // client.enterRoom(BigInt(1));
-    client.subscribeUserChickenGame(BigInt(0));
-    client.subscribeUserOrder(BigInt(0));
+    client.enterRoom(BigInt(37));
+    // client.subscribeUserChickenGame(BigInt(0));
+    // client.subscribeUserOrder(BigInt(0));
 }
 function test_http() {
-    (0, socket_1.configSite)("127.0.0.1:8849");
+    (0, socket_1.configSite)("ws.wooha.me");
+    (0, socket_1.useHttps)();
+    (0, socket_1.useWss)();
     (0, socket_1.getMessageHistory)(token, types_1.ChannelType.ROOM_MSG, BigInt(1300), { roomId: 1 })
         .then((res) => {
         console.info(res);
