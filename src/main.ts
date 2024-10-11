@@ -46,7 +46,7 @@ import {
  * 用户ID : 34353063
  */
 const token =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ3b29oYS11c2VyIiwiZXhwIjoxNzM2MzM1MjMzLCJpYXQiOjE3Mjg1NTkyMzMsImp0aSI6IjBjYjNkNWViZTk0NGI5NzU2OWRiNWRiMjNiZjcyMzY1In0.IaqHTpv3VFADEMYnHn8Eep-0uyCn9yRaFg5lEBt3yEw";
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ3b29oYS11c2VyIiwiZXhwIjoxNzM2NDE2MTI4LCJpYXQiOjE3Mjg2NDAxMjgsImp0aSI6IjNlODA5NmE3NWUxYTQ5ZGJiZGE5Yzg5MGNkYzYzNGM2In0.RnOxjsEf8v6CIFwYNeu8CL2uN7b4xmYRvN6AcrRj_fA";
 
 class MsgCallback implements EventHandle {
   OnUserBiddingRejectedReOffer(
