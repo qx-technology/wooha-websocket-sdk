@@ -39,7 +39,8 @@ import {
   UserBiddingAcceptedReOffer,
   UserBiddingRejectedReOffer,
   UserBiddingInitiateCounteroffer,
-  PlatformType
+  PlatformType,
+  ServiceError
 } from "./types";
 import { WebFuket } from "./socket_impl";
 import { pack, unpack } from "msgpackr";
@@ -919,7 +920,7 @@ export class ClientProvider implements Client {
             if (json.code == 0) {
               resolve(json.data);
             } else {
-              reject(json);
+              reject(new ServiceError(json));
             }
           },
           fail: () => {
@@ -938,7 +939,7 @@ export class ClientProvider implements Client {
             if (json.code == 0) {
               resolve(json.data);
             } else {
-              reject(json);
+              reject(new ServiceError(json));
             }
           })
           .catch((err) => {
@@ -1055,7 +1056,12 @@ export async function getMsgSeqByRank(
         url: `${url}${queryString}`,
         header: headers,
         success: (res: any) => {
-          resolve(res.data.data);
+          const json = res.data;
+          if (json.code == 0) {
+            resolve(json.data);
+          } else {
+            reject(new ServiceError(json));
+          }
         },
         fail: () => {
           reject();
@@ -1063,11 +1069,22 @@ export async function getMsgSeqByRank(
       });
     });
   } else {
-    return fetch(`${url}${queryString}`, {
-      method: "GET",
-      headers
-    })
-      .then((res) => res.json())
-      .then((json) => json.data);
+    return new Promise((resolve, reject) => {
+      fetch(`${url}${queryString}`, {
+        method: "GET",
+        headers
+      })
+        .then((res) => res.json())
+        .then((json) => {
+          if (json.code == 0) {
+            resolve(json.data);
+          } else {
+            reject(new ServiceError(json));
+          }
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    });
   }
 }

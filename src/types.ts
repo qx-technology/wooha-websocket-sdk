@@ -8,6 +8,22 @@ export enum PlatformType {
 }
 
 // ============================================================ //
+// 配置
+// ============================================================ //
+
+export class ServiceError extends Error {
+  private _tokenInvalid: boolean;
+  constructor(data: any) {
+    super(data.message);
+    this._tokenInvalid = data.code >= 2 && data.code <= 6;
+  }
+
+  tokenInvalid(): boolean {
+    return this._tokenInvalid;
+  }
+}
+
+// ============================================================ //
 // 枚举
 // ============================================================ //
 
