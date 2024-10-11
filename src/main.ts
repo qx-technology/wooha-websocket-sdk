@@ -111,7 +111,9 @@ class MsgCallback implements EventHandle {
   OnGroupBuyingVote(client: Client, param: RoomParam, message: Message<GroupBuyingVote>): void {
     const content = message.content;
     console.log(
-      `房间团购投票: 团购ID(${content.groupBuyingId}), 用户ID(${content.userId}), 投票时间(${content.voteTime}), 投票数(${content.tickets})`
+      `房间团购投票: 团购ID(${content.groupBuyingId}), 用户ID(${content.userId.toString().padStart(9)}), 投票时间(${
+        content.voteTime
+      }), 投票数(${content.tickets.toString().padStart(3)})`
     );
   }
   OnGroupBuyingNextProduct(client: Client, param: RoomParam, message: Message<GroupBuyingNextProduct>): void {
@@ -272,7 +274,7 @@ export function demo() {
   configSite("ws.wooha.me");
   useHttps();
   useWss();
-  const client = newClient(new MsgCallback(), token, true, PlatformType.WEB);
+  const client = newClient(new MsgCallback(), token, !true, PlatformType.WEB);
   client.start();
   client.enterRoom(BigInt(37));
   // client.subscribeUserChickenGame(BigInt(0));

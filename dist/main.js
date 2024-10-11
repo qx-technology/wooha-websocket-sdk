@@ -45,7 +45,7 @@ class MsgCallback {
     }
     OnGroupBuyingVote(client, param, message) {
         const content = message.content;
-        console.log(`房间团购投票: 团购ID(${content.groupBuyingId}), 用户ID(${content.userId}), 投票时间(${content.voteTime}), 投票数(${content.tickets})`);
+        console.log(`房间团购投票: 团购ID(${content.groupBuyingId}), 用户ID(${content.userId.toString().padStart(9)}), 投票时间(${content.voteTime}), 投票数(${content.tickets.toString().padStart(3)})`);
     }
     OnGroupBuyingNextProduct(client, param, message) {
         const content = message.content;
@@ -145,7 +145,7 @@ function demo() {
     (0, socket_1.configSite)("ws.wooha.me");
     (0, socket_1.useHttps)();
     (0, socket_1.useWss)();
-    const client = (0, socket_1.newClient)(new MsgCallback(), token, true, types_1.PlatformType.WEB);
+    const client = (0, socket_1.newClient)(new MsgCallback(), token, !true, types_1.PlatformType.WEB);
     client.start();
     client.enterRoom(BigInt(37));
     // client.subscribeUserChickenGame(BigInt(0));
