@@ -357,6 +357,18 @@ export interface GroupBuying {
    * 投票进度
    */
   voteProgress: bigint;
+  /**
+   * 首位投票用户名
+   */
+  firstVoteUserName: string;
+  /**
+   * 首位投票用户头像
+   */
+  firstVoteUserAvatar: string;
+  /**
+   * 首位投票数量
+   */
+  firstVoteAmount: bigint;
 }
 
 /**
