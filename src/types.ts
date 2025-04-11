@@ -407,6 +407,10 @@ export interface GroupBuyingVote {
    * 票数
    */
   tickets: bigint;
+  /**
+   * 票数类型
+   */
+  ticketsType: bigint;
 }
 
 /**
