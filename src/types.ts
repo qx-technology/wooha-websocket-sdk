@@ -369,6 +369,22 @@ export interface GroupBuying {
    * 首位投票数量
    */
   firstVoteAmount: bigint;
+  /**
+   * 蓝宝石最大票数
+   */
+  maxBlueTickets: bigint;
+  /**
+   * 蓝宝石当前票数
+   */
+  currentBlueTickets: bigint;
+  /**
+   * 黄宝石最大票数
+   */
+  maxYellowTickets: bigint;
+  /**
+   * 黄宝石当前票数
+   */
+  currentYellowTickets: bigint;
 }
 
 /**
