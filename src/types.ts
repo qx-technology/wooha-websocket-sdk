@@ -385,6 +385,10 @@ export interface GroupBuying {
    * 黄宝石当前票数
    */
   currentYellowTickets: bigint;
+  /**
+   * 宝石信息
+   */
+  ticketsInfo: string;
 }
 
 /**
